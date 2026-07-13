@@ -758,14 +758,45 @@ const MobileCategory = () => {
 
           <div className="md:flex md:gap-6 px-4 py-6 items-start">
             {/* LEFT SIDEBAR (Desktop) */}
-            <div className="w-full md:w-64 flex-shrink-0 hidden md:block sticky top-24">
-              {subcategories.length > 0 ? (
-                <>
-                  <h3 className="text-lg font-extrabold text-[#0A192F] mb-4 uppercase tracking-wider">Subcategories</h3>
-                  <div className="flex flex-col gap-2">
+            {subcategories.length > 0 && (
+              <div className="w-full md:w-64 flex-shrink-0 hidden md:block sticky top-24">
+                <h3 className="text-xl font-bold text-[#0A192F] mb-5 uppercase tracking-wider">Categories</h3>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => handleSubcategoryChange(null)}
+                    className={`text-left px-4 py-3.5 rounded-xl text-base font-bold transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-755 ${activeTheme.hoverBg}`}`}
+                  >
+                    All Items
+                  </button>
+                  {subcategories.map(sub => (
+                    <button
+                      key={sub.id}
+                      onClick={() => handleSubcategoryChange(sub.id)}
+                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-700 ${activeTheme.hoverBg}`}`}
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {typeof sub.image === 'string' && sub.image.includes('<svg') ? (
+                          <div dangerouslySetInnerHTML={{ __html: sub.image }} className={`w-6 h-6 filter ${selectedSubcategoryId === sub.id ? 'invert brightness-0' : 'invert-[.5] sepia-[1] saturate-[5] hue-rotate-[10deg]'}`} />
+                        ) : (
+                          <LazyImage src={sub.image} className="w-full h-full object-cover" />
+                        )}
+                      </div>
+                      <span className="truncate">{sub.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* RIGHT CONTENT */}
+            <div className="flex-1 min-w-0">
+              {/* Mobile Categories Scroll */}
+              {subcategories.length > 0 && (
+                <div className="w-full md:hidden mb-6 -mx-4 px-4 overflow-x-auto hide-scrollbar">
+                  <div className="flex gap-3 pb-2 w-max">
                     <button
                       onClick={() => handleSubcategoryChange(null)}
-                      className={`text-left px-4 py-3.5 rounded-xl text-base font-bold transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-755 ${activeTheme.hoverBg}`}`}
+                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-750 border border-gray-200"}`}
                     >
                       All Items
                     </button>
@@ -773,79 +804,14 @@ const MobileCategory = () => {
                       <button
                         key={sub.id}
                         onClick={() => handleSubcategoryChange(sub.id)}
-                        className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-700 ${activeTheme.hoverBg}`}`}
+                        className={`flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-755 border border-gray-200"}`}
                       >
-                        <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
-                          {typeof sub.image === 'string' && sub.image.includes('<svg') ? (
-                            <div dangerouslySetInnerHTML={{ __html: sub.image }} className={`w-6 h-6 filter ${selectedSubcategoryId === sub.id ? 'invert brightness-0' : 'invert-[.5] sepia-[1] saturate-[5] hue-rotate-[10deg]'}`} />
-                          ) : (
-                            <LazyImage src={sub.image} className="w-full h-full object-cover" />
-                          )}
-                        </div>
-                        <span className="truncate">{sub.name}</span>
+                        {sub.name}
                       </button>
                     ))}
                   </div>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-lg font-extrabold text-[#0A192F] mb-4 uppercase tracking-wider">Other Categories</h3>
-                  <div className="flex flex-col gap-2">
-                    {rootCategories.filter(rc => String(rc.id || rc._id) !== String(resolvedCategoryId)).map(rc => (
-                      <button
-                        key={rc.id || rc._id}
-                        onClick={() => navigate(`/category/${rc.id || rc._id}`)}
-                        className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all bg-gray-50 text-gray-700 ${activeTheme.hoverBg}`}
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center overflow-hidden flex-shrink-0 border border-slate-200 shadow-sm">
-                          <LazyImage src={rc.image} className="w-full h-full object-cover" />
-                        </div>
-                        <span className="truncate">{rc.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* RIGHT CONTENT */}
-            <div className="flex-1 min-w-0">
-              {/* Mobile Categories Scroll */}
-              <div className="w-full md:hidden mb-6 -mx-4 px-4 overflow-x-auto hide-scrollbar">
-                <div className="flex gap-3 pb-2 w-max">
-                  {subcategories.length > 0 ? (
-                    <>
-                      <button
-                        onClick={() => handleSubcategoryChange(null)}
-                        className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-750 border border-gray-200"}`}
-                      >
-                        All Items
-                      </button>
-                      {subcategories.map(sub => (
-                        <button
-                          key={sub.id}
-                          onClick={() => handleSubcategoryChange(sub.id)}
-                          className={`flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-755 border border-gray-200"}`}
-                        >
-                          {sub.name}
-                        </button>
-                      ))}
-                    </>
-                  ) : (
-                    <>
-                      {rootCategories.filter(rc => String(rc.id || rc._id) !== String(resolvedCategoryId)).map(rc => (
-                        <button
-                          key={rc.id || rc._id}
-                          onClick={() => navigate(`/category/${rc.id || rc._id}`)}
-                          className="flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all bg-white text-gray-755 border border-gray-200"
-                        >
-                          {rc.name}
-                        </button>
-                      ))}
-                    </>
-                  )}
                 </div>
-              </div>
+              )}
 
               {/* Search Bar */}
               <div className="mb-6 relative">

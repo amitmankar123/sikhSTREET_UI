@@ -656,6 +656,94 @@ const MobileProductDetail = () => {
     );
   }
 
+  const reviewsSection = (
+    <div id="reviews-section" className="border-t border-gray-200 pt-10">
+      <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">
+        Reviews for this item
+      </h3>
+      {productReviews && productReviews.length > 0 ? (
+        <div className="space-y-6">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-4xl font-bold text-gray-900">
+              {product.rating ? product.rating.toFixed(1) : "5.0"}
+            </span>
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <FiStar
+                  key={i}
+                  className={`text-lg ${i < Math.floor(product.rating || 5) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                />
+              ))}
+            </div>
+            <span className="text-sm text-gray-600 font-medium">
+              ({productReviews.length} reviews)
+            </span>
+          </div>
+
+          <div className="space-y-6">
+            {productReviews.slice(0, 5).map((review) => (
+              <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0">
+                <div className="flex items-center gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar
+                      key={i}
+                      className={`text-sm ${i < Math.floor(review.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
+                    />
+                  ))}
+                  <span className="text-xs text-gray-500 ml-2">
+                    {new Date(review.createdAt || new Date()).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-800 leading-relaxed mb-3">{review.comment}</p>
+
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                    {review.user.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs font-semibold text-gray-700">
+                    {review.user}
+                  </span>
+                </div>
+
+                {review.vendorResponse && (
+                  <div className="mt-4 ml-6 pl-4 border-l-2 border-gray-200">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center text-[10px] font-bold text-white">
+                        {vendor?.storeName?.charAt(0) || "V"}
+                      </div>
+                      <span className="text-xs font-bold text-gray-900">
+                        {vendor?.storeName || "Vendor"}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700">{review.vendorResponse}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm text-gray-500">No reviews yet.</p>
+      )}
+
+      {/* Write Review */}
+      {isAuthenticated && isMongoId(product?.id) && (
+        <div className="mt-8 pt-8 border-t border-gray-200">
+          {eligibleDeliveredOrderId ? (
+            <ReviewForm
+              productId={product.id}
+              onSubmit={handleSubmitReview}
+            />
+          ) : (
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 text-sm text-gray-600">
+              Reviews are available after product delivery.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={true}>
@@ -703,95 +791,13 @@ const MobileProductDetail = () => {
                  <FiFlag className="inline mr-2" /> Report this item to SikhStreet
                </div>
 
-               {/* Reviews Section Moved Here */}
-               <div id="reviews-section" className="border-t border-gray-200 pt-10">
-                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">
-                    Reviews for this item
-                  </h3>
-                  {productReviews && productReviews.length > 0 ? (
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-4 mb-6">
-                        <span className="text-4xl font-bold text-gray-900">
-                          {product.rating ? product.rating.toFixed(1) : "5.0"}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <FiStar
-                              key={i}
-                              className={`text-lg ${i < Math.floor(product.rating || 5) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-600 font-medium">
-                          ({productReviews.length} reviews)
-                        </span>
-                      </div>
-
-                      <div className="space-y-6">
-                        {productReviews.slice(0, 5).map((review) => (
-                          <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0">
-                            <div className="flex items-center gap-1 mb-2">
-                              {[...Array(5)].map((_, i) => (
-                                <FiStar
-                                  key={i}
-                                  className={`text-sm ${i < Math.floor(review.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
-                                />
-                              ))}
-                              <span className="text-xs text-gray-500 ml-2">
-                                {new Date(review.createdAt || new Date()).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-800 leading-relaxed mb-3">{review.comment}</p>
-
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
-                                {review.user.charAt(0).toUpperCase()}
-                              </div>
-                              <span className="text-xs font-semibold text-gray-700">
-                                {review.user}
-                              </span>
-                            </div>
-
-                            {review.vendorResponse && (
-                              <div className="mt-4 ml-6 pl-4 border-l-2 border-gray-200">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center text-[10px] font-bold text-white">
-                                    {vendor?.storeName?.charAt(0) || "V"}
-                                  </div>
-                                  <span className="text-xs font-bold text-gray-900">
-                                    {vendor?.storeName || "Vendor"}
-                                  </span>
-                                </div>
-                                <p className="text-sm text-gray-700">{review.vendorResponse}</p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No reviews yet.</p>
-                  )}
-
-                  {/* Write Review */}
-                  {isAuthenticated && isMongoId(product?.id) && (
-                    <div className="mt-8 pt-8 border-t border-gray-200">
-                      {eligibleDeliveredOrderId ? (
-                        <ReviewForm
-                          productId={product.id}
-                          onSubmit={handleSubmitReview}
-                        />
-                      ) : (
-                        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 text-sm text-gray-600">
-                          Reviews are available after product delivery.
-                        </div>
-                      )}
-                    </div>
-                  )}
+               {/* Reviews Section (Desktop Only) */}
+               <div className="hidden lg:block">
+                  {reviewsSection}
                </div>
                
-               {/* Community Q&A Moved Here */}
-               <div className="mt-12 max-w-4xl border-t border-gray-200 pt-10">
+               {/* Community Q&A (Desktop Only) */}
+               <div className="hidden lg:block mt-12 max-w-4xl border-t border-gray-200 pt-10">
                  <ProductQA productId={product.id} />
                </div>
             </div>
@@ -1075,34 +1081,6 @@ const MobileProductDetail = () => {
                     </div>
                   )}
 
-                  {/* Buy Buttons */}
-                  <div className="flex flex-col gap-3 mt-4">
-                    <button
-                      type="button"
-                      onClick={() => handleAddToCart(true)}
-                      disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-gray-900 bg-white border-2 border-gray-900 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                    >
-                      Buy it now
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleAddToCart(false)}
-                      disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-white bg-[#222222] hover:bg-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Add to basket
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleFavorite}
-                      className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 rounded-full transition-colors mt-2"
-                    >
-                      <FiHeart className={`text-lg ${isFavorite ? "fill-red-600 text-red-600" : ""}`} />
-                      {isFavorite ? "Remove from collection" : "Add to collection"}
-                    </button>
-                  </div>
-                  
                   {/* Add-ons Configuration */}
                   {isTurbanProduct && (product?.turbanConfig?.embroidery?.enabled || product?.turbanConfig?.giftWrap?.enabled) && (
                     <div className="space-y-2.5 pt-4 border-t border-gray-100">
@@ -1155,6 +1133,34 @@ const MobileProductDetail = () => {
                       </div>
                     </div>
                   )}
+
+                  {/* Buy Buttons */}
+                  <div className="flex flex-col gap-3 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(true)}
+                      disabled={selectedAvailableStock <= 0}
+                      className="w-full py-3.5 rounded-full font-bold text-gray-900 bg-white border-2 border-gray-900 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                    >
+                      Buy it now
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(false)}
+                      disabled={selectedAvailableStock <= 0}
+                      className="w-full py-3.5 rounded-full font-bold text-white bg-[#222222] hover:bg-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Add to basket
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleFavorite}
+                      className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 rounded-full transition-colors mt-2"
+                    >
+                      <FiHeart className={`text-lg ${isFavorite ? "fill-red-600 text-red-600" : ""}`} />
+                      {isFavorite ? "Remove from collection" : "Add to collection"}
+                    </button>
+                  </div>
 
                   {/* Accordions */}
                   <div className="border-t border-gray-200 mt-6 pt-2 divide-y divide-gray-200">
@@ -1258,6 +1264,14 @@ const MobileProductDetail = () => {
                       </details>
                     )}
                   </div>
+
+                  {/* Reviews & QA (Mobile Only) */}
+                  <div className="block lg:hidden mt-8 space-y-8">
+                    {reviewsSection}
+                    <div className="border-t border-gray-200 pt-8">
+                      <ProductQA productId={product.id} />
+                    </div>
+                  </div>
                 </div>
             </div>
           </div>
@@ -1280,60 +1294,6 @@ const MobileProductDetail = () => {
           )}
         </div>
 
-        {/* Sticky Bottom Action Bar (Mobile Only) */}
-        <div className="lg:hidden fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleFavorite}
-              className={`p-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center ${isFavorite
-                ? "bg-red-50 text-red-600 border-2 border-red-200"
-                : "bg-gray-100 text-gray-700"
-                }`}>
-              <FiHeart
-                className={`text-xl ${isFavorite ? "fill-red-600" : ""}`}
-              />
-            </button>
-            <button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: product.name,
-                    text: `Check out ${product.name}`,
-                    url: window.location.href,
-                  });
-                } else {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast.success("Link copied to clipboard");
-                }
-              }}
-              className="p-3 bg-gray-100 text-gray-700 rounded-xl font-semibold transition-all duration-300">
-              <FiShare2 className="text-xl" />
-            </button>
-            {isInCart ? (
-              <button
-                onClick={handleRemoveFromCart}
-                className="flex-1 py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 bg-red-50 text-red-600 border border-red-100">
-                <FiTrash2 className="text-xl" />
-                <span>Remove</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleAddToCart}
-                disabled={selectedAvailableStock <= 0}
-                className={`flex-1 py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 ${selectedAvailableStock <= 0
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "gradient-green text-white hover:shadow-glow-green"
-                  }`}>
-                <FiShoppingBag className="text-xl" />
-                <span>
-                  {selectedAvailableStock <= 0
-                    ? "Out of Stock"
-                    : "Add to Cart"}
-                </span>
-              </button>
-            )}
-          </div>
-        </div>
       </MobileLayout>
     </PageTransition>
   );
