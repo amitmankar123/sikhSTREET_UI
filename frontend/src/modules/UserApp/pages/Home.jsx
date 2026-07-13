@@ -68,6 +68,41 @@ const MobileHome = () => {
     vendorName: "Heritage Weaves"
   };
 
+  const smallShopProducts = [
+    {
+      id: 303,
+      name: "Classic Stainless Steel Kadda",
+      price: 35.00,
+      image: "/images/redesign/premium_kada.png",
+      vendorName: "Heritage Woodcarvers",
+      vendorId: "heritage-woodcarvers"
+    },
+    {
+      id: 302,
+      name: "Swirling Fish Artwork",
+      price: 150.00,
+      image: "/images/redesign/fish_artwork.png",
+      vendorName: "Amritsar Fine Arts",
+      vendorId: "amritsar-fine-arts"
+    },
+    {
+      id: 460,
+      name: "Premium Sikh Turban",
+      price: 40.00,
+      image: "/images/turbans/media__1783759342309.jpg",
+      vendorName: "Sikh Heritage Weaves",
+      vendorId: "sikh-heritage-weaves"
+    },
+    {
+      id: 307,
+      name: "Introduction to Sikhism",
+      price: 15.00,
+      image: "/images/redesign/media__1783408531361.png",
+      vendorName: "Amritsar Fine Arts",
+      vendorId: "amritsar-fine-arts"
+    }
+  ];
+
   const handleAddToCart = (product) => {
     const success = addItem({
       id: product.id,
@@ -311,6 +346,67 @@ const MobileHome = () => {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          </section>
+
+          {/* Featured Items from Small Shops Section */}
+          <section className="py-12 bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
+            <div className="max-w-7xl mx-auto px-container-margin">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 leading-tight">
+                    Featured Items from Small Shops
+                  </h3>
+                  <p className="text-neutral-500 text-sm mt-1 leading-relaxed">
+                    Handpicked local creations available today.
+                  </p>
+                </div>
+              </div>
+
+              {/* Product Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {smallShopProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-2xl border border-neutral-200/60 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    <div 
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      className="cursor-pointer overflow-hidden aspect-square relative bg-stone-100"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-4 flex-1 flex flex-col justify-between">
+                      <div className="mb-3">
+                        <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block mb-1">
+                          {product.vendorName}
+                        </span>
+                        <h4 
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          className="text-sm font-bold text-neutral-800 line-clamp-2 cursor-pointer hover:text-[#F1641E] transition-colors leading-snug"
+                        >
+                          {product.name}
+                        </h4>
+                      </div>
+                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-50">
+                        <span className="text-sm font-extrabold text-neutral-900">
+                          ${product.price}
+                        </span>
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="px-4 py-2 bg-[#8d4b00] hover:bg-[#6e3900] text-white rounded-xl text-xs font-semibold transition-all duration-300 active:scale-95 shadow-sm"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </section>

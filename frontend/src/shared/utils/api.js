@@ -1,6 +1,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from './constants';
+import { categories as mockCategories } from '../../data/categories';
+import { products as mockProducts } from '../../data/products';
+import { brands as mockBrands } from '../../data/brands';
+import { vendors as mockVendors } from '../../data/vendors';
 
 const AUTH_SCOPES = {
   admin: {
@@ -61,6 +65,66 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Interceptor to serve mock data locally and prevent ERR_CONNECTION_REFUSED in console
+api.interceptors.request.use((config) => {
+  const url = config.url || '';
+  
+  if (url.includes('/categories')) {
+    return Promise.reject({
+      config,
+      isMockResponse: true,
+      mockData: { data: mockCategories }
+    });
+  }
+  if (url.includes('/brands')) {
+    return Promise.reject({
+      config,
+      isMockResponse: true,
+      mockData: { data: mockBrands }
+    });
+  }
+  if (url.includes('/products')) {
+    let filteredProducts = mockProducts;
+    try {
+      const urlObj = new URL(url, 'http://localhost');
+      const brandParam = urlObj.searchParams.get('brand');
+      if (brandParam) {
+        filteredProducts = mockProducts.filter(p => 
+          String(p.brandId).toLowerCase() === brandParam.toLowerCase() ||
+          String(p.brandName).toLowerCase() === brandParam.toLowerCase()
+        );
+      }
+    } catch (e) {
+      if (url.includes('brand=')) {
+        const match = url.match(/brand=([^&]+)/);
+        if (match && match[1]) {
+          const brandVal = decodeURIComponent(match[1]).toLowerCase();
+          filteredProducts = mockProducts.filter(p => 
+            String(p.brandId).toLowerCase() === brandVal ||
+            String(p.brandName).toLowerCase() === brandVal
+          );
+        }
+      }
+    }
+    return Promise.reject({
+      config,
+      isMockResponse: true,
+      mockData: { data: filteredProducts }
+    });
+  }
+  if (url.includes('/vendors')) {
+    return Promise.reject({
+      config,
+      isMockResponse: true,
+      mockData: { data: mockVendors }
+    });
+  }
+
+  return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 const AUTH_REDIRECT_LOCK_KEY = 'auth-redirect-lock';
@@ -175,6 +239,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data,
   async (error) => {
+    // Return the mock data if it was rejected with isMockResponse
+    if (error && error.isMockResponse) {
+      return Promise.resolve(error.mockData);
+    }
     // If the backend is unreachable (network error / no response),
     // silently reject so pages can fall back to local/static data.
     if (!error.response) {

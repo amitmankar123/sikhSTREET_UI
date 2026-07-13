@@ -786,6 +786,105 @@ export const products = [
     vendorId: 1,
     vendorName: "Sikh Heritage Store",
     brandId: 1
+  },
+  {
+    id: 308,
+    name: "Classic Black Sikh Turban",
+    categoryId: "2e70d5e5-ae8f-4c72-823c-8568f12877a8",
+    unit: "Piece",
+    price: 45.00,
+    originalPrice: 55.00,
+    image: "/images/turbans/media__1783934151601.png",
+    images: [
+      "/images/turbans/media__1783934151601.png",
+      "/images/turbans/media__1783934151658.png",
+      "/images/turbans/media__1783934151664.jpg",
+      "/images/turbans/media__1783934151688.jpg"
+    ],
+    description: "Royal premium quality black cotton turban fabric. Carefully modeled and photographed in classic and modern draping styles.",
+    variants: {
+      sizes: ["5m", "5.5m", "6m", "6.5m", "7m", "7.5m", "8m"],
+      colors: ["Black", "Navy"],
+      colorHexMap: {
+        "Black": "#000000",
+        "Navy": "#0a192f"
+      }
+    },
+    turbanConfig: {
+      fabric: [
+        { type: "Full Voile", price: 45.00 },
+        { type: "Rubia", price: 55.00 },
+        { type: "Malmal", price: 38.00 }
+      ],
+      embroidery: { enabled: false },
+      giftWrap: { enabled: true, price: 15.00 }
+    },
+    flashSale: false,
+    isNewArrival: true,
+    stock: "in_stock",
+    stockQuantity: 80,
+    rating: 4.9,
+    reviewCount: 16,
+    vendorId: 3,
+    vendorName: "Heritage Weaves"
+  },
+  {
+    id: 309,
+    name: "Rabab",
+    categoryId: 7,
+    unit: "Piece",
+    price: 1645.00,
+    originalPrice: 1850.00,
+    image: "/images/instruments/media__1783934664515.jpg",
+    images: [
+      "/images/instruments/media__1783934664515.jpg",
+      "/images/instruments/media__1783934670035.jpg",
+      "/images/instruments/media__1783934675002.jpg"
+    ],
+    description: "The rabab (or rubab) is an ancient stringed instrument originating from Central Asia. It features a hollow wooden body with a belly covered by stretched animal skin (like goatskin). Players pluck the instrument with a plectrum to create a deep, warm, and banjo-like sound.",
+    variants: {
+      colors: ["Brown"],
+      colorHexMap: {
+        "Brown": "#8B5A2B"
+      }
+    },
+    flashSale: false,
+    isNewArrival: true,
+    stock: "in_stock",
+    stockQuantity: 5,
+    rating: 5.0,
+    reviewCount: 8,
+    vendorId: 1,
+    vendorName: "Sikh Heritage Store"
+  },
+  {
+    id: 310,
+    name: "Saranda",
+    categoryId: 7,
+    unit: "Piece",
+    price: 1950.00,
+    originalPrice: 2200.00,
+    image: "/images/instruments/media__1783935083685.jpg",
+    images: [
+      "/images/instruments/media__1783935083685.jpg",
+      "/images/instruments/media__1783935089370.jpg",
+      "/images/instruments/media__1783935093786.jpg"
+    ],
+    description: "The Saranda is a unique bowed stringed instrument from the Punjab region. Hand-carved from a single block of Tun wood, it features a unique drop-like open hollow sound box, and was popularized by Guru Arjan Dev Ji. It produces a rich, resonant, and emotionally expressive melody when bowed.",
+    variants: {
+      colors: ["Brown"],
+      colorHexMap: {
+        "Brown": "#8B5A2B"
+      }
+    },
+    flashSale: false,
+    isNewArrival: true,
+    stock: "in_stock",
+    stockQuantity: 2,
+    rating: 5.0,
+    reviewCount: 5,
+    vendorId: 1,
+    vendorName: "Sikh Heritage Store"
   }
 ];
 

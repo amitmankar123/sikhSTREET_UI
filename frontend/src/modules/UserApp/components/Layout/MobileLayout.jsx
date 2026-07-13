@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import '../../styles/user.css';
 import MobileHeader from './MobileHeader';
 import DesktopHeader from './DesktopHeader';
+import DesktopCategoryBar from './DesktopCategoryBar';
 import MobileBottomNav from './MobileBottomNav';
 import MobileCartBar from './MobileCartBar';
 import CartDrawer from '../../../../shared/components/Cart/CartDrawer';
@@ -37,7 +38,12 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true, full
 
   return (
     <>
-      {shouldShowHeader && <MobileHeader />}
+      {shouldShowHeader && (
+        <>
+          <MobileHeader />
+          <DesktopCategoryBar />
+        </>
+      )}
       <main
         className={`min-h-screen w-full overflow-x-hidden ${fullWidth ? 'max-w-none px-0' : 'max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12'} ${shouldShowBottomNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0' : ''} ${showCartBar ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}
         style={{ paddingTop: shouldShowHeader ? `${headerHeight}px` : '0px' }}

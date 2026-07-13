@@ -661,7 +661,7 @@ const MobileProductDetail = () => {
       <MobileLayout showBottomNav={false} showCartBar={true}>
         <div className="w-full pb-24 lg:pb-12 max-w-7xl mx-auto">
           {/* Breadcrumbs */}
-          <div className="px-6 pt-4 lg:pt-6 lg:px-8 flex items-center justify-center flex-wrap gap-1.5 text-sm md:text-base text-brand-muted font-sans">
+          <div className="hidden lg:flex px-6 pt-4 lg:pt-6 lg:px-8 items-center justify-start flex-wrap gap-1.5 text-sm md:text-base text-brand-muted font-sans">
             <Link to="/home" className="hover:text-brand-saffron hover:underline transition-colors font-medium">
               Homepage
             </Link>
@@ -680,7 +680,7 @@ const MobileProductDetail = () => {
           </div>
 
           {/* Back Button */}
-          <div className="px-4 pt-2 lg:pt-4 lg:px-8 mb-4">
+          <div className="hidden lg:block px-4 pt-2 lg:pt-4 lg:px-8 mb-4">
             <button
               onClick={() => navigate(-1)}
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors group">
@@ -692,7 +692,7 @@ const MobileProductDetail = () => {
           </div>
           <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-12 lg:px-8 lg:items-start max-w-[1400px] mx-auto">
             {/* LEFT COLUMN: Image Gallery + Reviews (Spans 7 columns) */}
-            <div className="lg:col-span-7 px-4 py-4 lg:p-0">
+            <div className="lg:col-span-7 p-0 lg:p-0">
                {/* Gallery */}
                <div className="mb-8">
                   <ImageGallery images={productImages} productName={product.name} />

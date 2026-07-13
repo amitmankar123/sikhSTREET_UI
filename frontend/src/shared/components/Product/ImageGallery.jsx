@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FiX, FiChevronLeft, FiChevronRight, FiPlayCircle } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import LazyImage from "../LazyImage";
@@ -93,6 +94,13 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
           <div
             className="relative w-full aspect-[4/5] lg:aspect-square bg-[#F9F9F9] rounded-2xl p-0 overflow-hidden"
             data-gallery>
+            {/* Floating Back Button (Mobile Only) */}
+            <button
+              onClick={() => window.history.back()}
+              className="absolute left-4 top-4 z-10 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all active:scale-95 lg:hidden"
+            >
+              <FiChevronLeft className="text-gray-800 text-2xl" />
+            </button>
             <motion.div
               key={selectedIndex}
               className="w-full h-full flex items-center justify-center cursor-zoom-in"
@@ -146,7 +154,7 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
 
       {/* Lightbox Modal */}
       <AnimatePresence>
-        {isLightboxOpen && (
+        {isLightboxOpen && createPortal(
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -164,11 +172,11 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-7xl max-h-[90vh] w-full">
+              className="relative max-w-7xl max-h-[90vh] w-full flex items-center justify-center">
               <img
                 src={mediaArray[selectedIndex]?.url}
                 alt={`${productName} - Full view`}
-                className="w-full h-full object-contain max-h-[90vh] rounded-lg"
+                className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-lg"
                 onError={(e) => {
                   e.target.src =
                     "https://placehold.co/800x800?text=Product+Image";
@@ -198,7 +206,8 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
                 </div>
               )}
             </motion.div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
     </>

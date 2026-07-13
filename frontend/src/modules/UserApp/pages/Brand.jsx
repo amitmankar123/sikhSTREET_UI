@@ -535,7 +535,7 @@ const Brand = () => {
             <PageTransition>
                 <MobileLayout showBottomNav={false} showCartBar={false}>
                     <div className="flex items-center justify-center min-h-[60vh] px-4">
-                        <p className="text-gray-600">Loading brand...</p>
+                        <p className="text-gray-600">Loading shop...</p>
                     </div>
                 </MobileLayout>
             </PageTransition>
