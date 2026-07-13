@@ -40,6 +40,7 @@ const CartDrawer = () => {
     e.preventDefault();
     if (!isAuthenticated) {
       toast.error("Please login to proceed to checkout");
+      navigate("/login");
       return;
     }
 
@@ -82,7 +83,10 @@ const CartDrawer = () => {
       toggleCart();
       navigate('/checkout');
     } catch (error) {
-      console.error("Cart stock validation failed:", error);
+      console.error("Cart stock validation failed, using fallback:", error);
+      // Fallback: proceed to checkout
+      toggleCart();
+      navigate('/checkout');
     } finally {
       setIsValidatingStock(false);
     }
