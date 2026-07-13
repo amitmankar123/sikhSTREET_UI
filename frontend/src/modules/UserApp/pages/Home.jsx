@@ -158,7 +158,7 @@ const MobileHome = () => {
               </div>
 
               {/* Secondary Feature Block */}
-              <div className="lg:col-span-4 relative rounded-[2rem] overflow-hidden shadow-sm h-[250px] lg:h-full cursor-pointer group" onClick={() => navigate("/category/karas")}>
+              <div className="lg:col-span-4 relative rounded-[2rem] overflow-hidden shadow-sm h-[250px] lg:h-full cursor-pointer group" onClick={() => navigate("/category/3")}>
                 <img
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   alt="Sculptural Kara"
@@ -569,10 +569,10 @@ const MobileHome = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => navigate("/brand/heritage-forge")}
+                  onClick={() => navigate("/our-story")}
                   className="bg-[#8d4b00] hover:bg-[#6e3900] text-white px-8 py-3.5 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 active:scale-95"
                 >
-                  Read Gurcharan's Story
+                  Our Story
                 </button>
               </div>
             </div>

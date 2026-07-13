@@ -730,7 +730,7 @@ const MobileProductDetail = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={true}>
-        <div className="w-full pb-24 lg:pb-12 max-w-7xl mx-auto">
+        <div className="w-full pb-4 lg:pb-8 max-w-7xl mx-auto">
           {/* Breadcrumbs */}
           <div className="hidden lg:flex px-6 pt-4 lg:pt-6 lg:px-8 items-center justify-start flex-wrap gap-1.5 text-sm md:text-base text-brand-muted font-sans">
             <Link to="/home" className="hover:text-brand-saffron hover:underline transition-colors font-medium">

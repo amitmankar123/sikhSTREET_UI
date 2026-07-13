@@ -162,18 +162,18 @@ const CATEGORY_THEMES = {
     name: "Electronics"
   },
   fashion: {
-    bodyBackground: "linear-gradient(135deg, #FFF5F7 0%, #FFF0F3 50%, #FFE3E8 100%)",
-    accentColor: "text-[#DB2777]",
-    accentBg: "bg-[#DB2777]/10",
-    accentBorder: "border-[#DB2777]/20",
-    hoverBg: "hover:bg-[#DB2777]/10",
-    primaryButton: "bg-[#DB2777] hover:bg-[#BE185D]",
+    bodyBackground: "linear-gradient(to bottom, #fffcf9, #fff8f5)",
+    accentColor: "text-[#8d4b00]",
+    accentBg: "bg-[#8d4b00]/10",
+    accentBorder: "border-[#e9d7cb]",
+    hoverBg: "hover:bg-[#fdeade]/50",
+    primaryButton: "gradient-saffron hover:shadow-glow-saffron",
     primaryButtonText: "text-white",
-    iconOutline: "shadow-[#DB2777]/20 ring-2 ring-[#DB2777]/30",
+    iconOutline: "shadow-sm ring-2 ring-[#e9d7cb]",
     searchPlaceholder: 'Search "Kurtas", "Graphic Tees", "Jackets", "Scarves"...',
-    searchFocusBorder: "focus:border-[#DB2777] focus:ring-[#DB2777]/30",
-    badgeColor: "text-[#DB2777] bg-[#DB2777]/10",
-    headerBg: "bg-[#FFF5F7]/80",
+    searchFocusBorder: "focus:border-[#8d4b00] focus:ring-[#8d4b00]/20",
+    badgeColor: "text-[#8d4b00] bg-[#fdeade]",
+    headerBg: "bg-[#fff8f5]/90",
     name: "Fashion"
   },
   langar: {
