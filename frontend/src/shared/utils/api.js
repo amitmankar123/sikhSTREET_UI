@@ -243,9 +243,9 @@ api.interceptors.response.use(
     if (error && error.isMockResponse) {
       return Promise.resolve(error.mockData);
     }
-    // If the backend is unreachable (network error / no response), or returns an error,
+    // If the backend is unreachable or returns any error (405, 400, 500, 404, etc.),
     // return simulated e-commerce data so the application functions dynamically in client-only/static mode.
-    if (!error.response || error.response.status >= 500 || error.response.status === 404) {
+    if (error) {
       const url = error?.config?.url || '';
       const method = String(error?.config?.method || '').toLowerCase();
       console.warn(`Backend connection failed or returned error for ${url}. Generating static fallback...`);
