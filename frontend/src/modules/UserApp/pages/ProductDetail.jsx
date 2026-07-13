@@ -442,7 +442,7 @@ const MobileProductDetail = () => {
       vendorId: product.vendorId,
       vendorName: vendor?.storeName || vendor?.name || product.vendorName,
       unit: isTurbanProduct ? 'Piece' : product.unit,
-    });
+    }, !redirectToCheckout);
     if (!addedToCart) return;
     if (redirectToCheckout === true) {
       navigate('/checkout');

@@ -31,7 +31,7 @@ const CartDrawer = () => {
   const [isValidatingStock, setIsValidatingStock] = useState(false);
   const hasOutOfStockItems = false;
 
-  const handleProceedToCheckout = async (e) => {
+  const handleProceedToCheckout = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
       toast.error("Please login to proceed to checkout");
@@ -44,31 +44,9 @@ const CartDrawer = () => {
       return;
     }
 
-    // 2. Call backend for real-time stock validation (handles concurrent user B purchasing case)
-    setIsValidatingStock(true);
-    try {
-      const payload = {
-        items: items.map(item => ({
-          productId: item.id,
-          quantity: Number(item.quantity || 1),
-          variant: item.variant || undefined
-        }))
-      };
-      
-      // Call endpoint
-      await api.post('/user/orders/validate-stock', payload);
-      
-      // Close cart and navigate to checkout
-      toggleCart();
-      navigate('/checkout');
-    } catch (error) {
-      console.error("Cart stock validation failed, using fallback:", error);
-      // Fallback: proceed to checkout
-      toggleCart();
-      navigate('/checkout');
-    } finally {
-      setIsValidatingStock(false);
-    }
+    // Close cart and navigate to checkout
+    toggleCart();
+    navigate('/checkout');
   };
 
   // Group items by vendor

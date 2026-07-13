@@ -770,7 +770,7 @@ const MobileCheckout = () => {
                         type="submit"
                         onClick={handleSubmit}
                         disabled={step === 2 && isPlacingOrder}
-                        className="w-full bg-[#8d4b00] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:shadow-glow-green transition-all duration-300 transform hover:-translate-y-0.5">
+                        className="w-full gradient-saffron text-white py-3.5 rounded-xl font-bold text-lg hover:shadow-glow-saffron transition-all duration-300 transform hover:-translate-y-0.5">
                         {step === 2 ? (isPlacingOrder ? "Placing Order..." : "Place Order") : "Continue to Payment"}
                       </button>
                       {step === 2 && (
@@ -984,7 +984,7 @@ const AddressFormModal = ({ onSubmit, onCancel }) => {
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 bg-[#8d4b00] text-white py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all">
+              className="flex-1 gradient-saffron text-white py-3 rounded-xl font-semibold hover:shadow-glow-saffron transition-all">
               Add Address
             </button>
             <button
