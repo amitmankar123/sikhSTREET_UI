@@ -226,7 +226,7 @@ const VariantSelector = ({ variants, onVariantChange, currentPrice, isKada, useD
                           <span className="text-xs">{option}</span>
                           {optionPrice !== undefined && optionPrice !== "" && (
                             <span className="text-[10px] text-gray-500 font-normal">
-                              ₹{Number(optionPrice).toLocaleString('en-IN')}
+                              ${Number(optionPrice).toLocaleString('en-US')}
                             </span>
                           )}
                         </div>

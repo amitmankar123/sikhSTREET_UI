@@ -170,7 +170,7 @@ const NewArrivalsSection = ({ products = null }) => {
                           {product.name}
                         </span>
                         <span className="text-brand-saffron text-xs font-bold">
-                          ₹{product.price}
+                          ${product.price}
                         </span>
                       </div>
                     </div>

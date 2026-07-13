@@ -254,8 +254,8 @@ api.interceptors.response.use(
 
       if (url.includes('/coupons/available')) {
         fallbackData = [
-          { code: "WELCOME50", discount: 50, type: "flat", minPurchase: 200, description: "Flat ₹50 off on purchases above ₹200" },
-          { code: "FREESHIP", discount: 100, type: "freeship", minPurchase: 500, description: "Free standard shipping on orders above ₹500" }
+          { code: "WELCOME50", discount: 50, type: "flat", minPurchase: 200, description: "Flat $50 off on purchases above $200" },
+          { code: "FREESHIP", discount: 100, type: "freeship", minPurchase: 500, description: "Free standard shipping on orders above $500" }
         ];
       } else if (url.includes('/coupons/validate')) {
         fallbackData = { success: true, discount: 50 };

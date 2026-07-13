@@ -13,9 +13,24 @@ import { categories as initialCategories } from "../../../data/categories";
 const MobileHome = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [favoriteShops, setFavoriteShops] = useState({});
+  const [favoriteShops, setFavoriteShops] = useState(() => {
+    try {
+      const saved = localStorage.getItem("favorite_shops");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
   const { addItem } = useCartStore();
   const { categories: backendCategories, initialize: initCategories } = useCategoryStore();
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("favorite_shops", JSON.stringify(favoriteShops));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [favoriteShops]);
 
   useEffect(() => {
     initCategories();

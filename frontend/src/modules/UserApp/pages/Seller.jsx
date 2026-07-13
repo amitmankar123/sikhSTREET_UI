@@ -189,7 +189,15 @@ const Seller = () => {
     const [isResolvingVendor, setIsResolvingVendor] = useState(true);
 
     const [activeTab, setActiveTab] = useState("items"); // items, reviews, about, policies
-    const [isFavoriteShop, setIsFavoriteShop] = useState(false);
+    const [isFavoriteShop, setIsFavoriteShop] = useState(() => {
+        try {
+            const saved = localStorage.getItem("favorite_shops");
+            const favs = saved ? JSON.parse(saved) : {};
+            return !!favs[vendorId];
+        } catch {
+            return false;
+        }
+    });
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const isScrollingRef = useRef(false);
@@ -359,12 +367,21 @@ const Seller = () => {
 
     // Toggle favorite shop
     const handleFavoriteShop = () => {
-        setIsFavoriteShop(!isFavoriteShop);
-        if (!isFavoriteShop) {
-            toast.success("Shop added to favorites!");
-        } else {
-            toast.success("Shop removed from favorites");
+        const newValue = !isFavoriteShop;
+        setIsFavoriteShop(newValue);
+        try {
+            const saved = localStorage.getItem("favorite_shops");
+            const favs = saved ? JSON.parse(saved) : {};
+            if (newValue) {
+                favs[vendorId] = true;
+            } else {
+                delete favs[vendorId];
+            }
+            localStorage.setItem("favorite_shops", JSON.stringify(favs));
+        } catch (e) {
+            console.error(e);
         }
+        toast.success(newValue ? "Shop added to favorites!" : "Shop removed from favorites");
     };
 
     // Close dropdowns when clicking outside
