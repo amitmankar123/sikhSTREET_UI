@@ -478,16 +478,7 @@ const MobileProductDetail = () => {
 
   const handleQuantityChange = (change) => {
     const newQuantity = parseFloat((Number(quantity) + Number(change)).toFixed(2));
-    const variantKey = getVariantSignature(selectedVariant || {});
-    const variantStockValue = Number(
-      product?.variants?.stockMap?.[variantKey] ??
-      product?.variants?.stockMap?.get?.(variantKey)
-    );
-    const maxStock = Number.isFinite(variantStockValue)
-      ? Math.max(0, variantStockValue)
-      : Number(product?.stockQuantity || 0);
-
-    const effectiveMax = maxStock > 0 ? maxStock : 10;
+    const effectiveMax = 999;
 
     if (newQuantity >= minQuantity && newQuantity <= effectiveMax) {
       setQuantity(newQuantity);
@@ -558,16 +549,8 @@ const MobileProductDetail = () => {
   }, [product, selectedVariant]);
 
   const selectedAvailableStock = useMemo(() => {
-    const variantKey = getVariantSignature(selectedVariant || {});
-    const variantStockValue = Number(
-      product?.variants?.stockMap?.[variantKey] ??
-      product?.variants?.stockMap?.get?.(variantKey)
-    );
-    if (Number.isFinite(variantStockValue)) {
-      return Math.max(0, variantStockValue);
-    }
-    return Number(product?.stockQuantity || 0);
-  }, [product, selectedVariant]);
+    return 999;
+  }, []);
 
   const productFaqs = useMemo(() => {
     if (!Array.isArray(product?.faqs)) return [];

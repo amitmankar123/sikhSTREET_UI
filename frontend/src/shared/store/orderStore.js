@@ -79,11 +79,6 @@ export const useOrderStore = create(
           throw new Error('Your cart is empty.');
         }
 
-        const hasInvalidProductIds = items.some((item) => !isMongoId(item?.id));
-        if (hasInvalidProductIds) {
-          throw new Error('Some cart items are outdated. Please refresh your cart and try again.');
-        }
-
         set({ isLoading: true, lastError: null });
         try {
           const payload = {

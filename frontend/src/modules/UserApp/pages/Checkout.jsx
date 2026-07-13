@@ -349,7 +349,7 @@ const MobileCheckout = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={false}>
-        <div className="w-full pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+        <div className="w-full pb-8 min-h-screen" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
           {/* Header */}
           <div className="bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
             {/* Title Bar */}
@@ -768,6 +768,7 @@ const MobileCheckout = () => {
                     <div className="p-4 border-t border-gray-100 bg-[#fff8f5]">
                       <button
                         type="submit"
+                        onClick={handleSubmit}
                         disabled={step === 2 && isPlacingOrder}
                         className="w-full bg-[#8d4b00] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:shadow-glow-green transition-all duration-300 transform hover:-translate-y-0.5">
                         {step === 2 ? (isPlacingOrder ? "Placing Order..." : "Place Order") : "Continue to Payment"}
@@ -799,12 +800,13 @@ const MobileCheckout = () => {
                   <button
                     type="button"
                     onClick={() => setStep(step - 1)}
-                    className="px-6 py-3 bg-[#fff8f5]Deep text-[#231a13] rounded-xl font-semibold hover:bg-brand-border transition-colors border border-[#e9d7cb]">
+                    className="px-6 py-3 bg-[#fff8f5] text-[#231a13] rounded-xl font-semibold hover:bg-brand-border transition-colors border border-[#e9d7cb]">
                     Back
                   </button>
                 )}
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   disabled={step === 2 && isPlacingOrder}
                   className="flex-1 gradient-saffron text-white py-3 rounded-xl font-semibold hover:shadow-glow-saffron transition-all duration-300">
                   {step === 2 ? (isPlacingOrder ? "Placing..." : "Place Order") : "Continue to Payment"}

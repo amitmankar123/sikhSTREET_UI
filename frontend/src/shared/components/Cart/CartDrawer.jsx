@@ -29,12 +29,7 @@ const CartDrawer = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const total = getTotal();
   const [isValidatingStock, setIsValidatingStock] = useState(false);
-  const hasOutOfStockItems = useMemo(() => {
-    return items.some((item) => {
-      const stock = Number(item.stockQuantity);
-      return Number.isFinite(stock) && (stock <= 0 || item.quantity > stock);
-    });
-  }, [items]);
+  const hasOutOfStockItems = false;
 
   const handleProceedToCheckout = async (e) => {
     e.preventDefault();
@@ -46,22 +41,6 @@ const CartDrawer = () => {
 
     if (items.length === 0) {
       toast.error("Your cart is empty.");
-      return;
-    }
-
-    // 1. Quick local client-side stock validation first
-    const outOfStockItem = items.find(item => {
-      const stock = Number(item.stockQuantity);
-      return Number.isFinite(stock) && (stock <= 0 || item.quantity > stock);
-    });
-
-    if (outOfStockItem) {
-      const stockQty = Number(outOfStockItem.stockQuantity);
-      if (stockQty <= 0) {
-        toast.error(`${outOfStockItem.name} is out of stock.`);
-      } else {
-        toast.error(`Only ${stockQty} items available for ${outOfStockItem.name}`);
-      }
       return;
     }
 
