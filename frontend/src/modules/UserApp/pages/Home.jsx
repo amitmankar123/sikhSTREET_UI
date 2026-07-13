@@ -407,7 +407,7 @@ const MobileHome = () => {
           </section>
 
           {/* Trending Products (Bento Style) */}
-          <section className="py-xl bg-surface-container-low text-left">
+          <section className="py-xl bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
             <div className="max-w-7xl mx-auto px-container-margin">
               <div className="mb-12 text-center">
                 <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 leading-tight">

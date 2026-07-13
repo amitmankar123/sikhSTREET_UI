@@ -122,14 +122,10 @@ const MobileWishlist = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={true} showCartBar={true}>
-        <div className="w-full min-h-screen bg-gradient-to-br from-[#fff7f2] via-[#ffece0] to-[#fff7f2] pb-24 relative overflow-hidden font-sans">
-          
-          {/* Decorative Saffron Blurs */}
-          <div className="absolute top-20 left-[-10%] w-[500px] h-[500px] rounded-full bg-[#f1641e]/10 blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-40 right-[-15%] w-[600px] h-[600px] rounded-full bg-[#8d4b00]/10 blur-[150px] pointer-events-none" />
+        <div className="w-full min-h-screen pb-24 relative overflow-hidden font-sans" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
 
           {/* Header */}
-          <div className="px-4 py-4 backdrop-blur-md bg-white/40 border-b border-white/20 sticky top-0 z-40 shadow-sm relative">
+          <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-40 shadow-sm relative">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <button
@@ -228,7 +224,7 @@ const MobileWishlist = () => {
                 {resolvedShops.map((shop) => (
                   <div
                     key={shop.id}
-                    className="bg-white/80 backdrop-blur-md rounded-2xl border border-white/40 p-4 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4"
+                    className="bg-white rounded-2xl border border-[#e9d7cb] p-4 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4"
                   >
                     <div 
                       onClick={() => navigate(`/brand/${shop.id}`)}
