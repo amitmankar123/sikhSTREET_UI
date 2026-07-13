@@ -349,7 +349,7 @@ const MobileCheckout = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={false}>
-        <div className="w-full pb-8 min-h-screen" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+        <div className="w-full pb-32 min-h-screen" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
           {/* Header */}
           <div className="bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
             {/* Title Bar */}
@@ -794,7 +794,7 @@ const MobileCheckout = () => {
             </div>
 
             {/* Navigation Buttons (Mobile Fixed Bottom) */}
-            <div className="fixed bottom-16 left-0 right-0 bg-[#fff8f5] border-t border-[#e9d7cb] p-4 z-40 safe-area-bottom lg:hidden" style={{ boxShadow: '0 -2px 16px rgba(44,26,14,0.07)' }}>
+            <div className="fixed bottom-0 left-0 right-0 bg-[#fff8f5] border-t border-[#e9d7cb] p-4 z-40 safe-area-bottom lg:hidden" style={{ boxShadow: '0 -2px 16px rgba(44,26,14,0.07)' }}>
               <div className="flex gap-3">
                 {step > 1 && (
                   <button
