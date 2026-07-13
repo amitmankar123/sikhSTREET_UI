@@ -265,9 +265,200 @@ api.interceptors.response.use(
         fallbackData = { success: true };
       } else if (url.includes('/user/orders')) {
         if (method === 'post') {
-          fallbackData = { success: true, orderId: `ORD-${Date.now()}` };
+          let postData = {};
+          try {
+            postData = error.config.data ? JSON.parse(error.config.data) : {};
+          } catch (e) {
+            console.error("Failed to parse order POST data:", e);
+          }
+
+          const orderId = `ORD-${Date.now()}`;
+          
+          // Construct a full order object to persist locally
+          const newOrder = {
+            id: orderId,
+            orderId: orderId,
+            userId: postData.userId || 'mock-customer-1',
+            date: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            status: "pending",
+            paymentMethod: postData.paymentMethod || "Cash on Delivery",
+            shippingOption: postData.shippingOption || "standard",
+            shippingAddress: postData.shippingAddress || {
+              fullName: "Amit Singh",
+              phone: "9876543210",
+              address: "123, Heritage Lane, near Golden Temple",
+              city: "Amritsar",
+              state: "Punjab",
+              zipCode: "143001",
+              country: "India"
+            },
+            items: (postData.items || []).map(item => {
+              const prod = mockProducts.find(p => String(p.id) === String(item.productId));
+              return {
+                id: item.productId,
+                name: prod ? prod.name : "Product Item",
+                price: Number(item.price || (prod ? prod.price : 100)),
+                quantity: Number(item.quantity || 1),
+                image: prod ? prod.image : "",
+                variant: item.variant
+              };
+            }),
+            // Calculate totals
+            subtotal: (postData.items || []).reduce((sum, item) => {
+              const prod = mockProducts.find(p => String(p.id) === String(item.productId));
+              return sum + (Number(item.price || (prod ? prod.price : 100)) * Number(item.quantity || 1));
+            }, 0),
+            discount: postData.couponCode ? 50 : 0,
+            shipping: postData.shippingOption === 'express' ? 150 : 50,
+            tax: 15,
+            vendorItems: []
+          };
+          newOrder.total = Math.max(0, newOrder.subtotal + newOrder.shipping + newOrder.tax - newOrder.discount);
+
+          // Build vendorGroups from items
+          const vendorMap = {};
+          newOrder.items.forEach(item => {
+            const prod = mockProducts.find(p => String(p.id) === String(item.id));
+            const vId = prod ? String(prod.vendorId || prod.brandId || "turban-king") : "turban-king";
+            const vName = prod ? (prod.vendorName || prod.brandName || "Turban King") : "Turban King";
+            if (!vendorMap[vId]) {
+              vendorMap[vId] = {
+                vendorId: vId,
+                vendorName: vName,
+                items: []
+              };
+            }
+            vendorMap[vId].items.push(item);
+          });
+          newOrder.vendorItems = Object.values(vendorMap);
+
+          // Save to localStorage so GET /user/orders/:id can retrieve it
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.setItem(`mock_order_${orderId}`, JSON.stringify(newOrder));
+              // Also add to mock orders list
+              const existingList = JSON.parse(localStorage.getItem('mock_orders_list') || '[]');
+              localStorage.setItem('mock_orders_list', JSON.stringify([newOrder, ...existingList]));
+            } catch (storageErr) {
+              console.error("Failed to save mock order:", storageErr);
+            }
+          }
+
+          fallbackData = { success: true, orderId };
         } else {
-          fallbackData = { orders: [], total: 0, page: 1, pages: 1 };
+          // GET requests
+          const pathParts = url.split('?')[0].split('/');
+          const lastPart = pathParts[pathParts.length - 1];
+          
+          if (lastPart && lastPart !== 'orders') {
+            // GET single order by ID
+            let foundOrder = null;
+            if (typeof window !== 'undefined') {
+              try {
+                const saved = localStorage.getItem(`mock_order_${lastPart}`);
+                if (saved) {
+                  foundOrder = JSON.parse(saved);
+                }
+              } catch (storageErr) {
+                console.error("Failed to read mock order:", storageErr);
+              }
+            }
+
+            if (!foundOrder) {
+              // Fallback to a generic mock order if not found in localStorage
+              foundOrder = {
+                id: lastPart,
+                orderId: lastPart,
+                userId: 'mock-customer-1',
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString(),
+                status: "pending",
+                paymentMethod: "Cash on Delivery",
+                shippingOption: "standard",
+                shippingAddress: {
+                  fullName: "Amit Singh",
+                  phone: "9876543210",
+                  address: "123, Heritage Lane, near Golden Temple",
+                  city: "Amritsar",
+                  state: "Punjab",
+                  zipCode: "143001",
+                  country: "India"
+                },
+                items: [
+                  {
+                    id: "302",
+                    name: "Premium Royal Blue Turban",
+                    price: 45,
+                    quantity: 1,
+                    image: "/images/products/turban1.jpg"
+                  }
+                ],
+                subtotal: 45,
+                discount: 0,
+                shipping: 50,
+                tax: 5,
+                total: 100,
+                vendorItems: [
+                  {
+                    vendorId: "turban-king",
+                    vendorName: "Turban King",
+                    items: [
+                      {
+                        id: "302",
+                        name: "Premium Royal Blue Turban",
+                        price: 45,
+                        quantity: 1,
+                        image: "/images/products/turban1.jpg"
+                      }
+                    ]
+                  }
+                ]
+              };
+            }
+            fallbackData = foundOrder;
+          } else {
+            // GET list of all orders
+            let list = [];
+            if (typeof window !== 'undefined') {
+              try {
+                list = JSON.parse(localStorage.getItem('mock_orders_list') || '[]');
+              } catch (storageErr) {
+                console.error("Failed to read mock orders list:", storageErr);
+              }
+            }
+            if (list.length === 0) {
+              list = [
+                {
+                  id: "ORD-987654321",
+                  userId: "mock-customer-1",
+                  date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                  status: "Delivered",
+                  total: 75.0,
+                  paymentMethod: "Card Payment",
+                  shippingAddress: {
+                    fullName: "Amit Singh",
+                    phone: "9876543210",
+                    address: "123, Heritage Lane, near Golden Temple",
+                    city: "Amritsar",
+                    state: "Punjab",
+                    zipCode: "143001",
+                    country: "India"
+                  },
+                  items: [
+                    {
+                      id: "302",
+                      name: "Premium Royal Blue Turban",
+                      price: 45,
+                      quantity: 1,
+                    }
+                  ],
+                  vendorItems: []
+                }
+              ];
+            }
+            fallbackData = { orders: list, total: list.length, page: 1, pages: 1 };
+          }
         }
       } else if (url.includes('/user/addresses')) {
         if (method === 'post') {

@@ -23,6 +23,7 @@ const normalizeOrder = (order) => {
   return {
     ...order,
     id,
+    status: order?.status || 'pending',
     date: order?.date || order?.createdAt || new Date().toISOString(),
     userId: order?.userId || null,
     items: Array.isArray(order?.items) ? order.items.map(normalizeOrderItem) : [],

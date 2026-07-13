@@ -200,7 +200,7 @@ const MobileOrderDetail = () => {
                   <h1 className="text-xl font-bold text-[#231a13]" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Details</h1>
                   <p className="text-sm text-[#554336]">Order #{order.id}</p>
                 </div>
-                <Badge variant={order.status}>{order.status.toUpperCase()}</Badge>
+                <Badge variant={order?.status || 'pending'}>{(order?.status || 'pending').toUpperCase()}</Badge>
               </div>
             </div>
 
@@ -325,14 +325,17 @@ const MobileOrderDetail = () => {
                   Shipping Address
                 </h2>
                 <div className="text-sm text-[#554336] space-y-1">
-                  <p className="font-semibold text-[#231a13]">{shippingAddress.name || 'N/A'}</p>
+                  <p className="font-semibold text-[#231a13]">
+                    {shippingAddress.fullName || shippingAddress.name || 'N/A'}
+                    {shippingAddress.fullName && shippingAddress.name && shippingAddress.name !== shippingAddress.fullName && ` (${shippingAddress.name})`}
+                  </p>
                   <p>{shippingAddress.address || 'N/A'}</p>
                   <p>
                     {shippingAddress.city || 'N/A'}, {shippingAddress.state || 'N/A'}{' '}
-                    {shippingAddress.zipCode || 'N/A'}
+                    {shippingAddress.zipCode || shippingAddress.pincode || shippingAddress.pinCode || shippingAddress.zip || 'N/A'}
                   </p>
                   <p>{shippingAddress.country || 'N/A'}</p>
-                  <p className="mt-2">Phone: {shippingAddress.phone || 'N/A'}</p>
+                  <p className="mt-2">Phone: {shippingAddress.phone || shippingAddress.phoneNumber || shippingAddress.mobile || 'N/A'}</p>
                 </div>
               </div>
 
