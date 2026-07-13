@@ -130,7 +130,7 @@ const MobileHome = () => {
         <div className="w-full relative overflow-hidden bg-background text-on-background font-body-md">
 
           {/* Hero Section */}
-          <section className="pt-4 pb-6 px-6 md:px-12 max-w-7xl mx-auto">
+          <section className="pt-4 pb-6 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 lg:h-[300px]">
               {/* Main Feature Block */}
               <div className="lg:col-span-8 bg-[#e2e8e4] rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-sm h-full">
@@ -178,7 +178,7 @@ const MobileHome = () => {
           </section>
 
           {/* Featured Categories */}
-          <section className="py-6 md:py-8 px-6 md:px-12 max-w-7xl mx-auto text-left">
+          <section className="py-6 md:py-8 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto text-left">
             <div className="flex flex-col md:flex-row justify-between items-end mb-4 gap-4">
               <div className="text-left">
                 <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 leading-tight">
@@ -217,7 +217,7 @@ const MobileHome = () => {
 
           {/* Discover Small Shops Section */}
           <section className="py-12 bg-[#faf6f0] text-left">
-            <div className="max-w-7xl mx-auto px-container-margin">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                 <div>
                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 leading-tight">
@@ -349,7 +349,7 @@ const MobileHome = () => {
 
           {/* Featured Items from Small Shops Section */}
           <section className="py-12 bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
-            <div className="max-w-7xl mx-auto px-container-margin">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                 <div>
                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 leading-tight">
@@ -408,7 +408,7 @@ const MobileHome = () => {
 
           {/* Trending Products (Bento Style) */}
           <section className="py-xl bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
-            <div className="max-w-7xl mx-auto px-container-margin">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               <div className="mb-12 text-center">
                 <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 leading-tight">
                   Trending Pieces
@@ -528,7 +528,7 @@ const MobileHome = () => {
           </section>
 
           {/* Featured Artisan */}
-          <section id="maker-section" className="py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto text-left">
+          <section id="maker-section" className="py-16 md:py-24 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto text-left">
             <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
               <div className="w-full md:w-1/2 relative">
                 <div className="aspect-square rounded-2xl overflow-hidden shadow-sm">
@@ -705,7 +705,7 @@ const MobileHome = () => {
 
           {/* Footer */}
           <footer className="w-full bg-[#fff1e9] border-t border-[#dbc2b0]/30 text-left">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-10 px-6 md:px-12 py-12 w-full max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-10 px-4 sm:px-8 lg:px-12 py-12 w-full max-w-7xl mx-auto">
               <div className="max-w-xs">
                 <h2 className="text-xl font-bold font-serif text-[#8d4b00] mb-4">Sikh Street</h2>
                 <p className="text-sm text-[#554336] mb-6 leading-relaxed">
