@@ -121,8 +121,8 @@ const MobileWishlist = () => {
 
   return (
     <PageTransition>
-      <MobileLayout showBottomNav={true} showCartBar={true}>
-        <div className="w-full min-h-screen pb-24 relative overflow-hidden font-sans" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+      <MobileLayout showBottomNav={true} showCartBar={true} style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+        <div className="w-full relative overflow-hidden font-sans">
 
           {/* Header */}
           <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-40 shadow-sm relative">
