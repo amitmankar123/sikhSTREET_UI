@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../../shared/store/useStore";
 import { useCategoryStore } from "../../../shared/store/categoryStore";
+import { formatPrice } from "../../../shared/utils/helpers";
 import MobileLayout from "../components/Layout/MobileLayout";
 import PageTransition from "../../../shared/components/PageTransition";
 import toast from "react-hot-toast";
@@ -68,40 +69,21 @@ const MobileHome = () => {
     vendorName: "Heritage Weaves"
   };
 
-  const smallShopProducts = [
-    {
-      id: 303,
-      name: "Classic Stainless Steel Kadda",
-      price: 35.00,
-      image: "/images/redesign/premium_kada.png",
-      vendorName: "Heritage Woodcarvers",
-      vendorId: "heritage-woodcarvers"
-    },
-    {
-      id: 302,
-      name: "Swirling Fish Artwork",
-      price: 150.00,
-      image: "/images/redesign/fish_artwork.png",
-      vendorName: "Amritsar Fine Arts",
-      vendorId: "amritsar-fine-arts"
-    },
-    {
-      id: 460,
-      name: "Premium Sikh Turban",
-      price: 40.00,
-      image: "/images/turbans/media__1783759342309.jpg",
-      vendorName: "Sikh Heritage Weaves",
-      vendorId: "sikh-heritage-weaves"
-    },
-    {
-      id: 307,
-      name: "Introduction to Sikhism",
-      price: 15.00,
-      image: "/images/redesign/media__1783408531361.png",
-      vendorName: "Amritsar Fine Arts",
-      vendorId: "amritsar-fine-arts"
-    }
-  ];
+  const smallShopProducts = useMemo(() => {
+    const targetIds = [303, 302, 460, 307];
+    return targetIds.map(id => {
+      const found = allProducts.find(p => Number(p.id) === Number(id));
+      if (found) return found;
+      // Fallback
+      return {
+        id,
+        name: id === 303 ? "Classic Stainless Steel Kadda" : id === 302 ? "Swirling Fish Artwork" : id === 460 ? "Premium Sikh Turban" : "Introduction to Sikhism",
+        price: id === 303 ? 35.00 : id === 302 ? 150.00 : id === 460 ? 40.00 : 15.00,
+        image: id === 303 ? "/images/redesign/premium_kada.png" : id === 302 ? "/images/redesign/fish_artwork.png" : id === 460 ? "/images/turbans/media__1783759342309.jpg" : "/images/redesign/media__1783408531361.png",
+        vendorName: id === 303 ? "Heritage Woodcarvers" : id === 302 ? "Amritsar Fine Arts" : id === 460 ? "Sikh Heritage Weaves" : "Amritsar Fine Arts"
+      };
+    });
+  }, []);
 
   const handleAddToCart = (product) => {
     const success = addItem({
@@ -369,12 +351,10 @@ const MobileHome = () => {
                 {smallShopProducts.map((product) => (
                   <div
                     key={product.id}
-                    className="bg-white rounded-2xl border border-neutral-200/60 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className="bg-white rounded-2xl border border-neutral-200/60 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
                   >
-                    <div 
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      className="cursor-pointer overflow-hidden aspect-square relative bg-stone-100"
-                    >
+                    <div className="overflow-hidden aspect-square relative bg-stone-100">
                       <img
                         src={product.image}
                         alt={product.name}
@@ -386,19 +366,19 @@ const MobileHome = () => {
                         <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block mb-1">
                           {product.vendorName}
                         </span>
-                        <h4 
-                          onClick={() => navigate(`/product/${product.id}`)}
-                          className="text-sm font-bold text-neutral-800 line-clamp-2 cursor-pointer hover:text-[#F1641E] transition-colors leading-snug"
-                        >
+                        <h4 className="text-sm font-bold text-neutral-800 line-clamp-2 hover:text-[#F1641E] transition-colors leading-snug">
                           {product.name}
                         </h4>
                       </div>
                       <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-50">
                         <span className="text-sm font-extrabold text-neutral-900">
-                          ${product.price}
+                          {formatPrice(product.price)}
                         </span>
                         <button
-                          onClick={() => handleAddToCart(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
                           className="px-4 py-2 bg-[#8d4b00] hover:bg-[#6e3900] text-white rounded-xl text-xs font-semibold transition-all duration-300 active:scale-95 shadow-sm"
                         >
                           Add to Cart
