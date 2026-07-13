@@ -63,7 +63,7 @@ const MobileHeader = () => {
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_QtluDyTyyTERMfRfd830u3RcIkF7aJHRbM37FYnRFNCY01_N74tx3WAK0zGIr3PEXlqhIdcITnhHLXC5x87LHZKdO0BvuQbZI88UlL9d0hYbgyyGowhWYN-gBgtlmM2Rr0o6e4YSkF9e4x6vS7jZY4SqZ65AXuXlAHqSnNDUs613UTccW7ylV1CyRVm_9MFrt9ceJxGerEQ2cFT2rZUFNVaq3a900_TuKdoUrotAgb_cjLr3F4-CNsxx4qut7UFp75j3KGaXtxvHxG8"
               />
             </div>
-            <span className="text-xl font-bold text-[#8d4b00] tracking-wide ml-1 hidden sm:inline-block">
+            <span className="text-base sm:text-xl font-black text-[#8d4b00] tracking-wide ml-1">
               Sikh Street
             </span>
           </Link>

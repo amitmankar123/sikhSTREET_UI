@@ -148,8 +148,8 @@ const MobileTrackOrder = () => {
 
   return (
     <PageTransition>
-      <MobileLayout showBottomNav={false} showCartBar={true}>
-          <div className="w-full pb-24 min-h-screen" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+      <MobileLayout showBottomNav={false} showCartBar={false}>
+          <div className="w-full pb-6" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
             {/* Header */}
             <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
               <div className="flex items-center gap-3 mb-3">
