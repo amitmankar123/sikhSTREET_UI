@@ -661,7 +661,7 @@ const MobileCategory = () => {
         >
           {/* Animated Header */}
           <div className={`px-4 pt-6 pb-6 rounded-b-[2.5rem] shadow-sm sticky top-0 z-40 backdrop-blur-md transition-all duration-500 ${activeTheme.headerBg}`}>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-row items-center justify-between gap-4">
 
               {/* Left Side: Back button + Category Details */}
               <div className="flex items-center gap-4">
@@ -678,21 +678,21 @@ const MobileCategory = () => {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
-                  <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-[#0A192F] flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
+                  <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-[#0A192F] flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
                     {typeof category.image === 'string' && category.image.includes('<svg') ? (
-                      <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-9 h-9 md:w-12 md:h-12 filter brightness-0 invert" />
+                      <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-12 h-12 md:w-16 md:h-16 filter brightness-0 invert" />
                     ) : (
                       <LazyImage
                         src={category.image}
                         alt={category.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.target.src = getPlaceholderImage(48, 48, "Category");
+                          e.target.src = getPlaceholderImage(80, 80, "Category");
                         }}
                       />
                     )}
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col text-left">
                     <motion.h1
                       className="text-xl md:text-3xl font-black font-heading text-[#0A192F] tracking-tight leading-none"
                       initial={{ opacity: 0, y: 10 }}
@@ -714,35 +714,7 @@ const MobileCategory = () => {
               </div>
 
               {/* Right Side: Filters & Controls */}
-              <div className="flex items-center gap-3 self-end md:self-auto flex-shrink-0">
-                <div className="flex items-center bg-gray-100 rounded-xl p-1.5 h-11 shadow-sm border border-slate-200">
-                  <select
-                    value={filters.sortBy}
-                    onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-                    className="bg-transparent border-none text-sm font-extrabold text-[#0A192F] focus:ring-0 cursor-pointer outline-none pl-2.5 pr-1.5"
-                  >
-                    <option value="newest">Newest</option>
-                    <option value="name_asc">Name (A-Z)</option>
-                    <option value="name_desc">Name (Z-A)</option>
-                    <option value="price_asc">Price (Low-High)</option>
-                    <option value="price_desc">Price (High-Low)</option>
-                    <option value="rating">Highest Rated</option>
-                  </select>
-                </div>
-                <div className="flex items-center bg-gray-100 rounded-xl p-1.5 h-11 shadow-sm border border-slate-200">
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`p-2 rounded-lg transition-colors ${viewMode === "list" ? "bg-white text-primary-600 shadow-sm" : "text-gray-600"}`}
-                  >
-                    <FiList className="text-xl" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode("grid")}
-                    className={`p-2 rounded-lg transition-colors ${viewMode === "grid" ? "bg-white text-primary-600 shadow-sm" : "text-gray-600"}`}
-                  >
-                    <FiGrid className="text-xl" />
-                  </button>
-                </div>
+              <div className="flex items-center gap-3 flex-shrink-0">
                 <div ref={filterButtonRef} className="relative">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -814,7 +786,7 @@ const MobileCategory = () => {
               )}
 
               {/* Search Bar */}
-              <div className="mb-6 relative">
+              <div className="mb-6 relative max-w-md">
                 <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
                 <input
                   type="text"
@@ -878,6 +850,27 @@ const MobileCategory = () => {
 
                       {/* Filter Content */}
                       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8 custom-scrollbar">
+
+                        {/* Sort Options */}
+                        <div className="space-y-4">
+                          <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                            Sort Items By
+                          </h4>
+                          <div className="relative">
+                            <select
+                              value={filters.sortBy}
+                              onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+                              className="w-full pl-3 pr-8 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm font-extrabold text-[#0A192F] cursor-pointer outline-none"
+                            >
+                              <option value="newest">Newest</option>
+                              <option value="name_asc">Name (A-Z)</option>
+                              <option value="name_desc">Name (Z-A)</option>
+                              <option value="price_asc">Price (Low-High)</option>
+                              <option value="price_desc">Price (High-Low)</option>
+                              <option value="rating">Highest Rated</option>
+                            </select>
+                          </div>
+                        </div>
 
                         {/* Price Range (Always show) */}
                         <div className="space-y-4">
