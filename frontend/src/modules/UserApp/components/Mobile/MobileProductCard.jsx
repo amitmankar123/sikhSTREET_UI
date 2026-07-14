@@ -200,7 +200,7 @@ const MobileProductCard = ({ product }) => {
                 onClick={handleFavorite}
                 className="flex-shrink-0 p-1.5 bg-white border border-gray-100 rounded-full shadow-sm hover:scale-105 transition-colors">
                 <FiHeart
-                  className={`text-base ${isFavorite ? "text-brand-saffron fill-brand-saffron" : "text-gray-400"
+                  className={`text-base ${isFavorite ? "text-[#F5A623] fill-brand-saffron" : "text-gray-400"
                     }`}
                 />
               </button>
@@ -271,7 +271,7 @@ const MobileProductCard = ({ product }) => {
                 whileTap={{ scale: 0.95 }}
                 className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${product.stock === "out_of_stock"
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-brand-saffron text-white hover:bg-orange-600 shadow-md"
+                  : "bg-black text-white hover:bg-orange-600 shadow-md"
                   }`}>
                 <FiShoppingBag className="text-base" />
                 <span>

@@ -141,7 +141,7 @@ const KadaMeasurementTool = ({ isOpen, onClose, onConfirm, selectedSize, availab
             <div className="flex-1 w-full flex flex-col justify-start items-center text-center px-5 pt-8 pb-4 relative overflow-y-auto custom-scrollbar gap-4">
               {/* Title & Instructions */}
               <div className="w-full">
-                <span className="text-[9px] uppercase tracking-widest text-[#B8860B] font-bold bg-[#B8860B]/10 px-2.5 py-0.5 rounded-full">
+                <span className="text-[9px] uppercase tracking-widest text-black font-bold bg-black/10 px-2.5 py-0.5 rounded-full">
                   Sikh Street Jewelry Guide
                 </span>
                 <h2 className="text-lg font-black text-gray-900 mt-2 mb-1">Find Your Perfect Kadda Size</h2>
@@ -171,14 +171,14 @@ const KadaMeasurementTool = ({ isOpen, onClose, onConfirm, selectedSize, availab
                   style={{
                     boxSizing: "content-box",
                     boxShadow: "0 8px 20px -5px rgba(184, 134, 11, 0.25), inset 0 2px 4px rgba(255,255,255,0.6)",
-                    border: "18px solid #D4AF37", // Polished bold Metallic gold Kada
+                    border: "18px solid #F5A623", // Polished bold Metallic gold Kada
                     background: "radial-gradient(circle, rgba(253,251,247,0.3) 0%, rgba(212,175,55,0.05) 100%)",
                   }}
                 >
                   {/* Center Measurement Display */}
                   <div className="text-center font-serif text-gray-800">
                     <span className="block text-2xl font-black tracking-tighter text-gray-900">{diameter}</span>
-                    <span className="text-[9px] font-sans font-bold tracking-widest text-[#B8860B] uppercase">mm</span>
+                    <span className="text-[9px] font-sans font-bold tracking-widest text-black uppercase">mm</span>
                   </div>
                 </motion.div>
               </div>
@@ -209,9 +209,9 @@ const KadaMeasurementTool = ({ isOpen, onClose, onConfirm, selectedSize, availab
                       max="100"
                       value={diameter}
                       onChange={handleSliderChange}
-                      className="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#B8860B]"
+                      className="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#F5A623]"
                       style={{
-                        background: `linear-gradient(to right, #B8860B 0%, #B8860B ${((diameter - 50) / 50) * 100}%, #F3F4F6 ${((diameter - 50) / 50) * 100}%, #F3F4F6 100%)`
+                        background: `linear-gradient(to right, #F5A623 0%, #B8860B ${((diameter - 50) / 50) * 100}%, #F3F4F6 ${((diameter - 50) / 50) * 100}%, #F3F4F6 100%)`
                       }}
                     />
                   </div>
@@ -227,16 +227,16 @@ const KadaMeasurementTool = ({ isOpen, onClose, onConfirm, selectedSize, availab
                 </div>
 
                 {/* Sizing Results Panel */}
-                <div className="bg-[#FCFBF7] border border-[#EADFC9]/60 rounded-xl p-3 flex items-center justify-between shadow-sm">
+                <div className="bg-white border border-black/10 rounded-xl p-3 flex items-center justify-between shadow-sm">
                   <div className="text-left">
-                    <span className="text-[9px] font-bold text-[#B8860B] uppercase tracking-wider block mb-0.5">
+                    <span className="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">
                       Recommended Size
                     </span>
                     <div className="flex items-baseline gap-1">
                       <span className="text-lg font-black text-gray-900 tracking-tight">
                         {recommended.label}
                       </span>
-                      <span className="text-[10px] text-[#B8860B] font-bold">
+                      <span className="text-[10px] text-black font-bold">
                         ({recommended.inner})
                       </span>
                     </div>
@@ -255,7 +255,7 @@ const KadaMeasurementTool = ({ isOpen, onClose, onConfirm, selectedSize, availab
                 <button
                   type="button"
                   onClick={() => onConfirm(recommended)}
-                  className="w-full py-3.5 rounded-xl font-bold text-white bg-[#B8860B] hover:bg-[#996515] transition-all duration-300 shadow-md flex items-center justify-center gap-2 hover:scale-[1.01]"
+                  className="w-full py-3.5 rounded-xl font-bold text-white bg-black hover:bg-[#F5A623] hover:text-black transition-colors hover:bg-[#F5A623] transition-all duration-300 shadow-md flex items-center justify-center gap-2 hover:scale-[1.01]"
                 >
                   <span>Continue with this Size</span>
                   <FiChevronRight className="w-4 h-4 stroke-[3]" />

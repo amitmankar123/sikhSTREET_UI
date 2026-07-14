@@ -79,10 +79,10 @@ const MobileLogin = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={false}>
-        <div className="w-full min-h-screen bg-gradient-to-br from-[#fff7f2] via-[#ffece0] to-[#fff7f2] flex items-start justify-center px-4 pt-8 pb-12 relative overflow-hidden font-sans">
+        <div className="w-full min-h-screen bg-white flex items-start justify-center px-4 pt-8 pb-12 relative overflow-hidden font-sans">
           {/* Decorative Saffron Blurs */}
-          <div className="absolute top-20 left-[-15%] w-[400px] h-[400px] rounded-full bg-[#f1641e]/5 blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-20 right-[-15%] w-[400px] h-[400px] rounded-full bg-[#8d4b00]/5 blur-[100px] pointer-events-none" />
+          <div className="hidden" />
+          <div className="hidden" />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -90,18 +90,18 @@ const MobileLogin = () => {
             transition={{ duration: 0.5 }}
             className="w-full max-w-md relative z-10"
           >
-            <div className="backdrop-blur-md bg-white/70 border border-[#ebdcd0]/50 rounded-3xl p-6 shadow-xl">
+            <div className="bg-white border border-black/10 rounded-3xl p-6 shadow-sm">
               {/* Logo & Header */}
               <div className="text-center mb-6 flex flex-col items-center">
-                <div className="w-16 h-16 flex items-center justify-center overflow-hidden rounded-2xl bg-[#8d4b00]/10 p-2 shadow-inner mb-3">
+                <div className="w-48 flex items-center justify-center mb-4">
                   <img
-                    className="w-full h-full object-contain"
+                    className="w-full h-auto object-contain mix-blend-multiply"
                     alt="sikhSTREET logo"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_QtluDyTyyTERMfRfd830u3RcIkF7aJHRbM37FYnRFNCY01_N74tx3WAK0zGIr3PEXlqhIdcITnhHLXC5x87LHZKdO0BvuQbZI88UlL9d0hYbgyyGowhWYN-gBgtlmM2Rr0o6e4YSkF9e4x6vS7jZY4SqZ65AXuXlAHqSnNDUs613UTccW7ylV1CyRVm_9MFrt9ceJxGerEQ2cFT2rZUFNVaq3a900_TuKdoUrotAgb_cjLr3F4-CNsxx4qut7UFp75j3KGaXtxvHxG8"
                   />
                 </div>
-                <h1 className="text-2xl font-black text-gray-900 font-serif tracking-wide">Welcome Back</h1>
-                <p className="text-xs text-[#554336]/80 mt-1">Login to access your sikhSTREET account</p>
+                <h1 className="text-2xl font-black text-gray-900 font-serif tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Welcome Back</h1>
+                <p className="text-xs text-black/80 mt-1">Login to access your sikhSTREET account</p>
               </div>
  
               {/* Login Form */}
@@ -121,7 +121,7 @@ const MobileLogin = () => {
                       })}
                       className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${errors.email
                           ? 'border-red-300 focus:border-red-500'
-                          : 'border-gray-200/80 focus:border-[#8d4b00]'
+                          : 'border-gray-200/80 focus:border-[#F5A623]'
                         } focus:outline-none transition-colors text-base`}
                       placeholder="your.email@example.com"
                     />
@@ -149,7 +149,7 @@ const MobileLogin = () => {
                       })}
                       className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm ${errors.password
                           ? 'border-red-300 focus:border-red-500'
-                          : 'border-gray-200/80 focus:border-[#8d4b00]'
+                          : 'border-gray-200/80 focus:border-[#F5A623]'
                         } focus:outline-none transition-colors text-base`}
                       placeholder="Enter your password"
                     />
@@ -173,13 +173,13 @@ const MobileLogin = () => {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 text-[#8d4b00] border-gray-300 rounded focus:ring-[#8d4b00]"
+                      className="w-4 h-4 text-black border-gray-300 rounded focus:ring-[#F5A623]"
                     />
                     <span className="ml-2 text-sm text-gray-700">Remember me</span>
                   </label>
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-[#8d4b00] hover:text-[#6e3900] font-medium"
+                    className="text-sm text-black hover:text-[#F5A623] font-medium"
                   >
                     Forget password?
                   </Link>
@@ -189,7 +189,7 @@ const MobileLogin = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#f1641e] to-[#8d4b00] text-white py-3.5 rounded-xl font-bold text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-black text-white hover:bg-[#F5A623] hover:text-black transition-colors text-white py-3.5 rounded-xl font-bold text-base transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Logging in...' : 'Log In'}
                 </button>
@@ -201,7 +201,7 @@ const MobileLogin = () => {
                   Don't have an account?{' '}
                   <Link
                     to="/register"
-                    className="text-[#8d4b00] hover:text-[#6e3900] font-semibold"
+                    className="text-black hover:text-[#F5A623] font-semibold"
                   >
                     Sign Up
                   </Link>

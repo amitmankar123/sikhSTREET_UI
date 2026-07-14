@@ -12,10 +12,12 @@ import useMobileHeaderHeight from '../../hooks/useMobileHeaderHeight';
 const MobileLayout = ({ children, showBottomNav = true, showCartBar = true, fullWidth = false, style = {}, className = "" }) => {
   const location = useLocation();
   const headerHeight = useMobileHeaderHeight();
-  // Hide header and bottom nav on login, register, and verification pages
+  // Hide header and bottom nav on login, register, and auth flow pages
   const isAuthPage = location.pathname === '/login' ||
     location.pathname === '/register' ||
-    location.pathname === '/verification';
+    location.pathname === '/verification' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname === '/reset-password';
 
   const isCheckoutPage = location.pathname === '/checkout';
 

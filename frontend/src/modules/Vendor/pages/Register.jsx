@@ -53,8 +53,12 @@ const VendorRegister = () => {
     },
     businessName: '',
     businessType: '',
-    businessCountry: '',
-    businessAddress: '',
+    businessAddress: {
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+    },
   });
   const [kycDocument, setKycDocument] = useState(null);
   const [governmentIdDocument, setGovernmentIdDocument] = useState(null);
@@ -71,6 +75,15 @@ const VendorRegister = () => {
         ...formData,
         address: {
           ...formData.address,
+          [addressField]: value,
+        },
+      });
+    } else if (name.startsWith('businessAddress.')) {
+      const addressField = name.split('.')[1];
+      setFormData({
+        ...formData,
+        businessAddress: {
+          ...formData.businessAddress,
           [addressField]: value,
         },
       });
@@ -139,7 +152,7 @@ const VendorRegister = () => {
       return;
     }
 
-    if (formData.vendorType === 'Business' && (!formData.businessName || !formData.businessType || !formData.businessCountry || !formData.businessAddress)) {
+    if (formData.vendorType === 'Business' && (!formData.businessName || !formData.businessType || !formData.businessAddress.street || !formData.businessAddress.city || !formData.businessAddress.state || !formData.businessAddress.zipCode)) {
       toast.error('Please fill in all business verification fields');
       return;
     }
@@ -181,6 +194,7 @@ const VendorRegister = () => {
       if (formData.vendorType === 'Business') {
         submitData.append('businessName', formData.businessName.trim());
         submitData.append('businessType', formData.businessType.trim());
+        submitData.append('businessAddress', JSON.stringify(formData.businessAddress));
         submitData.append('kycDocumentType', getBusinessDocumentLabel(formData.vendorCountry));
         submitData.append('kycDocument', kycDocument);
       }
@@ -495,36 +509,61 @@ const VendorRegister = () => {
                           <option value="Other">Other</option>
                         </select>
                       </div>
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Business Country <span className="text-red-500">*</span>
+                          Street Address <span className="text-red-500">*</span>
                         </label>
-                        <select
-                          name="businessCountry"
-                          value={formData.businessCountry}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800"
-                          required={formData.vendorType === 'Business'}
-                        >
-                          <option value="" disabled>Select Country</option>
-                          <option value="USA">United States</option>
-                          <option value="Canada">Canada</option>
-                          <option value="UK">United Kingdom</option>
-                          <option value="India">India</option>
-                          <option value="Australia">Australia</option>
-                          <option value="Other">Other</option>
-                        </select>
+                        <div className="relative">
+                          <FiMapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                          <input
+                            type="text"
+                            name="businessAddress.street"
+                            value={formData.businessAddress.street}
+                            onChange={handleChange}
+                            placeholder="Registered Street Address"
+                            className="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800 placeholder:text-gray-400"
+                            required={formData.vendorType === 'Business'}
+                          />
+                        </div>
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Business Address <span className="text-red-500">*</span>
+                          City <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
-                          name="businessAddress"
-                          value={formData.businessAddress}
+                          name="businessAddress.city"
+                          value={formData.businessAddress.city}
                           onChange={handleChange}
-                          placeholder="Registered Address"
+                          placeholder="City"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800 placeholder:text-gray-400"
+                          required={formData.vendorType === 'Business'}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          State/Province <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="businessAddress.state"
+                          value={formData.businessAddress.state}
+                          onChange={handleChange}
+                          placeholder="State"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800 placeholder:text-gray-400"
+                          required={formData.vendorType === 'Business'}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Zip/Postal Code <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="businessAddress.zipCode"
+                          value={formData.businessAddress.zipCode}
+                          onChange={handleChange}
+                          placeholder="Zip Code"
                           className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800 placeholder:text-gray-400"
                           required={formData.vendorType === 'Business'}
                         />

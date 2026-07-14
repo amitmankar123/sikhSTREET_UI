@@ -177,7 +177,7 @@ const Chat = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search order or shop..."
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8d4b00]/20 focus:border-[#8d4b00] text-sm font-medium"
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F5A623]/20 focus:border-[#F5A623] text-sm font-medium"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ const Chat = () => {
                         key={threadId}
                         onClick={() => handleSelectThread(thread)}
                         className={`p-4 cursor-pointer hover:bg-slate-50/80 transition-colors flex items-start justify-between gap-3 ${
-                          isActive ? "bg-[#fdeade]/60 border-l-4 border-[#8d4b00]" : ""
+                          isActive ? "bg-white/60 border-l-4 border-[#F5A623]" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -283,7 +283,7 @@ const Chat = () => {
                           <div
                             className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm border ${
                               isUser
-                                ? "bg-[#8d4b00] text-white border-[#8d4b00] rounded-br-none"
+                                ? "bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white border-[#F5A623] rounded-br-none"
                                 : "bg-white text-slate-800 border-slate-200 rounded-bl-none"
                             }`}
                           >
@@ -312,12 +312,12 @@ const Chat = () => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyDown={handleKeyPress}
                         placeholder="Ask the seller a question..."
-                        className="flex-1 px-4 py-2.5 border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#8d4b00]/20 focus:border-[#8d4b00] text-sm font-medium"
+                        className="flex-1 px-4 py-2.5 border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#F5A623]/20 focus:border-[#F5A623] text-sm font-medium"
                       />
                       <button
                         onClick={handleSendMessage}
                         disabled={isSending || !newMessage.trim()}
-                        className="p-3 bg-[#8d4b00] hover:bg-[#6e3900] text-white rounded-full hover:shadow-md transition-all disabled:opacity-50 flex items-center justify-center flex-shrink-0"
+                        className="p-3 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-full hover:shadow-md transition-all disabled:opacity-50 flex items-center justify-center flex-shrink-0"
                       >
                         <FiSend className="text-sm" />
                       </button>

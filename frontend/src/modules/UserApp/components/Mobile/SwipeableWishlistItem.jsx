@@ -109,7 +109,7 @@ const SwipeableWishlistItem = ({ item, index, onMoveToCart, onRemove }) => {
               {item.name}
             </h3>
           </Link>
-          <p className="text-lg font-black text-[#8d4b00] mb-3">
+          <p className="text-lg font-black text-black mb-3">
             {formatPrice(item.price)}
           </p>
 
@@ -125,7 +125,7 @@ const SwipeableWishlistItem = ({ item, index, onMoveToCart, onRemove }) => {
             ) : (
               <button
                 onClick={() => onMoveToCart(item)}
-                className="flex-1 py-2 sm:py-2.5 bg-gradient-to-r from-[#f1641e] to-[#8d4b00] text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap hover:shadow-lg hover:scale-[1.01] transition-all">
+                className="flex-1 py-2 sm:py-2.5 bg-black text-white hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap hover:shadow-lg hover:scale-[1.01] transition-all">
                 <FiShoppingBag className="text-sm sm:text-base" />
                 Add to Cart
               </button>

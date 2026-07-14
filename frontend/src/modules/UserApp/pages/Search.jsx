@@ -413,9 +413,9 @@ const MobileSearch = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={true} showCartBar={true}>
-        <div className="w-full pb-24 lg:pb-12 max-w-7xl mx-auto min-h-screen bg-[#fff8f5]">
+        <div className="w-full pb-24 lg:pb-12 max-w-7xl mx-auto min-h-screen bg-white">
           {/* Search Header */}
-          <div className="px-4 py-4 bg-[#fff8f5] sticky top-0 z-30">
+          <div className="px-4 py-4 bg-white sticky top-0 z-30">
             <form onSubmit={handleSearch} className="mb-3 lg:hidden">
               <div className="relative">
                 <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl z-10" />
@@ -428,7 +428,7 @@ const MobileSearch = () => {
                   }}
                   onFocus={() => setShowSuggestions(true)}
                   placeholder="Search for turbans, shawls, or artisan crafts..."
-                  className="w-full pl-12 pr-20 py-3 bg-white border border-[#e9d7cb] rounded-2xl focus:outline-none focus:ring-1 focus:ring-[#8d4b00] text-[#231a13] placeholder:text-gray-400 text-sm shadow-sm"
+                  className="w-full pl-12 pr-20 py-3 bg-white border border-black/10 rounded-2xl focus:outline-none focus:ring-1 focus:ring-[#F5A623] text-black placeholder:text-gray-400 text-sm shadow-sm"
                   autoFocus
                 />
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
@@ -547,7 +547,7 @@ const MobileSearch = () => {
                                    <select
                                      value={sortBy}
                                      onChange={(e) => handleSortChange(e.target.value)}
-                                     className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#8d4b00] text-xs font-bold text-gray-700 cursor-pointer"
+                                     className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-xs font-bold text-gray-700 cursor-pointer"
                                    >
                                      <option value="newest">Newest</option>
                                      <option value="oldest">Oldest</option>
@@ -783,7 +783,7 @@ const MobileSearch = () => {
             <div className="px-4 py-4">
                 {/* Categories Pills */}
                 <div className="mb-8">
-                  <h3 className="text-xs font-bold tracking-wider text-[#554336] mb-3 uppercase">Categories</h3>
+                  <h3 className="text-xs font-bold tracking-wider text-black mb-3 uppercase">Categories</h3>
                   <div className="flex flex-wrap gap-2">
                     {['Apparel', 'Accessories', 'Art Prints', 'Gifts', 'Home Decor'].map((cat, idx) => (
                       <button
@@ -801,7 +801,7 @@ const MobileSearch = () => {
                             handleSuggestionSelect(cat);
                           }
                         }}
-                        className="px-4 py-1.5 bg-[#fdeade] text-[#8d4b00] rounded-full text-xs font-semibold hover:bg-[#f2dfd3] transition-colors"
+                        className="px-4 py-1.5 bg-white text-black rounded-full text-xs font-semibold hover:bg-[#F5A623] hover:text-black transition-colors"
                       >
                         {cat}
                       </button>
@@ -811,15 +811,15 @@ const MobileSearch = () => {
 
                 {/* Popular Searches */}
                 <div className="mb-8">
-                  <h3 className="text-xs font-bold tracking-wider text-[#554336] mb-3 uppercase">Popular Searches</h3>
+                  <h3 className="text-xs font-bold tracking-wider text-black mb-3 uppercase">Popular Searches</h3>
                   <div className="space-y-4">
                     {['Full Voile Turbans', 'Phulkari Shawls', 'Kirpan Art'].map((term, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSuggestionSelect(term)}
-                        className="flex items-center gap-3 text-sm font-semibold text-[#554336] hover:text-[#8d4b00] transition-colors w-full text-left"
+                        className="flex items-center gap-3 text-sm font-semibold text-black hover:text-[#F5A623] transition-colors w-full text-left"
                       >
-                        <FiTrendingUp className="text-[#8d4b00]" size={16} />
+                        <FiTrendingUp className="text-black" size={16} />
                         {term}
                       </button>
                     ))}
@@ -830,14 +830,14 @@ const MobileSearch = () => {
                 {recentSearches.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xs font-bold tracking-wider text-[#554336] uppercase">Recent Searches</h3>
+                      <h3 className="text-xs font-bold tracking-wider text-black uppercase">Recent Searches</h3>
                     </div>
                     <div className="space-y-4">
                       {recentSearches.map((term, idx) => (
                         <button
                           key={idx}
                           onClick={() => handleSuggestionSelect(term)}
-                          className="flex items-center gap-3 text-sm font-semibold text-[#554336] hover:text-[#8d4b00] transition-colors w-full text-left"
+                          className="flex items-center gap-3 text-sm font-semibold text-black hover:text-[#F5A623] transition-colors w-full text-left"
                         >
                           <FiClock className="text-gray-400" size={16} />
                           {term}

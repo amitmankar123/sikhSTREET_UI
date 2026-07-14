@@ -173,11 +173,7 @@ const ProductCard = ({ product, hideRating = false, isFlashSale = false }) => {
         whileTap={{ scale: 0.98 }}
         whileHover={{ y: -4 }}
         style={{ willChange: "transform", transform: "translateZ(0)" }}
-        className={`bg-brand-surface rounded-2xl overflow-hidden group cursor-pointer h-full flex flex-col border transition-all duration-300 ${
-          isFlashSale
-            ? "border-orange-200 hover:shadow-saffron"
-            : "border-brand-border hover:shadow-card-hover"
-        } shadow-card glass-animated-pulse`}
+        className="bg-brand-surface rounded-2xl overflow-hidden group cursor-pointer h-full flex flex-col border border-white hover:shadow-card-hover transition-all duration-300 shadow-card glass-animated-pulse"
         {...longPressHandlers}>
         <div className="relative aspect-square w-full overflow-hidden rounded-t-2xl">
           {/* Favorite Icon */}
@@ -188,8 +184,8 @@ const ProductCard = ({ product, hideRating = false, isFlashSale = false }) => {
               <FiHeart
                 className={`text-sm md:text-base transition-all duration-300 ${
                   isFavorite
-                    ? "text-brand-saffron fill-brand-saffron scale-110"
-                    : "text-brand-muted hover:text-brand-saffron"
+                    ? "text-[#F5A623] fill-brand-saffron scale-110"
+                    : "text-brand-muted hover:text-[#F5A623]"
                 }`}
               />
             </button>
@@ -230,14 +226,14 @@ const ProductCard = ({ product, hideRating = false, isFlashSale = false }) => {
         {/* Product Info */}
         <div className="p-2.5 md:p-3 flex-1 flex flex-col bg-brand-surface">
           <Link to={productLink} className="block mb-1.5">
-            <h3 className="font-semibold text-brand-navy line-clamp-2 text-sm md:text-sm leading-snug transition-colors group-hover:text-brand-saffron" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+            <h3 className="font-semibold text-brand-navy line-clamp-2 text-sm md:text-sm leading-snug transition-colors" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
               {product.name}
             </h3>
           </Link>
 
           {/* Price */}
           <div className="flex items-center gap-1.5 mt-auto flex-wrap">
-            <span className="text-sm md:text-base font-bold text-brand-saffron">
+            <span className="text-sm md:text-base font-bold text-black">
               {formatPrice(product.price)}
             </span>
             {product.originalPrice > 0 && (

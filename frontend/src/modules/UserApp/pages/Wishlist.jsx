@@ -65,10 +65,8 @@ const MobileWishlist = () => {
   });
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchWishlist().catch(() => null);
-    }
-  }, [isAuthenticated, fetchWishlist]);
+    fetchWishlist().catch(() => null);
+  }, [fetchWishlist]);
 
   const handleMoveToCart = (item) => {
     const wishlistItem = moveToCart(item.id);
@@ -121,11 +119,11 @@ const MobileWishlist = () => {
 
   return (
     <PageTransition>
-      <MobileLayout showBottomNav={true} showCartBar={true} style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
-        <div className="w-full relative overflow-hidden font-sans">
+      <MobileLayout showBottomNav={true} showCartBar={true}>
+        <div className="w-full relative overflow-hidden font-sans bg-white min-h-screen">
 
           {/* Header */}
-          <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-40 shadow-sm relative">
+          <div className="px-4 py-4 bg-white border-b border-black/10 sticky top-0 z-40 shadow-sm relative">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <button
@@ -134,7 +132,7 @@ const MobileWishlist = () => {
                   <FiArrowLeft className="text-xl text-gray-700" />
                 </button>
                 <div className="flex-1 min-w-0 text-left">
-                  <h1 className="text-lg font-black text-gray-900 truncate font-serif">
+                  <h1 className="text-lg font-black text-gray-900 truncate font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     My Favorites
                   </h1>
                   <p className="text-xs text-gray-500 font-medium">
@@ -147,11 +145,11 @@ const MobileWishlist = () => {
                 {activeTab === "items" && items.length > 0 && (
                   <div className="flex items-center gap-2">
                     {/* View Toggle Buttons */}
-                    <div className="flex items-center bg-[#8d4b00]/5 rounded-lg p-1">
+                    <div className="flex items-center bg-black/5 rounded-lg p-1">
                       <button
                         onClick={() => setViewMode("list")}
                         className={`p-1.5 rounded transition-colors ${viewMode === "list"
-                          ? "bg-white text-[#8d4b00] shadow-sm font-bold"
+                          ? "bg-white text-black shadow-sm font-bold"
                           : "text-gray-500"
                           }`}>
                         <FiList className="text-lg" />
@@ -159,7 +157,7 @@ const MobileWishlist = () => {
                       <button
                         onClick={() => setViewMode("grid")}
                         className={`p-1.5 rounded transition-colors ${viewMode === "grid"
-                          ? "bg-white text-[#8d4b00] shadow-sm font-bold"
+                          ? "bg-white text-black shadow-sm font-bold"
                           : "text-gray-500"
                           }`}>
                         <FiGrid className="text-lg" />
@@ -180,7 +178,7 @@ const MobileWishlist = () => {
                   onClick={() => setActiveTab("items")}
                   className={`flex-1 pb-2 text-xs font-bold border-b-2 text-center transition-all ${
                     activeTab === "items"
-                      ? "border-[#8d4b00] text-[#8d4b00]"
+                      ? "border-[#F5A623] text-black"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
@@ -190,7 +188,7 @@ const MobileWishlist = () => {
                   onClick={() => setActiveTab("shops")}
                   className={`flex-1 pb-2 text-xs font-bold border-b-2 text-center transition-all ${
                     activeTab === "shops"
-                      ? "border-[#8d4b00] text-[#8d4b00]"
+                      ? "border-[#F5A623] text-black"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
@@ -224,7 +222,7 @@ const MobileWishlist = () => {
                 {resolvedShops.map((shop) => (
                   <div
                     key={shop.id}
-                    className="bg-white rounded-2xl border border-[#e9d7cb] p-4 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4"
+                    className="bg-white rounded-2xl border border-black/10 p-4 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4"
                   >
                     <div 
                       onClick={() => navigate(`/brand/${shop.id}`)}
@@ -239,11 +237,11 @@ const MobileWishlist = () => {
                         }}
                       />
                       <div className="text-left min-w-0 flex-1">
-                        <h4 className="font-bold text-gray-900 truncate font-serif text-sm">
+                        <h4 className="font-bold text-gray-900 truncate font-serif text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                           {shop.name}
                         </h4>
                         <div className="flex items-center gap-1 mt-0.5">
-                          <span className="text-xs text-[#8d4b00] font-bold">★ {shop.rating}</span>
+                          <span className="text-xs text-black font-bold">★ {shop.rating}</span>
                           <span className="text-[10px] text-gray-400">({shop.reviewCount} reviews)</span>
                         </div>
                         <p className="text-[10px] text-gray-500 truncate mt-1">
@@ -253,18 +251,18 @@ const MobileWishlist = () => {
                     </div>
                     
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => navigate(`/brand/${shop.id}`)}
-                        className="px-3 py-1.5 bg-[#8d4b00]/10 hover:bg-[#8d4b00]/25 text-[#8d4b00] text-xs font-bold rounded-lg transition-colors"
-                      >
-                        Visit
-                      </button>
-                      <button
-                        onClick={() => handleRemoveShop(shop.id)}
-                        className="w-8 h-8 rounded-full bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-colors"
-                      >
-                        <FiHeart className="fill-red-500 text-red-500 text-xs" />
-                      </button>
+                       <button
+                         onClick={() => navigate(`/brand/${shop.id}`)}
+                         className="px-3 py-1.5 bg-black/5 hover:bg-[#F5A623] hover:text-black text-black text-xs font-bold rounded-lg transition-colors"
+                       >
+                         Visit
+                       </button>
+                       <button
+                         onClick={() => handleRemoveShop(shop.id)}
+                         className="w-8 h-8 rounded-full bg-black/5 hover:bg-[#F5A623] hover:text-black flex items-center justify-center text-black transition-colors"
+                       >
+                         <FiHeart className="fill-black hover:fill-black text-xs" />
+                       </button>
                     </div>
                   </div>
                 ))}
@@ -279,17 +277,17 @@ const MobileWishlist = () => {
 
 // Empty State Component
 const EmptyWishlistState = () => (
-  <div className="backdrop-blur-md bg-white/40 border border-white/40 rounded-3xl p-10 shadow-xl max-w-md mx-auto text-center mt-12 relative z-10">
-    <div className="w-16 h-16 rounded-full bg-[#f1641e]/10 text-[#f1641e] flex items-center justify-center mx-auto mb-5">
+  <div className="bg-white border border-black/10 rounded-3xl p-10 shadow-sm max-w-md mx-auto text-center mt-12 relative z-10">
+    <div className="w-16 h-16 rounded-full bg-black/10 text-[#F5A623] flex items-center justify-center mx-auto mb-5">
       <FiHeart className="text-3xl" />
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif">
+    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
       Your wishlist is empty
     </h3>
-    <p className="text-sm text-[#554336]/80 mb-6">Start adding items you love!</p>
+    <p className="text-sm text-black/80 mb-6">Start adding items you love!</p>
     <Link
       to="/home"
-      className="px-8 py-3.5 bg-gradient-to-r from-[#f1641e] to-[#8d4b00] text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all inline-block">
+      className="px-8 py-3.5 bg-black text-white hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all inline-block">
       Continue Shopping
     </Link>
   </div>
@@ -297,17 +295,17 @@ const EmptyWishlistState = () => (
 
 // Empty Shops Component
 const EmptyShopsState = () => (
-  <div className="backdrop-blur-md bg-white/40 border border-white/40 rounded-3xl p-10 shadow-xl max-w-md mx-auto text-center mt-12 relative z-10">
-    <div className="w-16 h-16 rounded-full bg-[#f1641e]/10 text-[#f1641e] flex items-center justify-center mx-auto mb-5">
+  <div className="bg-white border border-black/10 rounded-3xl p-10 shadow-sm max-w-md mx-auto text-center mt-12 relative z-10">
+    <div className="w-16 h-16 rounded-full bg-black/10 text-[#F5A623] flex items-center justify-center mx-auto mb-5">
       <FiHeart className="text-3xl" />
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif">
+    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
       No favorite shops yet
     </h3>
-    <p className="text-sm text-[#554336]/80 mb-6">Explore small shops and follow them to see them here!</p>
+    <p className="text-sm text-black/80 mb-6">Explore small shops and follow them to see them here!</p>
     <Link
       to="/home"
-      className="px-8 py-3.5 bg-gradient-to-r from-[#f1641e] to-[#8d4b00] text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all inline-block">
+      className="px-8 py-3.5 bg-black text-white hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all inline-block">
       Discover Shops
     </Link>
   </div>

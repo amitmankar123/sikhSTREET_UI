@@ -57,13 +57,13 @@ const HomeFavourites = () => {
   return (
     <PageTransition>
       <MobileLayout fullWidth={true}>
-        <div className="w-full min-h-screen bg-[#fff8f5] pb-16 font-sans">
+        <div className="w-full min-h-screen bg-white pb-16 font-sans">
           
           {/* Back button container */}
           <div className="max-w-7xl mx-auto px-6 pt-6">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-sm font-semibold text-[#554336] hover:text-[#8d4b00] transition-colors"
+              className="flex items-center gap-2 text-sm font-semibold text-black hover:text-[#F5A623] transition-colors"
             >
               <FiArrowLeft className="w-4 h-4 stroke-[3]" />
               <span>Back</span>
@@ -99,7 +99,7 @@ const HomeFavourites = () => {
                     />
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <span className="text-xs md:text-sm font-medium text-[#231a13] group-hover:text-[#8d4b00] transition-colors mt-3 flex items-center gap-1 justify-center leading-tight">
+                  <span className="text-xs md:text-sm font-medium text-black group-hover:text-[#F5A623] transition-colors mt-3 flex items-center gap-1 justify-center leading-tight">
                     {item.name} <span className="text-[10px] transform translate-y-[1px] group-hover:translate-x-0.5 transition-transform duration-300">→</span>
                   </span>
                 </div>
@@ -109,7 +109,7 @@ const HomeFavourites = () => {
 
           {/* Discover Small Shops Section */}
           <div className="max-w-7xl mx-auto px-6 pt-6 border-t border-gray-200/60">
-            <h2 className="text-2xl font-bold text-[#231a13] mb-8 text-center md:text-left">
+            <h2 className="text-2xl font-bold text-black mb-8 text-center md:text-left">
               Discover small shops
             </h2>
             
@@ -152,7 +152,7 @@ const HomeFavourites = () => {
                   {/* Shop Details */}
                   <div className="flex items-center justify-between mt-2">
                     <div className="text-left">
-                      <h3 className="font-bold text-gray-900 group-hover:text-[#8d4b00] transition-colors leading-snug">
+                      <h3 className="font-bold text-gray-900 group-hover:text-[#F5A623] transition-colors leading-snug">
                         {shop.name}
                       </h3>
                       <div className="flex items-center gap-1 mt-1">
@@ -160,7 +160,7 @@ const HomeFavourites = () => {
                         <span className="text-xs text-gray-500 font-medium">{shop.rating}</span>
                       </div>
                     </div>
-                    <button className="p-2 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors bg-[#fff8f5]/50 flex items-center justify-center">
+                    <button className="p-2 rounded-full border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors bg-white/50 flex items-center justify-center">
                       <FiHeart className="w-4 h-4" />
                     </button>
                   </div>

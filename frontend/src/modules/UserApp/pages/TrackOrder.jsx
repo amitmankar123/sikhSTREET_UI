@@ -149,19 +149,19 @@ const MobileTrackOrder = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={false}>
-          <div className="w-full pb-6" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+          <div className="w-full pb-6 bg-white">
             {/* Header */}
-            <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
+            <div className="px-4 py-4 bg-white border-b border-black/10 sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
               <div className="flex items-center gap-3 mb-3">
                 <button
                   onClick={() => navigate(-1)}
-                  className="p-2 hover:bg-[#fdeade] rounded-full transition-colors"
+                  className="p-2 hover:bg-white rounded-full transition-colors"
                 >
-                  <FiArrowLeft className="text-xl text-[#231a13]" />
+                  <FiArrowLeft className="text-xl text-black" />
                 </button>
                 <div className="flex-1">
-                  <h1 className="text-xl font-bold text-[#231a13]" style={{ fontFamily: "'Lora', Georgia, serif" }}>Track Order</h1>
-                  <p className="text-sm text-[#554336]">Order #{displayOrderId}</p>
+                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Track Order</h1>
+                  <p className="text-sm text-black">Order #{displayOrderId}</p>
                 </div>
                 <Badge variant={normalizedStatus}>{normalizedStatus.toUpperCase()}</Badge>
               </div>
@@ -169,25 +169,25 @@ const MobileTrackOrder = () => {
 
             <div className="px-4 py-4 space-y-4">
               {/* Tracking Timeline */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Status</h2>
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Status</h2>
                 <div className="space-y-4">
                   {steps.map((step, index) => {
                     const Icon = step.icon;
                     return (
                       <div key={index} className="flex items-start gap-4">
                         <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${step.completed
-                          ? 'bg-[#8d4b00] text-white'
-                          : 'bg-[#e9d7cb]/40 text-[#554336]/60 border border-[#e9d7cb]'
+                          ? 'bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white'
+                          : 'bg-[#e9d7cb]/40 text-black/60 border border-black/10'
                           }`}>
                           <Icon className="text-lg" />
                         </div>
                         <div className="flex-1">
-                          <h3 className={`font-semibold text-sm mb-1 ${step.completed ? 'text-[#231a13]' : 'text-[#554336]/60'
+                          <h3 className={`font-semibold text-sm mb-1 ${step.completed ? 'text-black' : 'text-black/60'
                             }`}>
                             {step.label}
                           </h3>
-                          <p className="text-xs text-[#554336]/70">{formatDate(step.date)}</p>
+                          <p className="text-xs text-black/70">{formatDate(step.date)}</p>
                         </div>
                       </div>
                     );
@@ -197,21 +197,21 @@ const MobileTrackOrder = () => {
 
               {/* Tracking Number */}
               {order.trackingNumber && (
-                <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-[#231a13] mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>Tracking Number</h2>
-                  <p className="text-lg font-bold text-[#8d4b00]">{order.trackingNumber}</p>
+                <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Tracking Number</h2>
+                  <p className="text-lg font-bold text-black">{order.trackingNumber}</p>
                 </div>
               )}
 
               {/* Shipping Address */}
               {hasShippingAddress ? (
-                <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-[#231a13] mb-3 flex items-center gap-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
-                    <FiMapPin className="text-[#8d4b00]" />
+                <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                  <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <FiMapPin className="text-black" />
                     Shipping Address
                   </h2>
-                  <div className="text-sm text-[#554336] space-y-1">
-                    <p className="font-semibold text-[#231a13]">{shippingAddress.name || 'N/A'}</p>
+                  <div className="text-sm text-black space-y-1">
+                    <p className="font-semibold text-black">{shippingAddress.name || 'N/A'}</p>
                     <p>{shippingAddress.address || 'N/A'}</p>
                     <p>
                       {shippingAddress.city || 'N/A'}, {shippingAddress.state || 'N/A'}{' '}
@@ -222,12 +222,12 @@ const MobileTrackOrder = () => {
               ) : null}
 
               {/* Order Items */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-3" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Items</h2>
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Items</h2>
                 <div className="space-y-3">
                   {orderItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
-                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-[#e9d7cb]/40 flex-shrink-0">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-black/10 flex-shrink-0">
                         <LazyImage
                           src={item.image}
                           alt={item.name}
@@ -235,32 +235,32 @@ const MobileTrackOrder = () => {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-[#231a13] text-sm mb-1">{item.name}</h3>
-                        <p className="text-xs text-[#554336]/80">
+                        <h3 className="font-semibold text-black text-sm mb-1">{item.name}</h3>
+                        <p className="text-xs text-black/80">
                           {formatPrice(item.price)} x {item.quantity}
                         </p>
                         {formatVariantLabel(item?.variant) && (
-                          <p className="text-[11px] text-[#554336]/60">
+                          <p className="text-[11px] text-black/60">
                             {formatVariantLabel(item?.variant)}
                           </p>
                         )}
                       </div>
-                      <p className="font-bold text-[#231a13] text-sm">
+                      <p className="font-bold text-black text-sm">
                         {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
                   ))}
                   {orderItems.length === 0 && (
-                    <p className="text-sm text-[#554336]/80">Item details are not available for this tracking view.</p>
+                    <p className="text-sm text-black/80">Item details are not available for this tracking view.</p>
                   )}
                 </div>
               </div>
 
               {/* Estimated Delivery */}
               {order.estimatedDelivery && (
-                <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-[#231a13] mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>Estimated Delivery</h2>
-                  <p className="text-lg font-semibold text-[#8d4b00]">
+                <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Estimated Delivery</h2>
+                  <p className="text-lg font-semibold text-black">
                     {formatDate(order.estimatedDelivery)}
                   </p>
                 </div>
@@ -270,14 +270,14 @@ const MobileTrackOrder = () => {
               {user?.id ? (
                 <button
                   onClick={() => navigate(`/orders/${displayOrderId}`)}
-                  className="w-full py-3.5 bg-[#8d4b00] text-white rounded-xl font-bold text-base hover:bg-[#733c00] transition-colors shadow-md"
+                  className="w-full py-3.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl font-bold text-base hover:bg-[#F5A623] hover:text-black transition-colors shadow-md"
                 >
                   View Order Details
                 </button>
               ) : (
                 <button
                   onClick={() => navigate('/home')}
-                  className="w-full py-3.5 bg-[#8d4b00] text-white rounded-xl font-bold text-base hover:bg-[#733c00] transition-colors shadow-md"
+                  className="w-full py-3.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl font-bold text-base hover:bg-[#F5A623] hover:text-black transition-colors shadow-md"
                 >
                   Continue Shopping
                 </button>

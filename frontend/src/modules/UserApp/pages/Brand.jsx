@@ -160,7 +160,7 @@ const EtsyProductCard = ({ product }) => {
 
             <div className="p-3 flex-1 flex flex-col justify-between">
                 <div>
-                    <h4 className="text-xs md:text-sm font-medium text-gray-800 line-clamp-2 leading-snug group-hover:text-[#8d4b00] transition-colors font-sans">
+                    <h4 className="text-xs md:text-sm font-medium text-gray-800 line-clamp-2 leading-snug transition-colors font-sans">
                         {product.name}
                     </h4>
                     
@@ -583,119 +583,6 @@ const Brand = () => {
     return (
         <PageTransition>
             <MobileLayout showBottomNav={true} showCartBar={true}>
-                {/* Desktop-only Etsy Header & Sub-menu */}
-                <div className="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-30">
-                    <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-3 flex items-center justify-between gap-6">
-                        {/* Etsy Logo */}
-                        <div className="flex items-center gap-6">
-                            <span 
-                                onClick={() => navigate("/home")}
-                                className="text-3xl font-bold font-serif text-[#F1641E] tracking-tight cursor-pointer select-none"
-                            >
-                                Etsy
-                            </span>
-                            <button className="flex items-center gap-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 px-3 py-1.5 rounded-full transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-4 h-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                                </svg>
-                                Categories
-                            </button>
-                        </div>
-
-                        {/* Search Input Field */}
-                        <div className="flex-1 max-w-2xl relative">
-                            <input 
-                                type="text" 
-                                placeholder="Search for anything" 
-                                className="w-full pl-5 pr-14 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-full text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-stone-200 focus:border-transparent transition-all font-sans"
-                            />
-                            <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#F1641E] text-white flex items-center justify-center shadow hover:bg-[#d65213] transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-4 h-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.604 10.604Z" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Action Icons */}
-                        <div className="flex items-center gap-6 text-gray-650">
-                            <FiHeart className="text-xl hover:text-[#F1641E] cursor-pointer transition-colors" title="Favorites" />
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5.5 h-5.5 hover:text-[#F1641E] cursor-pointer transition-colors">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a9.049 9.049 0 0 1-5.185-2.813 9.049 9.049 0 0 1-2.813-5.185M9.672 3.33a9.049 9.049 0 0 1 5.185 2.813 9.049 9.049 0 0 1 2.813 5.185m-15.04 0a9.05 9.05 0 0 1 2.813-5.185 9.05 9.05 0 0 1 5.185-2.813m0 0a9.05 9.05 0 0 1 5.185 2.813 9.05 9.05 0 0 1 2.813 5.185" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5.5 h-5.5 hover:text-[#F1641E] cursor-pointer transition-colors">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h2.25M6 10.5h.008v.008H6V10.5Zm0 3.5h.008v.008H6V14Zm0 3.5h.008v.008H6v-.008Zm12-7h.008v.008H18V10.5Zm0 3.5h.008v.008H18V14Zm0 3.5h.008v.008H18v-.008Z" />
-                            </svg>
-                            <div 
-                                onClick={() => navigate("/profile")}
-                                className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-sm font-bold text-stone-700 cursor-pointer select-none hover:bg-stone-300 transition-colors"
-                            >
-                                A
-                            </div>
-                            <div className="relative cursor-pointer hover:scale-105 transition-transform" onClick={() => navigate("/cart")}>
-                                <FiShoppingBag className="text-xl text-gray-750" />
-                                <span className="absolute -top-1.5 -right-1.5 bg-[#F1641E] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Desktop Sub-navigation Links */}
-                    <div className="border-t border-gray-150 py-2.5 bg-white flex items-center justify-center gap-8 text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors flex items-center gap-1">🎁 Gifts</span>
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors">Sellers to Watch</span>
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors">Home Favourites</span>
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors">Fashion Finds</span>
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors">Vintage</span>
-                        <span className="hover:text-gray-900 cursor-pointer transition-colors">Registry</span>
-                    </div>
-                </div>
-
-                {/* Mobile-only Etsy Header */}
-                <div className="md:hidden bg-white border-b border-gray-200 sticky top-0 z-30">
-                    <div className="px-4 py-3 flex flex-col gap-3">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <button 
-                                    onClick={() => navigate(-1)}
-                                    className="p-1 hover:bg-gray-100 rounded-full transition-colors text-gray-700"
-                                >
-                                    <FiArrowLeft className="text-xl" />
-                                </button>
-                                <span className="text-2xl font-bold font-serif text-[#F1641E] tracking-tight">Etsy</span>
-                            </div>
-                            <div className="flex items-center gap-4 text-gray-750">
-                                <FiHeart className="text-xl hover:text-[#F1641E] cursor-pointer" />
-                                <div className="relative cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5.5 h-5.5 text-gray-700">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a9.049 9.049 0 0 1-5.185-2.813 9.049 9.049 0 0 1-2.813-5.185M9.672 3.33a9.049 9.049 0 0 1 5.185 2.813 9.049 9.049 0 0 1 2.813 5.185m-15.04 0a9.05 9.05 0 0 1 2.813-5.185 9.05 9.05 0 0 1 5.185-2.813m0 0a9.05 9.05 0 0 1 5.185 2.813 9.05 9.05 0 0 1 2.813 5.185" />
-                                    </svg>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5.5 h-5.5 text-gray-700 cursor-pointer">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h2.25M6 10.5h.008v.008H6V10.5Zm0 3.5h.008v.008H6V14Zm0 3.5h.008v.008H6v-.008Zm12-7h.008v.008H18V10.5Zm0 3.5h.008v.008H18V14Zm0 3.5h.008v.008H18v-.008Z" />
-                                </svg>
-                                <div className="w-7 h-7 rounded-full bg-stone-200 flex items-center justify-center text-xs font-bold text-stone-700">A</div>
-                                <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
-                                    <FiShoppingBag className="text-xl text-gray-700" />
-                                    <span className="absolute -top-1.5 -right-1.5 bg-[#F1641E] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {/* Search Bar */}
-                        <div className="relative w-full">
-                            <input 
-                                type="text" 
-                                placeholder="Search for anything" 
-                                className="w-full pl-4 pr-12 py-2.5 bg-[#f4f4f4] hover:bg-[#eaeaea] border border-transparent rounded-full text-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:bg-white focus:border-gray-300 transition-all font-sans"
-                            />
-                            <button className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#F1641E] text-white flex items-center justify-center shadow hover:bg-[#d65213] transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-4 h-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.604 10.604Z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div className="w-full max-w-[1400px] mx-auto px-0 md:px-12 py-0 md:py-6 bg-white min-h-screen text-left">
                     {/* Shop Banner Header */}
                     <div className="relative w-full h-36 md:h-[280px] md:rounded-2xl overflow-hidden bg-gradient-to-r from-[#ece4db] to-[#dfd3c3]">
@@ -716,15 +603,15 @@ const Brand = () => {
                         <div className="absolute bottom-3 right-3 flex items-center gap-2.5 z-10 md:hidden">
                             <button 
                                 onClick={() => navigate("/chat")}
-                                className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F1641E] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
+                                className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F5A623] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
                             >
                                 <FiMessageSquare className="text-base" />
                             </button>
                             <button 
                                 onClick={handleFavoriteShop}
-                                className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F1641E] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
+                                className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F5A623] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
                             >
-                                <FiHeart className={`text-base transition-colors ${isFavoriteShop ? "text-[#F1641E] fill-[#F1641E]" : ""}`} />
+                                <FiHeart className={`text-base transition-colors ${isFavoriteShop ? "text-[#F5A623] fill-[#F5A623]" : ""}`} />
                             </button>
                         </div>
                     </div>
@@ -788,7 +675,7 @@ const Brand = () => {
                                 onClick={handleFavoriteShop}
                                 className="px-5 py-2 border border-gray-300 hover:bg-gray-55 rounded-full font-bold text-sm text-gray-800 flex items-center gap-1.5 shadow-sm transition-all"
                             >
-                                <FiHeart className={`text-sm ${isFavoriteShop ? "text-[#F1641E] fill-[#F1641E]" : ""}`} />
+                                <FiHeart className={`text-sm ${isFavoriteShop ? "text-[#F5A623] fill-[#F5A623]" : ""}`} />
                                 {isFavoriteShop ? "Following" : "Follow"}
                             </button>
                         </div>
@@ -880,12 +767,12 @@ const Brand = () => {
                                                     onClick={() => setSelectedCategory(cat)}
                                                     className={`w-full text-left py-2 px-3 text-xs md:text-sm font-semibold rounded-lg transition-colors flex items-center justify-between ${
                                                         isActive 
-                                                            ? "bg-stone-50 font-bold text-[#F1641E] border-l-2 border-[#F1641E]" 
-                                                            : "text-gray-600 hover:bg-gray-50"
+                                                            ? "bg-black font-bold text-white" 
+                                                            : "text-gray-600 hover:bg-black hover:text-white transition-colors"
                                                     }`}
                                                 >
                                                     <span>{cat === "All" ? "All" : cat}</span>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? "bg-[#F1641E]/10 text-[#F1641E]" : "bg-gray-100 text-gray-400"}`}>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-400"}`}>
                                                         {getCategoryCount(cat)}
                                                     </span>
                                                 </button>
@@ -928,12 +815,12 @@ const Brand = () => {
                                                                 }}
                                                                 className={`w-full px-4 py-3 text-left text-sm transition-colors flex items-center justify-between ${
                                                                     selectedCategory === cat 
-                                                                        ? "bg-stone-50 font-bold text-[#F1641E]" 
-                                                                        : "text-gray-700 hover:bg-gray-55"
+                                                                        ? "bg-black font-bold text-white" 
+                                                                        : "text-gray-700 hover:bg-black hover:text-white transition-colors"
                                                                 }`}
                                                             >
                                                                 <span>{cat === "All" ? "All" : cat}</span>
-                                                                <span className="text-xs bg-gray-100 text-gray-505 px-2.5 py-0.5 rounded-full font-bold">
+                                                                <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${selectedCategory === cat ? "bg-white/20 text-white" : "bg-gray-100 text-gray-505"}`}>
                                                                     {getCategoryCount(cat)}
                                                                 </span>
                                                             </button>
@@ -945,7 +832,7 @@ const Brand = () => {
 
                                         {/* Section title & sort */}
                                         <div className="flex items-center justify-between w-full mt-2 border-b border-gray-100 pb-3">
-                                            <h3 className="text-lg md:text-xl font-bold text-gray-955 font-sans tracking-tight">Featured items</h3>
+                                            <h3 className="text-lg md:text-xl font-bold text-gray-955 font-serif tracking-tight">Featured items</h3>
                                             
                                             <div className="flex items-center gap-2">
                                                 {/* Sorting button (two arrows) */}
@@ -980,8 +867,8 @@ const Brand = () => {
                                                                         }}
                                                                         className={`w-full px-4 py-2 text-left text-xs md:text-sm transition-colors ${
                                                                             sortBy === item.id 
-                                                                                ? "bg-stone-50 font-bold text-[#F1641E]" 
-                                                                                : "text-gray-700 hover:bg-gray-55"
+                                                                                ? "bg-black font-bold text-white" 
+                                                                                : "text-gray-700 hover:bg-black hover:text-white transition-colors"
                                                                         }`}
                                                                     >
                                                                         {item.label}
@@ -996,7 +883,7 @@ const Brand = () => {
                                                 <div ref={filterButtonRef} className="relative">
                                                     <button
                                                         onClick={() => setShowFilters(!showFilters)}
-                                                        className={`p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center ${showFilters ? "text-[#F1641E]" : "text-gray-700"}`}
+                                                        className={`p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center ${showFilters ? "text-[#F5A623]" : "text-gray-700"}`}
                                                         title="Filter Products"
                                                     >
                                                         <FiFilter className="text-xl" />
@@ -1031,14 +918,14 @@ const Brand = () => {
                                                                                 placeholder="Min Price"
                                                                                 value={filters.minPrice}
                                                                                 onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                                                                                className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#F1641E] text-xs bg-gray-55"
+                                                                                className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#F5A623] text-xs bg-gray-55"
                                                                             />
                                                                             <input
                                                                                 type="number"
                                                                                 placeholder="Max Price"
                                                                                 value={filters.maxPrice}
                                                                                 onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                                                                                className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#F1641E] text-xs bg-gray-55"
+                                                                                className="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#F5A623] text-xs bg-gray-55"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -1052,7 +939,7 @@ const Brand = () => {
                                                                     </button>
                                                                     <button
                                                                         onClick={() => setShowFilters(false)}
-                                                                        className="flex-1 py-1.5 bg-[#F1641E] text-white rounded-lg font-bold text-[11px] hover:bg-[#d65213] transition-colors shadow"
+                                                                        className="flex-1 py-1.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-lg font-bold text-[11px] hover:bg-[#F5A623] transition-colors shadow"
                                                                     >
                                                                         Apply
                                                                     </button>
@@ -1165,7 +1052,7 @@ const Brand = () => {
                                         <div key={rev.id} className="pb-6 border-b border-gray-100 last:border-0 last:pb-0 text-left">
                                             <div className="flex items-center justify-between mb-2">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center font-bold text-xs text-[#8d4b00]">
+                                                    <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center font-bold text-xs text-black">
                                                         {rev.user.charAt(0).toUpperCase()}
                                                     </div>
                                                     <div>
@@ -1180,7 +1067,7 @@ const Brand = () => {
                                                 </div>
                                             </div>
                                             <p className="text-sm text-gray-700 leading-relaxed font-sans">{rev.comment}</p>
-                                            <p className="text-[11px] text-[#8d4b00] font-semibold mt-1.5">Product: {rev.product}</p>
+                                            <p className="text-[11px] text-black font-semibold mt-1.5">Product: {rev.product}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -1206,7 +1093,7 @@ const Brand = () => {
                                         />
                                     </div>
                                     <div className="text-center md:text-left">
-                                        <span className="text-[10px] font-extrabold text-[#8d4b00] tracking-wider uppercase">Shop Owner & Maker</span>
+                                        <span className="text-[10px] font-extrabold text-black tracking-wider uppercase">Shop Owner & Maker</span>
                                         <h4 className="text-base font-bold text-gray-950 mt-0.5 font-serif">Master Gurcharan Singh</h4>
                                         <p className="text-xs text-gray-505 font-medium">Mohali, India</p>
                                         <p className="text-sm text-gray-600 mt-2 leading-relaxed font-sans italic">

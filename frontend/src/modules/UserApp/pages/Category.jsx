@@ -70,157 +70,33 @@ const normalizeProduct = (raw) => {
   };
 };
 
+const SHARED_CATEGORY_THEME = {
+  bodyBackground: "#ffffff",
+  accentColor: "text-black",
+  accentBg: "bg-black/5",
+  accentBorder: "border-black/10",
+  hoverBg: "hover:bg-[#F5A623] hover:text-black transition-colors",
+  primaryButton: "bg-black hover:bg-[#F5A623] hover:text-black transition-colors",
+  primaryButtonText: "text-white",
+  iconOutline: "shadow-black/10 ring-2 ring-black/10",
+  searchPlaceholder: "Search in this category...",
+  searchFocusBorder: "focus:border-[#F5A623] focus:ring-[#F5A623]/20",
+  badgeColor: "text-black bg-black/5",
+  headerBg: "bg-white/90",
+  name: "Category"
+};
+
 const CATEGORY_THEMES = {
-  decor: {
-    bodyBackground: "linear-gradient(135deg, #FAF5F0 0%, #F4EBE1 50%, #EAECEF 100%)",
-    accentColor: "text-[#8B5E3C]",
-    accentBg: "bg-[#8B5E3C]/10",
-    accentBorder: "border-[#8B5E3C]/20",
-    hoverBg: "hover:bg-[#8B5E3C]/10",
-    primaryButton: "bg-[#8B5E3C] hover:bg-[#704B30]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#8B5E3C]/20 ring-2 ring-[#8B5E3C]/30",
-    searchPlaceholder: 'Search "Paintings", "Wall Clocks", "Gurbani Frames"...',
-    searchFocusBorder: "focus:border-[#8B5E3C] focus:ring-[#8B5E3C]/30",
-    badgeColor: "text-[#8B5E3C] bg-[#8B5E3C]/10",
-    headerBg: "bg-[#FAF5F0]/80",
-    name: "Art & Decor"
-  },
-  turbans: {
-    bodyBackground: "linear-gradient(135deg, #FFFDF9 0%, #FFF3E6 50%, #FFEAD2 100%)",
-    accentColor: "text-[#E65100]",
-    accentBg: "bg-[#E65100]/10",
-    accentBorder: "border-[#E65100]/20",
-    hoverBg: "hover:bg-[#E65100]/10",
-    primaryButton: "bg-[#E65100] hover:bg-[#C84500]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#E65100]/20 ring-2 ring-[#E65100]/30",
-    searchPlaceholder: 'Search "Full Voile", "Rubia", "Parna", "Double Patti"...',
-    searchFocusBorder: "focus:border-[#E65100] focus:ring-[#E65100]/30",
-    badgeColor: "text-[#E65100] bg-[#E65100]/10",
-    headerBg: "bg-[#FFFDF9]/80",
-    name: "Turbans"
-  },
-  sacred: {
-    bodyBackground: "linear-gradient(135deg, #F0F5FA 0%, #E4EEF8 50%, #FFFFFF 100%)",
-    accentColor: "text-[#1E40AF]",
-    accentBg: "bg-[#1E40AF]/10",
-    accentBorder: "border-[#1E40AF]/20",
-    hoverBg: "hover:bg-[#1E40AF]/10",
-    primaryButton: "bg-[#1E40AF] hover:bg-[#1C3D9F]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#1E40AF]/20 ring-2 ring-[#1E40AF]/30",
-    searchPlaceholder: 'Search "Chandoa Sahib", "Rumala Sahib", "Degh", "Nishan Flags"...',
-    searchFocusBorder: "focus:border-[#1E40AF] focus:ring-[#1E40AF]/30",
-    badgeColor: "text-[#1E40AF] bg-[#1E40AF]/10",
-    headerBg: "bg-[#F0F5FA]/80",
-    name: "Sacred Devotional"
-  },
-  kakaars: {
-    bodyBackground: "linear-gradient(135deg, #F1F3F5 0%, #E9ECEF 50%, #DEE2E6 100%)",
-    accentColor: "text-[#495057]",
-    accentBg: "bg-[#495057]/10",
-    accentBorder: "border-[#495057]/20",
-    hoverBg: "hover:bg-[#495057]/10",
-    primaryButton: "bg-[#495057] hover:bg-[#343A40]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#495057]/20 ring-2 ring-[#495057]/30",
-    searchPlaceholder: 'Search "Sarbloh Kara", "Wooden Kanga", "Kirpan", "Kachera"...',
-    searchFocusBorder: "focus:border-[#495057] focus:ring-[#495057]/30",
-    badgeColor: "text-[#495057] bg-[#495057]/10",
-    headerBg: "bg-[#F1F3F5]/80",
-    name: "Sacred Kakaars"
-  },
-  musical: {
-    bodyBackground: "linear-gradient(135deg, #FAF6F0 0%, #F2ECE4 50%, #E6DCCF 100%)",
-    accentColor: "text-[#5D4037]",
-    accentBg: "bg-[#5D4037]/10",
-    accentBorder: "border-[#5D4037]/20",
-    hoverBg: "hover:bg-[#5D4037]/10",
-    primaryButton: "bg-[#5D4037] hover:bg-[#4E342E]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#5D4037]/20 ring-2 ring-[#5D4037]/30",
-    searchPlaceholder: 'Search "Harmonium", "Tabla", "Dilruba", "Jodi"...',
-    searchFocusBorder: "focus:border-[#5D4037] focus:ring-[#5D4037]/30",
-    badgeColor: "text-[#5D4037] bg-[#5D4037]/10",
-    headerBg: "bg-[#FAF6F0]/80",
-    name: "Musical Instruments"
-  },
-  electronics: {
-    bodyBackground: "linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 50%, #F7FAFC 100%)",
-    accentColor: "text-[#102A43]",
-    accentBg: "bg-[#102A43]/10",
-    accentBorder: "border-[#102A43]/20",
-    hoverBg: "hover:bg-[#102A43]/10",
-    primaryButton: "bg-[#102A43] hover:bg-[#0C1B2A]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#102A43]/20 ring-2 ring-[#102A43]/30",
-    searchPlaceholder: 'Search "Speakers", "Audio Players", "Media Devices"...',
-    searchFocusBorder: "focus:border-[#102A43] focus:ring-[#102A43]/30",
-    badgeColor: "text-[#102A43] bg-[#102A43]/10",
-    headerBg: "bg-[#F0F4F8]/80",
-    name: "Electronics"
-  },
-  fashion: {
-    bodyBackground: "linear-gradient(to bottom, #fffcf9, #fff8f5)",
-    accentColor: "text-[#8d4b00]",
-    accentBg: "bg-[#8d4b00]/10",
-    accentBorder: "border-[#e9d7cb]",
-    hoverBg: "hover:bg-[#fdeade]/50",
-    primaryButton: "gradient-saffron hover:shadow-glow-saffron",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-sm ring-2 ring-[#e9d7cb]",
-    searchPlaceholder: 'Search "Kurtas", "Graphic Tees", "Jackets", "Scarves"...',
-    searchFocusBorder: "focus:border-[#8d4b00] focus:ring-[#8d4b00]/20",
-    badgeColor: "text-[#8d4b00] bg-[#fdeade]",
-    headerBg: "bg-[#fff8f5]/90",
-    name: "Fashion"
-  },
-  langar: {
-    bodyBackground: "linear-gradient(135deg, #FFF9F5 0%, #FFF4EC 50%, #FFEAD8 100%)",
-    accentColor: "text-[#C92A2A]",
-    accentBg: "bg-[#C92A2A]/10",
-    accentBorder: "border-[#C92A2A]/20",
-    hoverBg: "hover:bg-[#C92A2A]/10",
-    primaryButton: "bg-[#C92A2A] hover:bg-[#A61E1E]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#C92A2A]/20 ring-2 ring-[#C92A2A]/30",
-    searchPlaceholder: 'Search "Steel Plates", "Bata", "Serving Spoons", "Langar Tandoor"...',
-    searchFocusBorder: "focus:border-[#C92A2A] focus:ring-[#C92A2A]/30",
-    badgeColor: "text-[#C92A2A] bg-[#C92A2A]/10",
-    headerBg: "bg-[#FFF9F5]/80",
-    name: "Langar Hall"
-  },
-  kadda: {
-    bodyBackground: "linear-gradient(135deg, #FCFBF7 0%, #F8F5EB 50%, #F1E9DA 100%)",
-    accentColor: "text-[#D4AF37]",
-    accentBg: "bg-[#D4AF37]/10",
-    accentBorder: "border-[#D4AF37]/20",
-    hoverBg: "hover:bg-[#D4AF37]/10",
-    primaryButton: "bg-[#B8860B] hover:bg-[#996515]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#B8860B]/20 ring-2 ring-[#B8860B]/30",
-    searchPlaceholder: 'Search "Sarbloh Kadda", "Sterling Silver", "Chauras Kadda"...',
-    searchFocusBorder: "focus:border-[#B8860B] focus:ring-[#B8860B]/30",
-    badgeColor: "text-[#B8860B] bg-[#B8860B]/10",
-    headerBg: "bg-[#FCFBF7]/80",
-    name: "Premium Sikh Kaddas"
-  },
-  default: {
-    bodyBackground: "linear-gradient(135deg, #F8F9FA 0%, #FFFBF5 50%, #F1F3F5 100%)",
-    accentColor: "text-[#FF7A1A]",
-    accentBg: "bg-[#FF7A1A]/10",
-    accentBorder: "border-[#FF7A1A]/20",
-    hoverBg: "hover:bg-[#FF7A1A]/10",
-    primaryButton: "bg-[#0A192F] hover:bg-[#122B4D]",
-    primaryButtonText: "text-white",
-    iconOutline: "shadow-[#0A192F]/20 ring-2 ring-[#0A192F]/30",
-    searchPlaceholder: 'Search in this category...',
-    searchFocusBorder: "focus:border-[#0A192F] focus:ring-[#0A192F]/30",
-    badgeColor: "text-[#FF7A1A] bg-[#FF7A1A]/10",
-    headerBg: "bg-white",
-    name: "Default"
-  }
+  decor: { ...SHARED_CATEGORY_THEME, name: "Art & Decor", searchPlaceholder: 'Search "Paintings", "Wall Clocks", "Gurbani Frames"...' },
+  turbans: { ...SHARED_CATEGORY_THEME, name: "Turbans", searchPlaceholder: 'Search "Full Voile", "Rubia", "Parna", "Double Patti"...' },
+  sacred: { ...SHARED_CATEGORY_THEME, name: "Sacred Devotional", searchPlaceholder: 'Search "Chandoa Sahib", "Rumala Sahib", "Degh", "Nishan Flags"...' },
+  kakaars: { ...SHARED_CATEGORY_THEME, name: "Sacred Kakaars", searchPlaceholder: 'Search "Sarbloh Kara", "Wooden Kanga", "Kirpan", "Kachera"...' },
+  musical: { ...SHARED_CATEGORY_THEME, name: "Musical Instruments", searchPlaceholder: 'Search "Harmonium", "Tabla", "Dilruba", "Jodi"...' },
+  electronics: { ...SHARED_CATEGORY_THEME, name: "Electronics", searchPlaceholder: 'Search "Speakers", "Audio Players", "Media Devices"...' },
+  fashion: { ...SHARED_CATEGORY_THEME, name: "Fashion", searchPlaceholder: 'Search "Kurtas", "Graphic Tees", "Jackets", "Scarves"...' },
+  langar: { ...SHARED_CATEGORY_THEME, name: "Langar Hall", searchPlaceholder: 'Search "Steel Plates", "Bata", "Serving Spoons", "Langar Tandoor"...' },
+  kadda: { ...SHARED_CATEGORY_THEME, name: "Premium Sikh Kaddas", searchPlaceholder: 'Search "Sarbloh Kadda", "Sterling Silver", "Chauras Kadda"...' },
+  default: { ...SHARED_CATEGORY_THEME, name: "Default" }
 };
 
 const getCategoryTheme = (category) => {
@@ -667,7 +543,7 @@ const MobileCategory = () => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => navigate(-1)}
-                  className="p-2.5 hover:bg-gray-100 rounded-full transition-colors text-[#0A192F] flex-shrink-0"
+                  className="p-2.5 hover:bg-gray-100 rounded-full transition-colors text-black flex-shrink-0"
                 >
                   <FiArrowLeft className="text-xl" />
                 </button>
@@ -678,7 +554,7 @@ const MobileCategory = () => {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
-                  <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-[#0A192F] flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
+                  <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-black flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
                     {typeof category.image === 'string' && category.image.includes('<svg') ? (
                       <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-12 h-12 md:w-16 md:h-16 filter brightness-0 invert" />
                     ) : (
@@ -694,7 +570,7 @@ const MobileCategory = () => {
                   </div>
                   <div className="flex flex-col text-left">
                     <motion.h1
-                      className="text-xl md:text-3xl font-black font-heading text-[#0A192F] tracking-tight leading-none"
+                      className="text-xl md:text-3xl font-black font-heading text-black tracking-tight leading-none"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 }}
@@ -720,7 +596,7 @@ const MobileCategory = () => {
                     onClick={() => setShowFilters(!showFilters)}
                     className={`p-3 glass-card rounded-xl hover:bg-gray-100 transition-colors h-11 w-11 flex items-center justify-center shadow-sm border border-slate-200 ${showFilters ? "bg-gray-100" : ""}`}
                   >
-                    <FiFilter className={`text-xl transition-colors ${hasActiveFilters ? "text-blue-600" : "text-[#0A192F]"}`} />
+                    <FiFilter className={`text-xl transition-colors ${hasActiveFilters ? "text-blue-600" : "text-black"}`} />
                   </button>
                 </div>
               </div>
@@ -732,11 +608,11 @@ const MobileCategory = () => {
             {/* LEFT SIDEBAR (Desktop) */}
             {subcategories.length > 0 && (
               <div className="w-full md:w-64 flex-shrink-0 hidden md:block sticky top-24">
-                <h3 className="text-xl font-bold text-[#0A192F] mb-5 uppercase tracking-wider">Categories</h3>
+                <h3 className="text-xl font-bold text-black mb-5 uppercase tracking-wider">Categories</h3>
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => handleSubcategoryChange(null)}
-                    className={`text-left px-4 py-3.5 rounded-xl text-base font-bold transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-755 ${activeTheme.hoverBg}`}`}
+                    className={`text-left px-4 py-3.5 rounded-xl text-base font-bold transition-all ${!selectedSubcategoryId ? "bg-black text-white shadow-md" : "bg-gray-50 text-gray-755 hover:bg-black hover:text-white transition-colors"}`}
                   >
                     All Items
                   </button>
@@ -744,7 +620,7 @@ const MobileCategory = () => {
                     <button
                       key={sub.id}
                       onClick={() => handleSubcategoryChange(sub.id)}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : `bg-gray-50 text-gray-700 ${activeTheme.hoverBg}`}`}
+                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all ${selectedSubcategoryId === sub.id ? "bg-black text-white shadow-md" : "bg-gray-50 text-gray-700 hover:bg-black hover:text-white transition-colors"}`}
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {typeof sub.image === 'string' && sub.image.includes('<svg') ? (
@@ -768,7 +644,7 @@ const MobileCategory = () => {
                   <div className="flex gap-3 pb-2 w-max">
                     <button
                       onClick={() => handleSubcategoryChange(null)}
-                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${!selectedSubcategoryId ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-750 border border-gray-200"}`}
+                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${!selectedSubcategoryId ? "bg-black text-white shadow-md" : "bg-white text-gray-750 border border-gray-200 hover:bg-black hover:text-white hover:border-black transition-colors"}`}
                     >
                       All Items
                     </button>
@@ -776,7 +652,7 @@ const MobileCategory = () => {
                       <button
                         key={sub.id}
                         onClick={() => handleSubcategoryChange(sub.id)}
-                        className={`flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedSubcategoryId === sub.id ? `${activeTheme.primaryButton} ${activeTheme.primaryButtonText} shadow-md` : "bg-white text-gray-755 border border-gray-200"}`}
+                        className={`flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedSubcategoryId === sub.id ? "bg-black text-white shadow-md" : "bg-white text-gray-755 border border-gray-200 hover:bg-black hover:text-white hover:border-black transition-colors"}`}
                       >
                         {sub.name}
                       </button>
@@ -806,7 +682,7 @@ const MobileCategory = () => {
               </div>
 
               <div className="mb-5 flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-tight">Featured Items</h2>
+                <h2 className="text-xl md:text-blackxl font-black text-slate-800 uppercase tracking-tight">Featured Items</h2>
                 <span className={`text-xs font-extrabold px-3 py-1.5 rounded-lg shadow-sm transition-all ${activeTheme.badgeColor}`}>
                   {categoryProducts.length} items
                 </span>
@@ -834,10 +710,10 @@ const MobileCategory = () => {
                       {/* Header */}
                       <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 bg-white">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#0A192F]/5 flex items-center justify-center">
-                            <FiFilter className="text-[#0A192F]" />
+                          <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center">
+                            <FiFilter className="text-black" />
                           </div>
-                          <h3 className="text-lg font-bold text-[#0A192F] tracking-tight">
+                          <h3 className="text-lg font-bold text-black tracking-tight">
                             Refine Search
                           </h3>
                         </div>
@@ -853,14 +729,14 @@ const MobileCategory = () => {
 
                         {/* Sort Options */}
                         <div className="space-y-4">
-                          <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                          <h4 className="font-bold text-black text-sm uppercase tracking-wider">
                             Sort Items By
                           </h4>
                           <div className="relative">
                             <select
                               value={filters.sortBy}
                               onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-                              className="w-full pl-3 pr-8 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm font-extrabold text-[#0A192F] cursor-pointer outline-none"
+                              className="w-full pl-3 pr-8 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm font-extrabold text-black cursor-pointer outline-none"
                             >
                               <option value="newest">Newest</option>
                               <option value="name_asc">Name (A-Z)</option>
@@ -874,7 +750,7 @@ const MobileCategory = () => {
 
                         {/* Price Range (Always show) */}
                         <div className="space-y-4">
-                          <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider flex items-center justify-between">
+                          <h4 className="font-bold text-black text-sm uppercase tracking-wider flex items-center justify-between">
                             Price Range
                             <span className="text-xs font-normal text-gray-400 capitalize">Custom</span>
                           </h4>
@@ -909,7 +785,7 @@ const MobileCategory = () => {
 
                             {/* Cloth Type */}
                             <div className="space-y-4">
-                              <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
                                 Cloth Type
                               </h4>
                               <div className="space-y-2">
@@ -918,7 +794,7 @@ const MobileCategory = () => {
                                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${filters.clothType === type ? 'border-[#D4AF37]' : 'border-gray-300 group-hover:border-[#D4AF37]'}`}>
                                       {filters.clothType === type && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-[#0A192F] transition-colors">{type}</span>
+                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{type}</span>
                                     <input
                                       type="radio"
                                       className="hidden"
@@ -933,16 +809,16 @@ const MobileCategory = () => {
 
                             {/* Color Options */}
                             <div className="space-y-4">
-                              <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
                                 Color Options
                               </h4>
                               <div className="grid grid-cols-2 gap-2">
                                 {['Yellow/Orange', 'Blue', 'Pink/Purple', 'Grey', 'Red/Maroon', 'Brown', 'White/Black', 'Green', 'Others'].map((c) => (
                                   <label key={c} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.color === c ? 'bg-[#0A192F] border-[#0A192F]' : 'border-gray-300 bg-white group-hover:border-[#0A192F]'}`}>
+                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.color === c ? 'bg-black border-black' : 'border-gray-300 bg-white group-hover:border-[#F5A623]'}`}>
                                       {filters.color === c && <FiX className="text-white text-xs rotate-45" />}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-[#0A192F] transition-colors">{c}</span>
+                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{c}</span>
                                     <input
                                       type="radio"
                                       className="hidden"
@@ -961,7 +837,7 @@ const MobileCategory = () => {
 
                             {/* Location Radius */}
                             <div className="space-y-4">
-                              <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider flex items-center justify-between">
+                              <h4 className="font-bold text-black text-sm uppercase tracking-wider flex items-center justify-between">
                                 Location Radius
                                 <span className="text-xs font-normal text-[#D4AF37] capitalize">{filters.radius} km</span>
                               </h4>
@@ -982,16 +858,16 @@ const MobileCategory = () => {
 
                             {/* Material (Multi-select mock) */}
                             <div className="space-y-4">
-                              <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
                                 Material
                               </h4>
                               <div className="grid grid-cols-2 gap-2">
                                 {['Cotton', 'Silk', 'Linen', 'Wool'].map((mat) => (
                                   <label key={mat} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.material.includes(mat) ? 'bg-[#0A192F] border-[#0A192F]' : 'border-gray-300 bg-white group-hover:border-[#0A192F]'}`}>
+                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.material.includes(mat) ? 'bg-black border-black' : 'border-gray-300 bg-white group-hover:border-[#F5A623]'}`}>
                                       {filters.material.includes(mat) && <FiX className="text-white text-xs rotate-45" />}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-[#0A192F] transition-colors">{mat}</span>
+                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{mat}</span>
                                     <input
                                       type="checkbox"
                                       className="hidden"
@@ -1010,7 +886,7 @@ const MobileCategory = () => {
 
                             {/* Rating */}
                             <div className="space-y-4">
-                              <h4 className="font-bold text-[#0A192F] text-sm uppercase tracking-wider">
+                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
                                 Minimum Rating
                               </h4>
                               <div className="space-y-2">
@@ -1021,7 +897,7 @@ const MobileCategory = () => {
                                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${filters.minRating === rating.toString() ? 'border-[#D4AF37]' : 'border-gray-300 group-hover:border-[#D4AF37]'}`}>
                                       {filters.minRating === rating.toString() && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-[#0A192F] transition-colors">
+                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">
                                       {rating}+ Stars
                                     </span>
                                     <input
@@ -1050,7 +926,7 @@ const MobileCategory = () => {
                         </button>
                         <button
                           onClick={() => setShowFilters(false)}
-                          className="flex-1 py-3.5 bg-[#0A192F] text-white rounded-xl font-bold text-sm hover:bg-[#0A192F]/90 shadow-[0_8px_16px_rgba(10,25,47,0.2)] hover:shadow-[0_4px_12px_rgba(10,25,47,0.15)] hover:-translate-y-0.5 transition-all">
+                          className="flex-1 py-3.5 bg-black text-white rounded-xl font-bold text-sm hover:bg-black/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
                           Show Results
                         </button>
                       </div>

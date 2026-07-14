@@ -186,19 +186,19 @@ const MobileOrderDetail = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={false}>
-          <div className="w-full pb-6" style={{ background: 'linear-gradient(180deg, #FFF8F0 0%, #FFF3E4 60%, #FBEBD8 100%)' }}>
+          <div className="w-full pb-6 bg-white">
             {/* Header */}
-            <div className="px-4 py-4 bg-[#fff8f5] border-b border-[#e9d7cb] sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
+            <div className="px-4 py-4 bg-white border-b border-black/10 sticky top-0 z-30" style={{ boxShadow: '0 1px 8px rgba(44,26,14,0.06)' }}>
               <div className="flex items-center gap-3 mb-3">
                 <button
                   onClick={() => navigate(-1)}
-                  className="p-2 hover:bg-[#fdeade] rounded-full transition-colors"
+                  className="p-2 hover:bg-white rounded-full transition-colors"
                 >
-                  <FiArrowLeft className="text-xl text-[#231a13]" />
+                  <FiArrowLeft className="text-xl text-black" />
                 </button>
                 <div className="flex-1">
-                  <h1 className="text-xl font-bold text-[#231a13]" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Details</h1>
-                  <p className="text-sm text-[#554336]">Order #{order.id}</p>
+                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Details</h1>
+                  <p className="text-sm text-black">Order #{order.id}</p>
                 </div>
                 <Badge variant={order?.status || 'pending'}>{(order?.status || 'pending').toUpperCase()}</Badge>
               </div>
@@ -206,18 +206,18 @@ const MobileOrderDetail = () => {
 
             <div className="px-4 py-4 space-y-4">
               {/* Order Items */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Items</h2>
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Items</h2>
                 {order.vendorItems && order.vendorItems.length > 0 ? (
                   <div className="space-y-4">
                     {order.vendorItems.map((vendorGroup) => (
                       <div key={vendorGroup.vendorId} className="space-y-2">
                         {/* Vendor Header */}
-                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#fdeade] to-[#fff8f5] rounded-lg border border-[#e9d7cb]/60">
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8d4b00] to-[#733c00] flex items-center justify-center flex-shrink-0">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#fdeade] to-[#fff8f5] rounded-lg border border-black/10">
+                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-black to-black flex items-center justify-center flex-shrink-0">
                             <FiShoppingBag className="text-white text-[10px]" />
                           </div>
-                          <span className="text-sm font-bold text-[#8d4b00] flex-1">
+                          <span className="text-sm font-bold text-black flex-1">
                             {vendorGroup.vendorName}
                           </span>
                           {vendorGroup.status && (
@@ -227,12 +227,12 @@ const MobileOrderDetail = () => {
                           )}
                           <button
                             onClick={() => handleChatWithSeller(vendorGroup.vendorId, vendorGroup.vendorName)}
-                            className="p-1 px-2.5 bg-white text-[#8d4b00] hover:text-[#733c00] hover:bg-[#fdeade]/50 rounded-md border border-[#e9d7cb]/80 flex items-center gap-1.5 transition-colors text-[11px] font-bold mr-1 shadow-sm"
+                            className="p-1 px-2.5 bg-white text-black hover:text-[#F5A623] hover:bg-white/50 rounded-md border border-black/10 flex items-center gap-1.5 transition-colors text-[11px] font-bold mr-1 shadow-sm"
                           >
                             <FiMessageSquare className="text-xs" />
                             <span>Chat</span>
                           </button>
-                          <span className="text-xs font-semibold text-[#8d4b00] bg-white px-2 py-0.5 rounded-md border border-[#e9d7cb]/40">
+                          <span className="text-xs font-semibold text-black bg-white px-2 py-0.5 rounded-md border border-black/10">
                             {formatPrice(vendorGroup.subtotal)}
                           </span>
                         </div>
@@ -240,7 +240,7 @@ const MobileOrderDetail = () => {
                         <div className="space-y-2 pl-2">
                           {vendorGroup.items.map((item, itemIndex) => (
                             <div key={`${item.id}-${itemIndex}-${getVariantSignature(item?.variant || {})}`} className="flex items-center gap-3">
-                              <Link to={`/product/${item.productId || item.id}`} className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#e9d7cb]/40 flex-shrink-0 hover:opacity-85 transition-opacity">
+                              <Link to={`/product/${item.productId || item.id}`} className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-black/10 flex-shrink-0 hover:opacity-85 transition-opacity">
                                 <LazyImage
                                   src={item.image}
                                   alt={item.name}
@@ -248,27 +248,27 @@ const MobileOrderDetail = () => {
                                 />
                               </Link>
                               <div className="flex-1 min-w-0">
-                                <Link to={`/product/${item.productId || item.id}`} className="font-semibold text-[#231a13] text-sm mb-1 hover:text-[#8d4b00] transition-colors block truncate">
+                                <Link to={`/product/${item.productId || item.id}`} className="font-semibold text-black text-sm mb-1 hover:text-[#F5A623] transition-colors block truncate">
                                   {item.name}
                                 </Link>
-                                <p className="text-xs text-[#554336]/85">
+                                <p className="text-xs text-black/85">
                                   {formatPrice(item.price)} x {item.quantity}
                                 </p>
                                 {formatVariantLabel(item?.variant) && (
-                                  <p className="text-[11px] text-[#554336]/60">
+                                  <p className="text-[11px] text-black/60">
                                     {formatVariantLabel(item?.variant)}
                                   </p>
                                 )}
                                 {order.status === 'delivered' && (
                                   <Link
                                     to={`/product/${item.productId || item.id}?write-review=true#reviews-section`}
-                                    className="inline-block mt-1 text-xs font-bold text-[#8d4b00] hover:text-[#733c00] hover:underline"
+                                    className="inline-block mt-1 text-xs font-bold text-black hover:text-[#F5A623] hover:underline"
                                   >
                                     Write a Review
                                   </Link>
                                 )}
                               </div>
-                              <p className="font-bold text-[#231a13] text-sm">
+                              <p className="font-bold text-black text-sm">
                                 {formatPrice(item.price * item.quantity)}
                               </p>
                             </div>
@@ -281,7 +281,7 @@ const MobileOrderDetail = () => {
                   <div className="space-y-3">
                     {orderItems.map((item, itemIndex) => (
                       <div key={`${item.id}-${itemIndex}-${getVariantSignature(item?.variant || {})}`} className="flex items-center gap-3">
-                        <Link to={`/product/${item.productId || item.id}`} className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-[#e9d7cb]/40 flex-shrink-0 hover:opacity-85 transition-opacity">
+                        <Link to={`/product/${item.productId || item.id}`} className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-black/10 flex-shrink-0 hover:opacity-85 transition-opacity">
                           <LazyImage
                             src={item.image}
                             alt={item.name}
@@ -289,27 +289,27 @@ const MobileOrderDetail = () => {
                           />
                         </Link>
                         <div className="flex-1 min-w-0">
-                          <Link to={`/product/${item.productId || item.id}`} className="font-semibold text-[#231a13] text-sm mb-1 hover:text-[#8d4b00] transition-colors block truncate">
+                          <Link to={`/product/${item.productId || item.id}`} className="font-semibold text-black text-sm mb-1 hover:text-[#F5A623] transition-colors block truncate">
                             {item.name}
                           </Link>
-                          <p className="text-xs text-[#554336]/85">
+                          <p className="text-xs text-black/85">
                             {formatPrice(item.price)} x {item.quantity}
                           </p>
                           {formatVariantLabel(item?.variant) && (
-                            <p className="text-[11px] text-[#554336]/60">
+                            <p className="text-[11px] text-black/60">
                               {formatVariantLabel(item?.variant)}
                             </p>
                           )}
                           {order.status === 'delivered' && (
                             <Link
                               to={`/product/${item.productId || item.id}?write-review=true#reviews-section`}
-                              className="inline-block mt-1 text-xs font-bold text-[#8d4b00] hover:text-[#733c00] hover:underline"
+                              className="inline-block mt-1 text-xs font-bold text-black hover:text-[#F5A623] hover:underline"
                             >
                               Write a Review
                             </Link>
                           )}
                         </div>
-                        <p className="font-bold text-[#231a13] text-sm">
+                        <p className="font-bold text-black text-sm">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
@@ -319,13 +319,13 @@ const MobileOrderDetail = () => {
               </div>
 
               {/* Shipping Address */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-3 flex items-center gap-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
-                  <FiMapPin className="text-[#8d4b00]" />
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <FiMapPin className="text-black" />
                   Shipping Address
                 </h2>
-                <div className="text-sm text-[#554336] space-y-1">
-                  <p className="font-semibold text-[#231a13]">
+                <div className="text-sm text-black space-y-1">
+                  <p className="font-semibold text-black">
                     {shippingAddress.fullName || shippingAddress.name || 'N/A'}
                     {shippingAddress.fullName && shippingAddress.name && shippingAddress.name !== shippingAddress.fullName && ` (${shippingAddress.name})`}
                   </p>
@@ -340,56 +340,56 @@ const MobileOrderDetail = () => {
               </div>
 
               {/* Payment Info */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-3 flex items-center gap-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
-                  <FiCreditCard className="text-[#8d4b00]" />
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <FiCreditCard className="text-black" />
                   Payment Information
                 </h2>
-                <div className="text-sm text-[#554336] space-y-2">
+                <div className="text-sm text-black space-y-2">
                   <div className="flex justify-between">
                     <span>Payment Method:</span>
-                    <span className="font-semibold text-[#231a13] capitalize">
+                    <span className="font-semibold text-black capitalize">
                       {order.paymentMethod}
                     </span>
                   </div>
                   {order.trackingNumber && (
                     <div className="flex justify-between">
                       <span>Tracking Number:</span>
-                      <span className="font-semibold text-[#231a13]">{order.trackingNumber}</span>
+                      <span className="font-semibold text-black">{order.trackingNumber}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span>Order Date:</span>
-                    <span className="font-semibold text-[#231a13]">{formatDate(order.date)}</span>
+                    <span className="font-semibold text-black">{formatDate(order.date)}</span>
                   </div>
                 </div>
               </div>
 
               {/* Order Summary */}
-              <div className="bg-[#fff8f5] border border-[#e9d7cb] rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-[#231a13] mb-3" style={{ fontFamily: "'Lora', Georgia, serif" }}>Order Summary</h2>
+              <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Summary</h2>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-[#554336]/90">
+                  <div className="flex justify-between text-black/90">
                     <span>Subtotal</span>
                     <span>{formatPrice(order.subtotal)}</span>
                   </div>
                   {order.discount > 0 && (
-                    <div className="flex justify-between text-[#8d4b00] font-semibold">
+                    <div className="flex justify-between text-black font-semibold">
                       <span>Discount</span>
                       <span>-{formatPrice(order.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-[#554336]/90">
+                  <div className="flex justify-between text-black/90">
                     <span>Shipping</span>
                     <span>{formatPrice(order.shipping)}</span>
                   </div>
-                  <div className="flex justify-between text-[#554336]/90">
+                  <div className="flex justify-between text-black/90">
                     <span>Tax</span>
                     <span>{formatPrice(order.tax)}</span>
                   </div>
-                  <div className="flex justify-between text-lg font-bold text-[#231a13] pt-2 border-t border-[#e9d7cb]">
+                  <div className="flex justify-between text-lg font-bold text-black pt-2 border-t border-black/10">
                     <span>Total</span>
-                    <span className="text-[#8d4b00]">{formatPrice(order.total)}</span>
+                    <span className="text-black">{formatPrice(order.total)}</span>
                   </div>
                 </div>
               </div>
@@ -406,7 +406,7 @@ const MobileOrderDetail = () => {
                 )}
                 <button
                   onClick={handleReorder}
-                  className="w-full py-3.5 bg-[#8d4b00] text-white rounded-xl font-bold text-base hover:bg-[#733c00] transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl font-bold text-base hover:bg-[#F5A623] hover:text-black transition-colors shadow-md flex items-center justify-center gap-2"
                 >
                   <FiRotateCw className="text-lg" />
                   Reorder
@@ -414,7 +414,7 @@ const MobileOrderDetail = () => {
                 {order.status === 'delivered' && (
                   <button
                     onClick={openReturnModal}
-                    className="w-full py-3.5 bg-[#fff3e4] text-[#8d4b00] border border-[#e9d7cb]/60 rounded-xl font-bold hover:bg-[#fbebd8] transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-white text-black border border-black/10 rounded-xl font-bold hover:bg-[#fbebd8] transition-colors flex items-center justify-center gap-2"
                   >
                     <FiPackage className="text-lg" />
                     Request Return
@@ -422,7 +422,7 @@ const MobileOrderDetail = () => {
                 )}
                 <button
                   onClick={() => navigate(`/track-order/${order.id}`)}
-                  className="w-full py-3.5 bg-[#fff8f5] text-[#231a13] hover:bg-[#fdeade] rounded-xl font-bold border border-[#e9d7cb]/80 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-white text-black hover:bg-white rounded-xl font-bold border border-black/10 transition-colors flex items-center justify-center gap-2"
                 >
                   <FiTruck className="text-lg" />
                   Track Order
@@ -444,13 +444,13 @@ const MobileOrderDetail = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 20, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full sm:max-w-md bg-[#fff8f5] border border-[#e9d7cb] rounded-t-2xl sm:rounded-2xl p-4 sm:p-5"
+                className="w-full sm:max-w-md bg-white border border-black/10 rounded-t-2xl sm:rounded-2xl p-4 sm:p-5"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-[#231a13]" style={{ fontFamily: "'Lora', Georgia, serif" }}>Request Return</h3>
+                  <h3 className="text-lg font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Request Return</h3>
                   <button
                     onClick={() => setShowReturnModal(false)}
-                    className="p-2 rounded-full hover:bg-[#fdeade]"
+                    className="p-2 rounded-full hover:bg-white"
                   >
                     <FiX className="text-gray-600" />
                   </button>
@@ -458,13 +458,13 @@ const MobileOrderDetail = () => {
 
                 {vendorOptions.length > 1 && (
                   <div className="mb-4">
-                    <label className="block text-sm font-semibold text-[#554336] mb-2">
+                    <label className="block text-sm font-semibold text-black mb-2">
                       Select Vendor
                     </label>
                     <select
                       value={returnVendorId}
                       onChange={(e) => setReturnVendorId(e.target.value)}
-                      className="w-full px-3 py-2.5 border-2 border-[#e9d7cb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8d4b00]/40 focus:border-[#8d4b00] text-base text-[#231a13] bg-[#fff8f5]"
+                      className="w-full px-3 py-2.5 border-2 border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F5A623]/40 focus:border-[#F5A623] text-base text-black bg-white"
                     >
                       <option value="">Choose vendor</option>
                       {vendorOptions.map((vendor) => (
@@ -477,14 +477,14 @@ const MobileOrderDetail = () => {
                 )}
 
                 <div className="mb-4">
-                  <label className="block text-sm font-semibold text-[#554336] mb-2">
+                  <label className="block text-sm font-semibold text-black mb-2">
                     Reason
                   </label>
                   <textarea
                     value={returnReason}
                     onChange={(e) => setReturnReason(e.target.value)}
                     rows={3}
-                    className="w-full px-3 py-2.5 border-2 border-[#e9d7cb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8d4b00]/40 focus:border-[#8d4b00] text-base text-[#231a13] bg-[#fff8f5]"
+                    className="w-full px-3 py-2.5 border-2 border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F5A623]/40 focus:border-[#F5A623] text-base text-black bg-white"
                     placeholder="Describe the issue briefly"
                   />
                 </div>
@@ -492,7 +492,7 @@ const MobileOrderDetail = () => {
                 <button
                   onClick={handleRequestReturn}
                   disabled={isSubmittingReturn}
-                  className="w-full py-3.5 bg-[#8d4b00] text-white rounded-xl font-bold text-base hover:bg-[#733c00] transition-colors shadow-md disabled:opacity-70"
+                  className="w-full py-3.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl font-bold text-base hover:bg-[#F5A623] hover:text-black transition-colors shadow-md disabled:opacity-70"
                 >
                   {isSubmittingReturn ? 'Submitting...' : 'Submit Return Request'}
                 </button>

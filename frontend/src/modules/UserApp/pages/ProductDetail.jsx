@@ -733,13 +733,13 @@ const MobileProductDetail = () => {
         <div className="w-full pb-4 lg:pb-8 max-w-7xl mx-auto">
           {/* Breadcrumbs */}
           <div className="hidden lg:flex px-6 pt-4 lg:pt-6 lg:px-8 items-center justify-start flex-wrap gap-1.5 text-sm md:text-base text-brand-muted font-sans">
-            <Link to="/home" className="hover:text-brand-saffron hover:underline transition-colors font-medium">
+            <Link to="/home" className="hover:text-[#F5A623] hover:underline transition-colors font-medium">
               Homepage
             </Link>
             {breadcrumbs.map((cat) => (
               <div key={cat.id || cat._id} className="flex items-center gap-1.5">
                 <span className="text-brand-subtle font-light">›</span>
-                <Link to={`/category/${cat.id || cat._id}`} className="hover:text-brand-saffron hover:underline transition-colors font-medium">
+                <Link to={`/category/${cat.id || cat._id}`} className="hover:text-[#F5A623] hover:underline transition-colors font-medium">
                   {cat.name}
                 </Link>
               </div>
@@ -1123,7 +1123,7 @@ const MobileProductDetail = () => {
                       type="button"
                       onClick={() => handleAddToCart(true)}
                       disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-gray-900 bg-white border-2 border-gray-900 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                      className="w-full py-3.5 rounded-full font-bold text-black bg-white border-2 border-black hover:bg-[#F5A623] hover:text-black hover:border-[#F5A623] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
                       Buy it now
                     </button>
@@ -1131,16 +1131,16 @@ const MobileProductDetail = () => {
                       type="button"
                       onClick={() => handleAddToCart(false)}
                       disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-white bg-[#222222] hover:bg-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full py-3.5 rounded-full font-bold text-white bg-black hover:bg-[#F5A623] hover:text-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Add to basket
                     </button>
                     <button
                       type="button"
                       onClick={handleFavorite}
-                      className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 rounded-full transition-colors mt-2"
+                      className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-black hover:bg-[#F5A623] hover:text-black rounded-full transition-colors mt-2"
                     >
-                      <FiHeart className={`text-lg ${isFavorite ? "fill-red-600 text-red-600" : ""}`} />
+                      <FiHeart className={`text-lg ${isFavorite ? "fill-[#F5A623] text-[#F5A623]" : ""}`} />
                       {isFavorite ? "Remove from collection" : "Add to collection"}
                     </button>
                   </div>

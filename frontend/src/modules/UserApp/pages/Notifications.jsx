@@ -21,12 +21,12 @@ const getNotificationIcon = (title, isRead) => {
     IconComponent = FiPackage;
     colorClass = isRead 
       ? "bg-gray-100 text-gray-400 border border-gray-200/50" 
-      : "bg-[#fdeade] text-[#8d4b00] border border-[#e9d7cb]/40";
+      : "bg-white text-black border border-black/10";
   } else if (t.includes("message") || t.includes("chat") || t.includes("seller") || t.includes("reply")) {
     IconComponent = FiMessageSquare;
     colorClass = isRead 
       ? "bg-gray-100 text-gray-400 border border-gray-200/50" 
-      : "bg-[#fff0e8] text-[#f1641e] border border-[#fdeade]/40";
+      : "bg-white text-[#F5A623] border border-[#fdeade]/40";
   } else if (t.includes("welcome") || t.includes("signup") || t.includes("gift") || t.includes("celebrate")) {
     IconComponent = FiGift;
     colorClass = isRead 
@@ -36,7 +36,7 @@ const getNotificationIcon = (title, isRead) => {
     IconComponent = FiInfo;
     colorClass = isRead 
       ? "bg-gray-100 text-gray-400 border border-gray-200/50" 
-      : "bg-[#f5f3ff] text-[#8d4b00] border border-[#EDE9FE]/50";
+      : "bg-[#f5f3ff] text-black border border-[#EDE9FE]/50";
   }
 
   return (
@@ -79,7 +79,7 @@ const UserNotifications = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchNotifications(1)}
-                className="px-4 py-2 rounded-xl border border-[#e9d7cb] text-gray-700 text-xs font-bold hover:bg-[#fff8f5] active:scale-95 transition-all"
+                className="px-4 py-2 rounded-xl border border-black/10 text-gray-700 text-xs font-bold hover:bg-white active:scale-95 transition-all"
                 type="button"
               >
                 <span className="inline-flex items-center gap-1.5">
@@ -90,7 +90,7 @@ const UserNotifications = () => {
               <button
                 onClick={markAllAsRead}
                 disabled={!notifications.length || unreadCount === 0}
-                className="px-4 py-2 rounded-xl bg-[#8d4b00] hover:bg-[#6e3900] text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-md active:scale-95 transition-all"
+                className="px-4 py-2 rounded-xl bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-md active:scale-95 transition-all"
                 type="button"
               >
                 Mark all read
@@ -99,12 +99,12 @@ const UserNotifications = () => {
           </motion.div>
 
           {isLoading && notifications.length === 0 ? (
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e9d7cb] text-gray-600 font-semibold text-sm">
+            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-black/10 text-gray-600 font-semibold text-sm">
               Loading notifications...
             </div>
           ) : notifications.length === 0 ? (
-            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-[#e9d7cb]">
-              <div className="w-16 h-16 rounded-2xl bg-[#fff8f5] flex items-center justify-center text-[#8d4b00]/30 mx-auto mb-4 border border-[#e9d7cb]">
+            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-black/10">
+              <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-black/30 mx-auto mb-4 border border-black/10">
                 <FiBell className="text-3xl" />
               </div>
               <p className="text-gray-800 font-bold text-lg">No notifications yet</p>
@@ -120,8 +120,8 @@ const UserNotifications = () => {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.03 }}
-                  className={`group rounded-2xl p-5 shadow-sm border transition-all duration-300 bg-white border-[#e9d7cb] hover:shadow-md ${
-                    !notification?.isRead && "bg-gradient-to-r from-[#fffdfa] to-[#fff8f5] border-[#fdeade] border-l-4 border-l-[#8d4b00]"
+                  className={`group rounded-2xl p-5 shadow-sm border transition-all duration-300 bg-white border-black/10 hover:shadow-md ${
+                    !notification?.isRead && "bg-black/5 border-black/10 border-l-4 border-l-[#F5A623]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -130,14 +130,14 @@ const UserNotifications = () => {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className={`font-bold text-base leading-snug ${
-                            notification?.isRead ? "text-gray-800" : "text-[#8d4b00]"
+                            notification?.isRead ? "text-gray-800" : "text-black"
                           }`}>
                             {notification?.title || "Notification"}
                           </h3>
                           {!notification?.isRead && (
                             <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f1641e] opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f1641e]"></span>
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black hover:bg-[#F5A623] hover:text-black transition-colors opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-black hover:bg-[#F5A623] hover:text-black transition-colors"></span>
                             </span>
                           )}
                         </div>
@@ -154,7 +154,7 @@ const UserNotifications = () => {
                       {!notification?.isRead && (
                         <button
                           onClick={() => markAsRead(notification?._id)}
-                          className="p-2.5 rounded-xl border border-[#e9d7cb] text-gray-600 hover:bg-[#fdeade] hover:text-[#8d4b00] hover:border-[#ebd3c5] active:scale-95 transition-all"
+                          className="p-2.5 rounded-xl border border-black/10 text-gray-600 hover:bg-white hover:text-[#F5A623] hover:border-[#ebd3c5] active:scale-95 transition-all"
                           title="Mark as read"
                           type="button"
                         >

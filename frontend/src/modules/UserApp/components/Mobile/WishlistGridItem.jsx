@@ -64,7 +64,7 @@ const WishlistGridItem = ({ item, index, onMoveToCart, onRemove }) => {
       {/* Product Info */}
       <div className="p-3 flex-1 flex flex-col">
         <Link to={`/product/${item.id}`} className="mb-1">
-          <h3 className="font-bold text-gray-800 line-clamp-2 text-xs md:text-sm transition-colors leading-snug group-hover:text-[#f1641e]" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+          <h3 className="font-bold text-gray-800 line-clamp-2 text-xs md:text-sm transition-colors leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {item.name}
           </h3>
         </Link>
@@ -122,7 +122,7 @@ const WishlistGridItem = ({ item, index, onMoveToCart, onRemove }) => {
             }}
             whileTap={{ scale: 0.95 }}
             style={{ willChange: "transform", transform: "translateZ(0)" }}
-            className="w-full py-1.5 rounded-xl font-bold text-[10px] md:text-xs transition-all duration-300 flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#f1641e] to-[#8d4b00] text-white shadow-sm hover:shadow active:scale-95 group/btn">
+            className="w-full py-1.5 rounded-xl font-bold text-[10px] md:text-xs transition-all duration-300 flex items-center justify-center gap-1.5 bg-black text-white hover:bg-[#F5A623] hover:text-black transition-colors text-white shadow-sm hover:shadow active:scale-95 group/btn">
             <FiShoppingBag className="text-xs transition-transform" />
             <span>Add</span>
           </motion.button>

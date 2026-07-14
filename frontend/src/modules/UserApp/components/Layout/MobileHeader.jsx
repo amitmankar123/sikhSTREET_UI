@@ -48,7 +48,7 @@ const MobileHeader = () => {
 
   const headerContent = (
     <header
-      className={`fixed top-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-[#e8e8e8] transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 bg-white border-b border-[#e8e8e8] transition-all duration-300 ${
         isScrolled ? "shadow-sm py-2" : "py-4"
       }`}
     >
@@ -58,7 +58,7 @@ const MobileHeader = () => {
           <Link to="/home" className="flex items-center gap-3 active:scale-95 transition-transform flex-shrink-0">
             <div className="flex items-center justify-center">
               <img
-                className="w-[140px] sm:w-[160px] h-auto object-contain"
+                className="w-[140px] sm:w-[160px] h-auto object-contain mix-blend-multiply"
                 alt="Sikh Street logo"
                 src={appLogo.src}
               />
@@ -80,7 +80,7 @@ const MobileHeader = () => {
                 }
               }}
               placeholder="Search for anything"
-              className="w-full bg-[#f8f8f8] border border-gray-200 focus:border-[#8d4b00] focus:bg-white rounded-full py-2.5 pl-11 pr-4 text-xs outline-none transition-all shadow-inner"
+              className="w-full bg-[#f8f8f8] border border-gray-200 focus:border-[#F5A623] focus:bg-white rounded-full py-2.5 pl-11 pr-4 text-xs outline-none transition-all shadow-inner"
             />
             {/* Desktop Search Suggestions Popover */}
             <AnimatePresence>
@@ -90,10 +90,10 @@ const MobileHeader = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-[#e9d7cb] overflow-hidden z-50 text-left"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-black/10 overflow-hidden z-50 text-left"
                 >
                   <div className="p-3">
-                    <h3 className="px-3 py-1.5 text-xs font-bold text-[#231a13]">
+                    <h3 className="px-3 py-1.5 text-xs font-bold text-black">
                       Gifts as special as they are
                     </h3>
                     <div className="flex flex-col">
@@ -103,12 +103,12 @@ const MobileHeader = () => {
                           onClick={() => {
                             navigate(`/category/${cat.id}`);
                           }}
-                          className="flex items-center gap-4 px-4 py-2 hover:bg-[#fff8f5] rounded-xl transition-colors text-left"
+                          className="flex items-center gap-4 px-4 py-2 hover:bg-white rounded-xl transition-colors text-left"
                         >
                           <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-[#e9d7cb]">
                             <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
                           </div>
-                          <span className="text-xs font-medium text-[#554336]">{cat.name}</span>
+                          <span className="text-xs font-medium text-black">{cat.name}</span>
                         </button>
                       ))}
                     </div>
@@ -124,7 +124,7 @@ const MobileHeader = () => {
             <div className="block md:hidden">
               <button
                 onClick={() => navigate("/search")}
-                className="text-[#554336] hover:text-[#8d4b00] flex items-center justify-center p-2 rounded-full hover:bg-[#8d4b00]/5 transition-all active:scale-95"
+                className="text-black hover:text-[#F5A623] flex items-center justify-center p-2 rounded-full hover:bg-[#F5A623]/10 hover:text-[#F5A623] transition-all active:scale-95"
               >
                 <Search size={22} />
               </button>
@@ -133,12 +133,12 @@ const MobileHeader = () => {
             {/* Wishlist Button */}
             <Link
               to="/wishlist"
-              className="relative text-[#554336] hover:text-[#8d4b00] flex items-center justify-center p-2 rounded-full hover:bg-[#8d4b00]/5 transition-all active:scale-95"
+              className="relative text-black hover:text-[#F5A623] flex items-center justify-center p-2 rounded-full hover:bg-[#F5A623]/10 hover:text-[#F5A623] transition-all active:scale-95"
               title="Wishlist"
             >
               <Heart size={22} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#8d4b00] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                <span className="absolute -top-0.5 -right-0.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                   {wishlistCount > 9 ? "9+" : wishlistCount}
                 </span>
               )}
@@ -147,7 +147,7 @@ const MobileHeader = () => {
             {/* Profile Button (Desktop Only) */}
             <button
               onClick={() => navigate("/profile")}
-              className="hidden md:flex relative text-[#554336] hover:text-[#8d4b00] items-center justify-center p-2 rounded-full hover:bg-[#8d4b00]/5 transition-all active:scale-95"
+              className="hidden md:flex relative text-black hover:text-[#F5A623] items-center justify-center p-2 rounded-full hover:bg-[#F5A623]/10 hover:text-[#F5A623] transition-all active:scale-95"
             >
               <User size={22} />
             </button>
@@ -155,11 +155,11 @@ const MobileHeader = () => {
             {/* Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative text-[#554336] hover:text-[#8d4b00] flex items-center justify-center p-2 rounded-full hover:bg-[#8d4b00]/5 transition-all active:scale-95"
+              className="relative text-black hover:text-[#F5A623] flex items-center justify-center p-2 rounded-full hover:bg-[#F5A623]/10 hover:text-[#F5A623] transition-all active:scale-95"
             >
               <ShoppingCart size={22} />
               {itemCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#8d4b00] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                <span className="absolute -top-0.5 -right-0.5 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               )}
@@ -169,19 +169,19 @@ const MobileHeader = () => {
 
         {/* Row 2: Desktop Navigation Links (Below Search) */}
         <nav className="hidden md:flex gap-8 items-center justify-center border-t border-gray-200/50 pt-2.5 w-full">
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-[#8d4b00] transition-colors hover:text-[#6e3900]" to="/home">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/home">
             Home
           </Link>
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-[#554336] transition-colors hover:text-[#8d4b00]" to="/categories">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/categories">
             Collections
           </Link>
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-[#554336] transition-colors hover:text-[#8d4b00]" to="/home-favourites">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/home-favourites">
             Home Favourites
           </Link>
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-[#554336] transition-colors hover:text-[#8d4b00]" to="/category/fashion">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/category/fashion">
             Fashion Finds
           </Link>
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-[#554336] transition-colors hover:text-[#8d4b00]" to="/our-story">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/our-story">
             Our Story
           </Link>
         </nav>

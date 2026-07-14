@@ -247,7 +247,7 @@ const SearchBar = ({ className = '', size = 'default' }) => {
           />
           <button
             type="submit"
-            className={`absolute ${buttonRightClass} bg-brand-saffron hover:bg-orange-600 text-white rounded-full transition-colors flex items-center justify-center shadow-sm`}
+            className={`absolute ${buttonRightClass} bg-black hover:bg-orange-600 text-white rounded-full transition-colors flex items-center justify-center shadow-sm`}
             style={{ width: buttonSize, height: buttonSize }}
           >
             <FiSearch size={searchIconSize} className="stroke-[2.5]" />
