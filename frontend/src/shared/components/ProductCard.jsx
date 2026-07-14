@@ -226,7 +226,7 @@ const ProductCard = ({ product, hideRating = false, isFlashSale = false }) => {
         {/* Product Info */}
         <div className="p-2.5 md:p-3 flex-1 flex flex-col bg-brand-surface">
           <Link to={productLink} className="block mb-1.5">
-            <h3 className="font-semibold text-brand-navy line-clamp-2 text-sm md:text-sm leading-snug transition-colors" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h3 className="font-semibold text-brand-navy line-clamp-2 text-sm md:text-sm leading-snug transition-colors" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
               {product.name}
             </h3>
           </Link>

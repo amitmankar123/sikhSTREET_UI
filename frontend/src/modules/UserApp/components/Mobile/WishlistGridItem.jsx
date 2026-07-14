@@ -64,7 +64,7 @@ const WishlistGridItem = ({ item, index, onMoveToCart, onRemove }) => {
       {/* Product Info */}
       <div className="p-3 flex-1 flex flex-col">
         <Link to={`/product/${item.id}`} className="mb-1">
-          <h3 className="font-bold text-gray-800 line-clamp-2 text-xs md:text-sm transition-colors leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h3 className="font-bold text-gray-800 line-clamp-2 text-xs md:text-sm transition-colors leading-snug" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>
             {item.name}
           </h3>
         </Link>

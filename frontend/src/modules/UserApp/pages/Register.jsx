@@ -81,7 +81,7 @@ const MobileRegister = () => {
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_QtluDyTyyTERMfRfd830u3RcIkF7aJHRbM37FYnRFNCY01_N74tx3WAK0zGIr3PEXlqhIdcITnhHLXC5x87LHZKdO0BvuQbZI88UlL9d0hYbgyyGowhWYN-gBgtlmM2Rr0o6e4YSkF9e4x6vS7jZY4SqZ65AXuXlAHqSnNDUs613UTccW7ylV1CyRVm_9MFrt9ceJxGerEQ2cFT2rZUFNVaq3a900_TuKdoUrotAgb_cjLr3F4-CNsxx4qut7UFp75j3KGaXtxvHxG8"
                   />
                 </div>
-                <h1 className="text-2xl font-black text-gray-900 font-serif tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Get Started Now</h1>
+                <h1 className="text-2xl font-black text-gray-900 font-serif tracking-wide" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Get Started Now</h1>
                 <p className="text-xs text-black/80 mt-1">Create an account to join sikhSTREET</p>
               </div>
 

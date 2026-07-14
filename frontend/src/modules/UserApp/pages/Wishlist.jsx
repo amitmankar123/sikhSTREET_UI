@@ -132,7 +132,7 @@ const MobileWishlist = () => {
                   <FiArrowLeft className="text-xl text-gray-700" />
                 </button>
                 <div className="flex-1 min-w-0 text-left">
-                  <h1 className="text-lg font-black text-gray-900 truncate font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h1 className="text-lg font-black text-gray-900 truncate font-serif" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
                     My Favorites
                   </h1>
                   <p className="text-xs text-gray-500 font-medium">
@@ -237,7 +237,7 @@ const MobileWishlist = () => {
                         }}
                       />
                       <div className="text-left min-w-0 flex-1">
-                        <h4 className="font-bold text-gray-900 truncate font-serif text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                        <h4 className="font-bold text-gray-900 truncate font-serif text-sm" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
                           {shop.name}
                         </h4>
                         <div className="flex items-center gap-1 mt-0.5">
@@ -281,7 +281,7 @@ const EmptyWishlistState = () => (
     <div className="w-16 h-16 rounded-full bg-black/10 text-[#F5A623] flex items-center justify-center mx-auto mb-5">
       <FiHeart className="text-3xl" />
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
       Your wishlist is empty
     </h3>
     <p className="text-sm text-black/80 mb-6">Start adding items you love!</p>
@@ -299,7 +299,7 @@ const EmptyShopsState = () => (
     <div className="w-16 h-16 rounded-full bg-black/10 text-[#F5A623] flex items-center justify-center mx-auto mb-5">
       <FiHeart className="text-3xl" />
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+    <h3 className="text-xl font-bold text-gray-900 mb-2 font-serif" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
       No favorite shops yet
     </h3>
     <p className="text-sm text-black/80 mb-6">Explore small shops and follow them to see them here!</p>

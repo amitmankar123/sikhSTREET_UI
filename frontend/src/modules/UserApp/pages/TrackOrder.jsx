@@ -160,7 +160,7 @@ const MobileTrackOrder = () => {
                   <FiArrowLeft className="text-xl text-black" />
                 </button>
                 <div className="flex-1">
-                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Track Order</h1>
+                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Times New Roman', Times, serif" }}>Track Order</h1>
                   <p className="text-sm text-black">Order #{displayOrderId}</p>
                 </div>
                 <Badge variant={normalizedStatus}>{normalizedStatus.toUpperCase()}</Badge>
@@ -170,7 +170,7 @@ const MobileTrackOrder = () => {
             <div className="px-4 py-4 space-y-4">
               {/* Tracking Timeline */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Status</h2>
+                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "'Times New Roman', Times, serif" }}>Order Status</h2>
                 <div className="space-y-4">
                   {steps.map((step, index) => {
                     const Icon = step.icon;
@@ -198,7 +198,7 @@ const MobileTrackOrder = () => {
               {/* Tracking Number */}
               {order.trackingNumber && (
                 <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Tracking Number</h2>
+                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Times New Roman', Times, serif" }}>Tracking Number</h2>
                   <p className="text-lg font-bold text-black">{order.trackingNumber}</p>
                 </div>
               )}
@@ -206,7 +206,7 @@ const MobileTrackOrder = () => {
               {/* Shipping Address */}
               {hasShippingAddress ? (
                 <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
                     <FiMapPin className="text-black" />
                     Shipping Address
                   </h2>
@@ -223,7 +223,7 @@ const MobileTrackOrder = () => {
 
               {/* Order Items */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Items</h2>
+                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "'Times New Roman', Times, serif" }}>Order Items</h2>
                 <div className="space-y-3">
                   {orderItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
@@ -259,7 +259,7 @@ const MobileTrackOrder = () => {
               {/* Estimated Delivery */}
               {order.estimatedDelivery && (
                 <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Estimated Delivery</h2>
+                  <h2 className="text-base font-bold text-black mb-2" style={{ fontFamily: "'Times New Roman', Times, serif" }}>Estimated Delivery</h2>
                   <p className="text-lg font-semibold text-black">
                     {formatDate(order.estimatedDelivery)}
                   </p>

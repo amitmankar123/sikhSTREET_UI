@@ -359,7 +359,7 @@ const MobileCheckout = () => {
                 className="p-2 hover:bg-white rounded-full transition-colors">
                 <FiArrowLeft className="text-xl text-black" />
               </button>
-              <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Checkout</h1>
+              <h1 className="text-xl font-bold text-black" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Checkout</h1>
             </div>
             {/* Steps Bar */}
             <div className="px-4 pb-3">
@@ -377,7 +377,7 @@ const MobileCheckout = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="px-4 py-4 lg:p-0">
-                    <h2 className="text-lg font-bold text-black mb-4 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <h2 className="text-lg font-bold text-black mb-4 flex items-center gap-2" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>
                       <FiTruck className="text-black" />
                       Shipping Information
                     </h2>
@@ -555,7 +555,7 @@ const MobileCheckout = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="px-4 py-4 lg:p-0">
-                    <h2 className="text-lg font-bold text-black mb-4 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <h2 className="text-lg font-bold text-black mb-4 flex items-center gap-2" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>
                       <FiCreditCard className="text-black" />
                       Payment Method
                     </h2>

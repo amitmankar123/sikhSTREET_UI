@@ -197,7 +197,7 @@ const MobileOrderDetail = () => {
                   <FiArrowLeft className="text-xl text-black" />
                 </button>
                 <div className="flex-1">
-                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Details</h1>
+                  <h1 className="text-xl font-bold text-black" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Order Details</h1>
                   <p className="text-sm text-black">Order #{order.id}</p>
                 </div>
                 <Badge variant={order?.status || 'pending'}>{(order?.status || 'pending').toUpperCase()}</Badge>
@@ -207,7 +207,7 @@ const MobileOrderDetail = () => {
             <div className="px-4 py-4 space-y-4">
               {/* Order Items */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Items</h2>
+                <h2 className="text-base font-bold text-black mb-4" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Order Items</h2>
                 {order.vendorItems && order.vendorItems.length > 0 ? (
                   <div className="space-y-4">
                     {order.vendorItems.map((vendorGroup) => (
@@ -320,7 +320,7 @@ const MobileOrderDetail = () => {
 
               {/* Shipping Address */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>
                   <FiMapPin className="text-black" />
                   Shipping Address
                 </h2>
@@ -341,7 +341,7 @@ const MobileOrderDetail = () => {
 
               {/* Payment Info */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h2 className="text-base font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>
                   <FiCreditCard className="text-black" />
                   Payment Information
                 </h2>
@@ -367,7 +367,7 @@ const MobileOrderDetail = () => {
 
               {/* Order Summary */}
               <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
-                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Order Summary</h2>
+                <h2 className="text-base font-bold text-black mb-3" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Order Summary</h2>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-black/90">
                     <span>Subtotal</span>
@@ -447,7 +447,7 @@ const MobileOrderDetail = () => {
                 className="w-full sm:max-w-md bg-white border border-black/10 rounded-t-2xl sm:rounded-2xl p-4 sm:p-5"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-black" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Request Return</h3>
+                  <h3 className="text-lg font-bold text-black" style={{ fontFamily: "\"Times New Roman\", Times, serif" }}>Request Return</h3>
                   <button
                     onClick={() => setShowReturnModal(false)}
                     className="p-2 rounded-full hover:bg-white"

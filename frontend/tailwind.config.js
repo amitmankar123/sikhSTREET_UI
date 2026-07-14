@@ -156,11 +156,11 @@ export default {
         // Body font (clean, modern)
         sans:    ['"Segoe UI"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         // Display/heading font
-        heading: ['Playfair Display', 'Lora', 'Georgia', 'serif'],
+        heading: ['"Times New Roman"', 'Times', 'serif'],
         // Brand logo font (Playfair for the hero brand name)
-        brand:   ['Playfair Display', 'Lora', 'Georgia', 'serif'],
+        brand:   ['"Times New Roman"', 'Times', 'serif'],
         // Standard serif override
-        serif:   ['Playfair Display', 'Lora', 'Georgia', 'serif'],
+        serif:   ['"Times New Roman"', 'Times', 'serif'],
       },
 
       fontSize: {
