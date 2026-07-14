@@ -41,7 +41,6 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true, full
       {shouldShowHeader && (
         <>
           <MobileHeader />
-          {location.pathname !== '/categories' && location.pathname !== '/categories/' && <DesktopCategoryBar />}
         </>
       )}
       <main

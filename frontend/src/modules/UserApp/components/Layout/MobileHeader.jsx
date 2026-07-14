@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "../../../../data/categories";
 import { useCartStore, useUIStore } from "../../../../shared/store/useStore";
 import { useWishlistStore } from "../../../../shared/store/wishlistStore";
+import { appLogo } from "../../../../data/logos";
 
 const MobileHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,25 +48,21 @@ const MobileHeader = () => {
 
   const headerContent = (
     <header
-      className={`fixed top-0 w-full z-50 bg-[#fff8f5]/90 backdrop-blur-lg border-b border-[#e8e8e8] transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-[#e8e8e8] transition-all duration-300 ${
         isScrolled ? "shadow-sm py-2" : "py-4"
       }`}
     >
       <div className="flex flex-col gap-3 px-6 md:px-12 w-full max-w-7xl mx-auto">
         {/* Row 1: Logo, Search Bar, and Action Icons */}
         <div className="flex justify-between items-center w-full gap-6">
-          {/* Left Side: Logo and Title */}
           <Link to="/home" className="flex items-center gap-3 active:scale-95 transition-transform flex-shrink-0">
-            <div className="w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-[#8d4b00]/10 p-1">
+            <div className="flex items-center justify-center">
               <img
-                className="w-full h-full object-contain"
+                className="w-[140px] sm:w-[160px] h-auto object-contain"
                 alt="Sikh Street logo"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_QtluDyTyyTERMfRfd830u3RcIkF7aJHRbM37FYnRFNCY01_N74tx3WAK0zGIr3PEXlqhIdcITnhHLXC5x87LHZKdO0BvuQbZI88UlL9d0hYbgyyGowhWYN-gBgtlmM2Rr0o6e4YSkF9e4x6vS7jZY4SqZ65AXuXlAHqSnNDUs613UTccW7ylV1CyRVm_9MFrt9ceJxGerEQ2cFT2rZUFNVaq3a900_TuKdoUrotAgb_cjLr3F4-CNsxx4qut7UFp75j3KGaXtxvHxG8"
+                src={appLogo.src}
               />
             </div>
-            <span className="text-base sm:text-xl font-black text-[#8d4b00] tracking-wide ml-1">
-              Sikh Street
-            </span>
           </Link>
 
           {/* Desktop Search Bar (Inline Etsy Style) */}

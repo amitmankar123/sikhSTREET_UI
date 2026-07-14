@@ -101,11 +101,11 @@ const DesktopHeader = () => {
                     <div className="flex items-center gap-5 lg:gap-8 flex-shrink-0">
                         <Link to="/home" className="flex-shrink-0 flex items-center gap-2.5">
                             {appLogo.src ? (
-                                <motion.div style={{ scale: logoScale }} className="bg-white p-2 rounded-lg shadow-sm origin-left">
+                                <motion.div style={{ scale: logoScale }} className="origin-left flex items-center">
                                     <img
                                         src={appLogo.src}
                                         alt={appLogo.alt}
-                                        className="h-12 w-auto object-contain"
+                                        className="w-[180px] lg:w-[220px] h-auto object-contain"
                                     />
                                 </motion.div>
                             ) : (
