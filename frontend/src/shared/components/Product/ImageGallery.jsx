@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { FiX, FiChevronLeft, FiChevronRight, FiPlayCircle } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiChevronRight, FiPlayCircle, FiHeart, FiStar, FiCompass } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import LazyImage from "../LazyImage";
 import useSwipeGesture from "../../../modules/UserApp/hooks/useSwipeGesture";
 
-const ImageGallery = ({ images, video, productName = "Product", children }) => {
+const ImageGallery = ({
+  images,
+  video,
+  productName = "Product",
+  showFavorite = false,
+  isFavorite = false,
+  onFavoriteClick = () => {},
+  isBestseller = false,
+  onLookInsideClick = null,
+  children
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  const videoRef = useRef(null);
 
   // Ensure images is an array
   const imageArray =
@@ -19,6 +32,20 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
     ...imageArray.map((url) => ({ type: "image", url })),
     ...(video ? [{ type: "video", url: video }] : []),
   ];
+
+  const displayIndex = hoveredIndex !== null ? hoveredIndex : selectedIndex;
+
+  useEffect(() => {
+    if (mediaArray[displayIndex]?.type === "video" && videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch((err) => {
+        console.log("Autoplay blocked or failed:", err);
+      });
+    } else if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  }, [displayIndex, mediaArray]);
 
   if (mediaArray.length === 0) {
     return (
@@ -43,7 +70,7 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
   };
 
   const handleImageClick = () => {
-    if (mediaArray[selectedIndex].type === "image") {
+    if (mediaArray[displayIndex]?.type === "image") {
       setIsLightboxOpen(true);
     }
   };
@@ -56,16 +83,25 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
   });
 
   return (
-    <>
-      <div className="w-full flex flex-col-reverse lg:flex-row gap-4">
-        {/* Thumbnails (Left on Desktop, Bottom on Mobile) */}
+    <>      <div className="w-full flex flex-row gap-4">
+        {/* Thumbnails (Always Left Side) */}
         {mediaArray.length > 1 && (
-          <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px] lg:w-20 xl:w-24 flex-shrink-0 hide-scrollbar pb-2 lg:pb-0">
+          <div className="flex flex-col gap-3 overflow-y-auto max-h-[500px] lg:max-h-[600px] w-12 sm:w-16 md:w-20 xl:w-24 flex-shrink-0 hide-scrollbar">
             {mediaArray.map((media, index) => (
               <button
                 key={index}
                 onClick={() => handleThumbnailClick(index)}
-                className={`w-16 lg:w-full aspect-square flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-300 relative bg-gray-100 ${selectedIndex === index
+                onMouseEnter={() => {
+                  if (media.type === "video") {
+                    setHoveredIndex(index);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (media.type === "video") {
+                    setHoveredIndex(null);
+                  }
+                }}
+                className={`w-full aspect-square flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-300 relative bg-gray-100 ${selectedIndex === index
                   ? "border-gray-900"
                   : "border-transparent hover:border-gray-300"
                   }`}>
@@ -92,7 +128,7 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
         {/* Main Image */}
         <div className="flex-1 w-full flex flex-col gap-6">
           <div
-            className="relative w-full aspect-[4/5] lg:aspect-square bg-[#F9F9F9] rounded-2xl p-0 overflow-hidden"
+            className="relative w-full aspect-[4/5] lg:aspect-square bg-[#F9F9F9] rounded-2xl p-0 overflow-visible group"
             data-gallery>
             {/* Floating Back Button (Mobile Only) */}
             <button
@@ -101,9 +137,45 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
             >
               <FiChevronLeft className="text-gray-800 text-2xl" />
             </button>
+
+            {/* Floating Bestseller Badge */}
+            {isBestseller && (
+              <div className="absolute left-4 top-4 lg:top-4 max-lg:top-16 z-10 bg-[#FFB500] text-black font-bold text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-white/50 font-sans">
+                <FiStar className="fill-black text-[10px]" />
+                Bestseller
+              </div>
+            )}
+
+            {/* Floating Look Inside Preview Button */}
+            {onLookInsideClick && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLookInsideClick();
+                }}
+                className="absolute left-4 bottom-4 z-10 bg-white/95 text-stone-800 text-xs px-4 py-2.5 rounded-full flex items-center gap-1.5 shadow-sm border border-stone-200 hover:bg-stone-50 transition-colors font-sans font-semibold"
+              >
+                <FiCompass className="text-sm" />
+                Look Inside (Preview)
+              </button>
+            )}
+
+            {/* Floating Favorite Heart Button */}
+            {showFavorite && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFavoriteClick();
+                }}
+                className="absolute right-4 top-4 z-10 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-105 active:scale-95 transition-all"
+              >
+                <FiHeart className={`text-xl transition-colors ${isFavorite ? "fill-[#F5A623] text-[#F5A623]" : "text-gray-600 hover:text-gray-800"}`} />
+              </button>
+            )}
+
             <motion.div
-              key={selectedIndex}
-              className="w-full h-full flex items-center justify-center cursor-zoom-in"
+              key={displayIndex}
+              className="w-full h-full flex items-center justify-center cursor-zoom-in rounded-2xl overflow-hidden"
               onClick={handleImageClick}
               onTouchStart={swipeHandlers.onTouchStart}
               onTouchMove={swipeHandlers.onTouchMove}
@@ -111,16 +183,19 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}>
-              {mediaArray[selectedIndex].type === "video" ? (
+              {mediaArray[displayIndex]?.type === "video" ? (
                 <video
-                  src={mediaArray[selectedIndex].url}
+                  ref={videoRef}
+                  src={mediaArray[displayIndex].url}
                   controls
+                  muted
+                  playsInline
                   className="w-full h-full object-cover bg-black"
                 />
               ) : (
                 <LazyImage
-                  src={mediaArray[selectedIndex].url}
-                  alt={`${productName} - Image ${selectedIndex + 1}`}
+                  src={mediaArray[displayIndex]?.url}
+                  alt={`${productName} - Image ${displayIndex + 1}`}
                   className="w-full h-full object-cover mix-blend-multiply"
                   onError={(e) => {
                     e.target.src =
@@ -130,24 +205,8 @@ const ImageGallery = ({ images, video, productName = "Product", children }) => {
               )}
             </motion.div>
 
-            {/* Navigation Arrows (Mobile Only) */}
-            {mediaArray.length > 1 && (
-              <>
-                <button
-                  onClick={(e) => { e.stopPropagation(); handlePrevious(); }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:bg-white lg:hidden">
-                  <FiChevronLeft className="text-gray-800 text-xl" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:bg-white lg:hidden">
-                  <FiChevronRight className="text-gray-800 text-xl" />
-                </button>
-              </>
-            )}
-          </div>
 
-          {/* Action Buttons / Badge Area (Injected via children) */}
+          </div>
           {children}
         </div>
       </div>

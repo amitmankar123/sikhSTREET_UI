@@ -14,9 +14,12 @@ import {
   FiCompass,
   FiInfo,
   FiChevronDown,
+  FiChevronRight,
+  FiChevronLeft,
   FiFlag,
+  FiX,
 } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore, useUIStore } from "../../../shared/store/useStore";
 import { useWishlistStore } from "../../../shared/store/wishlistStore";
 import { useReviewsStore } from "../../../shared/store/reviewsStore";
@@ -34,6 +37,7 @@ import { formatPrice } from "../../../shared/utils/helpers";
 import toast from "react-hot-toast";
 import MobileLayout from "../components/Layout/MobileLayout";
 import ImageGallery from "../../../shared/components/Product/ImageGallery";
+import SearchBar from "../../../shared/components/SearchBar";
 import VariantSelector from "../../../shared/components/Product/VariantSelector";
 import ReviewForm from "../../../shared/components/Product/ReviewForm";
 import ProductQA from "../components/ProductQA";
@@ -42,6 +46,7 @@ import PageTransition from "../../../shared/components/PageTransition";
 import Badge from "../../../shared/components/Badge";
 import ProductCard from "../../../shared/components/ProductCard";
 import { getVariantSignature, resolveVariantPrice } from "../../../shared/utils/variant";
+import LazyImage from "../../../shared/components/LazyImage";
 
 
 
@@ -120,6 +125,130 @@ const normalizeProduct = (raw) => {
   };
 };
 
+const BookProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  const productLink = `/product/${product.id}`;
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const renderPrice = (val) => {
+    return `CA$ ${Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  const discountPercent = product.originalPrice && product.originalPrice > product.price
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
+  return (
+    <div 
+      onClick={() => {
+        navigate(productLink);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group cursor-pointer flex flex-col w-full h-full text-left bg-transparent"
+    >
+      {/* Image Container */}
+      <div className="relative w-full aspect-square bg-[#F4F4F4] rounded-xl overflow-hidden shadow-sm border border-gray-100 flex items-center justify-center">
+        {product.video && isHovered ? (
+          <video
+            src={product.video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover transition-all duration-300 rounded-xl"
+          />
+        ) : (
+          <LazyImage
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              e.target.src = "https://placehold.co/300x300?text=Book+Cover";
+            }}
+          />
+        )}
+
+        {/* Play Button Overlay */}
+        {product.hasVideo && !isHovered && (
+          <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-transform hover:scale-110">
+            <svg 
+              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        )}
+
+        {/* Free Shipping / USPS Logo Badge overlay */}
+        {product.id === 316 && (
+          <div className="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-sm border border-gray-200 px-1.5 py-0.5 rounded shadow-sm text-[8px] font-extrabold text-blue-800 flex items-center gap-0.5">
+            🚚 FREE SHIPPING
+          </div>
+        )}
+      </div>
+
+      {/* Info Block */}
+      <div className="flex-1 flex flex-col pt-2 pb-1">
+        {/* Designer / Rating Line */}
+        <div className="text-[11px] text-gray-600 flex items-center gap-1 flex-wrap">
+          <span className="font-semibold text-gray-800 truncate max-w-[120px]">
+            {product.vendorName || "Sikh Street"}
+          </span>
+          {product.rating > 0 && (
+            <span className="flex items-center text-orange-500 font-bold ml-1">
+              ★ {product.rating} <span className="text-gray-400 font-normal ml-0.5">({product.reviewCount})</span>
+            </span>
+          )}
+          {product.isAd && (
+            <span className="text-gray-400 text-[10px] font-medium ml-auto">Ad</span>
+          )}
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xs md:text-sm text-gray-800 font-normal mt-1 leading-snug line-clamp-2 group-hover:underline font-sans text-left">
+          {product.name}
+        </h3>
+
+        {/* Price and Discount */}
+        <div className="mt-1.5 flex items-baseline gap-1.5 flex-wrap">
+          <span className="font-bold text-gray-900 text-sm md:text-base">
+            {renderPrice(product.price)}
+          </span>
+          {discountPercent > 0 && (
+            <>
+              <span className="text-[11px] text-gray-400 line-through font-normal">
+                {renderPrice(product.originalPrice)}
+              </span>
+              <span className="text-green-700 text-xs font-semibold">
+                ({discountPercent}% off)
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* Delivery / Badges */}
+        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-gray-500">
+          {product.digitalDownload ? (
+            <span className="flex items-center gap-1 text-gray-500 font-medium">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Digital download
+            </span>
+          ) : product.freeDelivery ? (
+            <span className="text-gray-600 font-medium">
+              Free delivery
+            </span>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MobileProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -139,6 +268,12 @@ const MobileProductDetail = () => {
   const [isPersonalMessageOpen, setIsPersonalMessageOpen] = useState(false);
   const [selectedArtSize, setSelectedArtSize] = useState(null);
   const [selectedArtMaterial, setSelectedArtMaterial] = useState(null);
+  
+  // Book Product States
+  const [selectedBookFormat, setSelectedBookFormat] = useState(null);
+  const [selectedBookLanguage, setSelectedBookLanguage] = useState(null);
+  const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
+  const [lookInsideIndex, setLookInsideIndex] = useState(0);
 
   useEffect(() => {
     if (product?.turbanConfig?.fabric?.length > 0) {
@@ -332,6 +467,24 @@ const MobileProductDetail = () => {
   }, [product]);
 
   useEffect(() => {
+    if (product?.bookConfig) {
+      if (Array.isArray(product.bookConfig.formatOptions) && product.bookConfig.formatOptions.length > 0) {
+        setSelectedBookFormat(product.bookConfig.formatOptions[0]);
+      } else {
+        setSelectedBookFormat(null);
+      }
+      if (Array.isArray(product.bookConfig.languageOptions) && product.bookConfig.languageOptions.length > 0) {
+        setSelectedBookLanguage(product.bookConfig.languageOptions[0]);
+      } else {
+        setSelectedBookLanguage(null);
+      }
+    } else {
+      setSelectedBookFormat(null);
+      setSelectedBookLanguage(null);
+    }
+  }, [product]);
+
+  useEffect(() => {
     if (product?.id) {
       fetchReviews(product.id, { sort: "newest", limit: 50 });
     }
@@ -385,7 +538,10 @@ const MobileProductDetail = () => {
     if (product?.artworkConfig && selectedArtSize && selectedArtMaterial) {
       computedBaseRate = selectedArtSize.basePrice * selectedArtMaterial.priceMultiplier;
     }
-    const baseRate = computedBaseRate;
+    let baseRate = computedBaseRate;
+    if (isBookProduct && selectedBookFormat) {
+      baseRate = Number(product.price || 0) + Number(selectedBookFormat.priceOffset || 0);
+    }
     const fabricRate = selectedFabric ? Number(selectedFabric.price) : 0;
     const ratePerMeter = isTurbanProduct && fabricRate > 0 ? fabricRate : baseRate;
 
@@ -409,6 +565,8 @@ const MobileProductDetail = () => {
       ...(product?.artworkConfig && selectedArtSize ? { art_size: selectedArtSize.label } : {}),
       ...(product?.artworkConfig && selectedArtMaterial ? { art_material: selectedArtMaterial.label } : {}),
       ...(personalMessage ? { personal_message: personalMessage } : {}),
+      ...(isBookProduct && selectedBookFormat ? { format: selectedBookFormat.label } : {}),
+      ...(isBookProduct && selectedBookLanguage ? { language: selectedBookLanguage.label } : {}),
     };
 
     const variantKey = getVariantSignature(selectedVariant || {});
@@ -598,6 +756,9 @@ const MobileProductDetail = () => {
   if (product?.artworkConfig && selectedArtSize && selectedArtMaterial) {
     baseRate = selectedArtSize.basePrice * selectedArtMaterial.priceMultiplier;
   }
+  if (isBookProduct && selectedBookFormat) {
+    baseRate = Number(product.price || 0) + Number(selectedBookFormat.priceOffset || 0);
+  }
   const fabricRate = selectedFabric ? Number(selectedFabric.price) : 0;
   const ratePerMeter = isTurbanProduct && fabricRate > 0 ? fabricRate : baseRate;
 
@@ -731,6 +892,13 @@ const MobileProductDetail = () => {
     <PageTransition>
       <MobileLayout showBottomNav={false} showCartBar={true}>
         <div className="w-full pb-4 lg:pb-8 max-w-7xl mx-auto">
+          {/* Page Search Bar with bottom padding */}
+          {!isBookProduct && (
+            <div className="px-6 lg:px-8 pt-4 pb-6 w-full max-w-2xl">
+              <SearchBar size="default" />
+            </div>
+          )}
+
           {/* Breadcrumbs */}
           <div className="hidden lg:flex px-6 pt-4 lg:pt-6 lg:px-8 items-center justify-start flex-wrap gap-1.5 text-sm md:text-base text-brand-muted font-sans">
             <Link to="/home" className="hover:text-[#F5A623] hover:underline transition-colors font-medium">
@@ -765,10 +933,22 @@ const MobileProductDetail = () => {
             {/* LEFT COLUMN: Image Gallery + Reviews (Spans 7 columns) */}
             <div className="lg:col-span-7 p-0 lg:p-0">
                {/* Gallery */}
-               <div className="mb-8">
-                  <ImageGallery images={productImages} productName={product.name} />
+               <div className="mb-8 relative">
+                  <ImageGallery
+                    images={productImages}
+                    video={product.video}
+                    productName={product.name}
+                    showFavorite={true}
+                    isFavorite={isFavorite}
+                    onFavoriteClick={handleFavorite}
+                    isBestseller={product.isBestseller}
+                    onLookInsideClick={isBookProduct && product.bookConfig?.previewPages?.length > 0 ? () => {
+                      setLookInsideIndex(0);
+                      setIsLookInsideOpen(true);
+                    } : null}
+                  />
                </div>
-               
+
                {/* Report to Etsy placeholder */}
                <div className="flex justify-end mb-12 text-sm text-gray-500 font-medium hover:underline cursor-pointer">
                  <FiFlag className="inline mr-2" /> Report this item to SikhStreet
@@ -788,28 +968,60 @@ const MobileProductDetail = () => {
             {/* RIGHT COLUMN: Info + Configuration (Spans 5 columns) */}
             <div className="lg:col-span-5 px-4 py-4 lg:p-0 lg:sticky lg:top-24 flex flex-col gap-5">
                 {/* Scarcity */}
-                {selectedAvailableStock < 10 && selectedAvailableStock > 0 && (
-                   <p className="text-sm font-bold text-red-600">In {selectedAvailableStock + 3} baskets</p>
+                {isBookProduct ? (
+                  <p className="text-xs md:text-sm font-bold text-[#C82333] font-sans">
+                    In 20+ baskets
+                  </p>
+                ) : (
+                  selectedAvailableStock < 10 && selectedAvailableStock > 0 && (
+                     <p className="text-sm font-bold text-red-600">In {selectedAvailableStock + 3} baskets</p>
+                  )
                 )}
                 
                 {/* Price */}
-                <div className="flex flex-col gap-0.5">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-black text-gray-900">
-                      {formatPrice(ratePerMeter)}
-                    </span>
-                    {isTurbanProduct && <span className="text-sm text-gray-500 font-normal">+ per meter</span>}
-                  </div>
-                  {product.originalPrice && (
-                    <span className="text-sm text-gray-500 line-through font-medium">
-                      {formatPrice(product.originalPrice)}
-                    </span>
+                <div className="flex flex-col gap-1">
+                  {isBookProduct ? (
+                    <div className="space-y-1 font-sans">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-2xl font-bold text-gray-900">
+                          Now {formatPrice(ratePerMeter)}
+                        </span>
+                      </div>
+                      {product.originalPrice && (
+                        <div className="text-sm text-gray-500 line-through font-medium">
+                          {formatPrice(product.originalPrice)}
+                        </div>
+                      )}
+                      
+                      {product.originalPrice && (
+                        <div className="flex items-center gap-1 text-sm font-semibold text-green-700">
+                          <span>{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off</span>
+                          <span className="text-gray-400 font-light mx-0.5">•</span>
+                          <span className="text-green-700">Sale ends on 05 August</span>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500 font-medium mt-0.5">GST Included</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl font-black text-gray-900">
+                          {formatPrice(ratePerMeter)}
+                        </span>
+                        {isTurbanProduct && <span className="text-sm text-gray-500 font-normal">+ per meter</span>}
+                      </div>
+                      {product.originalPrice && (
+                        <span className="text-sm text-gray-500 line-through font-medium">
+                          {formatPrice(product.originalPrice)}
+                        </span>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">* Seller GST included (where applicable). Additional GST may be applied at checkout.</p>
+                    </>
                   )}
-                  <p className="text-xs text-gray-500 mt-1">* Seller GST included (where applicable). Additional GST may be applied at checkout.</p>
                 </div>
 
                 {/* Title & Description */}
-                <h1 className="text-lg lg:text-xl font-medium text-gray-900 leading-snug">
+                <h1 className={`text-lg lg:text-xl font-normal leading-relaxed text-gray-900 font-sans mt-2`}>
                   {product.name} - {product.description || "Premium quality Sikh artifact"}
                 </h1>
                 
@@ -821,17 +1033,19 @@ const MobileProductDetail = () => {
                       className="text-sm font-medium text-gray-900 hover:underline flex items-center gap-1 group"
                     >
                       <span>{vendor.storeName || vendor.name}</span>
-                      {vendor.isVerified && (
+                      {isBookProduct ? (
+                        <FiCheckCircle className="text-purple-600 text-xs" title="Star Seller" />
+                      ) : vendor.isVerified && (
                         <FiCheckCircle className="text-blue-500 text-xs" title="Verified Vendor" />
                       )}
                     </Link>
                   )}
                   {product.rating > 0 && (
-                    <div className="flex items-center gap-1 cursor-pointer">
+                    <div className="flex items-center gap-0.5 cursor-pointer text-gray-800">
                       {[...Array(5)].map((_, i) => (
                         <FiStar
                           key={i}
-                          className={`text-sm ${i < Math.floor(product.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
+                          className={`text-xs ${i < Math.floor(product.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
                         />
                       ))}
                     </div>
@@ -840,6 +1054,63 @@ const MobileProductDetail = () => {
 
                 {/* Configuration Dropdowns */}
                 <div className="space-y-4 mt-2">
+                  
+                  {/* Book Configuration (Format & Language Selector) */}
+                  {isBookProduct && product?.bookConfig && (
+                    <div className="space-y-4 mb-4 font-sans">
+                      {/* Format Options */}
+                      {Array.isArray(product.bookConfig.formatOptions) && product.bookConfig.formatOptions.length > 0 && (
+                        <div className="space-y-2">
+                          <label className="text-sm font-bold text-stone-800">Format</label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {product.bookConfig.formatOptions.map((opt) => (
+                              <button
+                                key={opt.id}
+                                type="button"
+                                onClick={() => setSelectedBookFormat(opt)}
+                                className={`px-3 py-2.5 rounded-xl border text-xs font-bold text-center transition-all flex flex-col items-center justify-center ${
+                                  selectedBookFormat?.id === opt.id
+                                    ? "border-stone-900 bg-stone-900 text-white shadow-sm"
+                                    : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                                }`}
+                              >
+                                <span className="truncate">{opt.label}</span>
+                                <span className={`text-[10px] mt-0.5 ${selectedBookFormat?.id === opt.id ? "text-stone-300" : "text-stone-500"}`}>
+                                  {formatPrice(product.price + opt.priceOffset)}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Language Options */}
+                      {Array.isArray(product.bookConfig.languageOptions) && product.bookConfig.languageOptions.length > 0 && (
+                        <div className="space-y-2">
+                          <label className="text-sm font-bold text-stone-800">Language</label>
+                          <div className="relative">
+                            <select
+                              value={selectedBookLanguage?.id || ""}
+                              onChange={(e) => {
+                                const lang = product.bookConfig.languageOptions.find((l) => l.id === e.target.value);
+                                if (lang) setSelectedBookLanguage(lang);
+                              }}
+                              className="w-full px-4 py-3 border border-stone-200 rounded-xl text-sm font-medium text-stone-900 bg-white appearance-none focus:outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900 transition-colors cursor-pointer shadow-sm"
+                            >
+                              {product.bookConfig.languageOptions.map((lang) => (
+                                <option key={lang.id} value={lang.id}>
+                                  {lang.label}
+                                </option>
+                              ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                              <FiChevronDown className="text-stone-600" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   {/* Length / Sizes Selector (Turbans Only) */}
                   {isTurbanProduct && (() => {
@@ -1117,6 +1388,67 @@ const MobileProductDetail = () => {
                     </div>
                   )}
 
+
+
+                  {/* Bundle Recommendations (Etsy Style) */}
+                  {isBookProduct && product.bookConfig?.recommendsBundle && (
+                    <div className="border border-stone-200/80 bg-white rounded-xl p-4 space-y-4 font-sans mt-2 shadow-sm">
+                      <h4 className="text-sm font-bold text-stone-900">{product.bookConfig.recommendsBundle.title}</h4>
+                      <div className="space-y-3">
+                        {product.bookConfig.recommendsBundle.items.map((item, idx) => (
+                          <div key={idx} className="flex gap-3 items-center">
+                            <div className="w-12 h-14 bg-stone-50 rounded-lg overflow-hidden flex-shrink-0 border border-stone-100">
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-stone-800 truncate">{item.name}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-xs font-bold text-stone-900">{formatPrice(item.price)}</span>
+                                <span className="text-[10px] text-stone-400 line-through">{formatPrice(item.originalPrice)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] text-stone-500 font-medium">Bundle Price</p>
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-base font-extrabold text-stone-900">
+                              {formatPrice(product.bookConfig.recommendsBundle.bundlePrice)}
+                            </span>
+                            <span className="text-xs text-stone-400 line-through">
+                              {formatPrice(product.bookConfig.recommendsBundle.originalBundlePrice)}
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const bundle = product.bookConfig.recommendsBundle;
+                            handleAddToCart(false);
+                            addItem({
+                              id: `bundle_item_${product.id}`,
+                              name: bundle.items[1].name,
+                              price: bundle.items[1].price,
+                              image: bundle.items[1].image,
+                              quantity: 1,
+                              variant: { type: "Companion Bundle Addon" },
+                              stockQuantity: 99,
+                              vendorId: product.vendorId,
+                              vendorName: product.vendorName,
+                              unit: "Piece"
+                            }, true);
+                            toast.success("Added bundle to basket!");
+                          }}
+                          className="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-all shadow-sm active:scale-95"
+                        >
+                          Add bundle to basket
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Buy Buttons */}
                   <div className="flex flex-col gap-3 mt-4">
                     <button
@@ -1143,6 +1475,18 @@ const MobileProductDetail = () => {
                       <FiHeart className={`text-lg ${isFavorite ? "fill-[#F5A623] text-[#F5A623]" : ""}`} />
                       {isFavorite ? "Remove from collection" : "Add to collection"}
                     </button>
+
+                    {/* Star Seller Card (Etsy Style) */}
+                    {isBookProduct && (
+                      <div className="flex gap-3.5 font-sans mt-3 items-start border-t border-b border-gray-200 py-3">
+                        <div className="w-10 h-10 rounded-full bg-[#FAF0F8] flex items-center justify-center text-[#A24B91] flex-shrink-0">
+                          <FiStar className="fill-[#A24B91] text-base animate-pulse" />
+                        </div>
+                        <div className="text-xs text-gray-600 leading-relaxed mt-0.5 text-left">
+                          <span className="font-bold text-gray-900">Star Seller.</span> This seller consistently earned 5-star reviews, dispatched on time, and replied quickly to any messages they received.
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Accordions */}
@@ -1168,55 +1512,55 @@ const MobileProductDetail = () => {
                         </div>
                         
                         {isBookProduct ? (
-                          <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden bg-white">
-                            <div className="border-b border-gray-200 bg-gray-50 px-4 py-2 flex w-max border-r border-t-0">
-                              <h3 className="text-teal-700 font-bold tracking-wide italic">SYNOPSIS</h3>
+                          <div className="mt-6 border border-stone-200 rounded-xl overflow-hidden bg-white shadow-sm font-sans">
+                            {/* Synopsis Header */}
+                            <div className="border-b border-stone-200 bg-stone-50 px-5 py-3 flex items-center justify-between">
+                              <h3 className="text-stone-800 font-extrabold tracking-wide uppercase text-xs">Synopsis & Details</h3>
                             </div>
-                            <div className="p-5 flex flex-col gap-8">
-                              <div className="space-y-5 text-gray-600 text-sm">
-                                <p className="leading-relaxed">
-                                  {product.bookConfig?.synopsis || product.description || "This book is a comprehensive introduction to the Sikh faith. Ideal for those with little knowledge of the religion, it will give you a clear understanding of what Sikh's believe, and how they practise their faith. Covering all aspects, from the history of Sikhism, to Sikh ethics, to the practicalities of living a Sikh life, learn what it means to be Sikh today."}
+                            <div className="p-6 flex flex-col gap-6">
+                              {/* Synopsis Text */}
+                              <div className="space-y-4 text-stone-700 text-sm font-serif leading-relaxed">
+                                <p className="first-letter:text-3xl first-letter:font-bold first-letter:text-stone-900 first-letter:float-left first-letter:mr-2">
+                                  {product.bookConfig?.synopsis || product.description}
                                 </p>
-                                
-                                {product.bookConfig?.sections ? product.bookConfig.sections.map((section, idx) => (
-                                  <div key={idx}>
-                                    <h4 className="text-gray-500 uppercase tracking-widest text-xs mb-1">{section.title}</h4>
-                                    <p className="leading-relaxed">{section.content}</p>
-                                  </div>
-                                )) : (
-                                  <>
-                                    <div>
-                                      <h4 className="text-gray-500 uppercase tracking-widest text-xs mb-1">NOT GOT MUCH TIME?</h4>
-                                      <p className="leading-relaxed">One, five and ten-minute introductions to key principles to get you started.</p>
-                                    </div>
-                                    <div>
-                                      <h4 className="text-gray-500 uppercase tracking-widest text-xs mb-1">AUTHOR INSIGHTS</h4>
-                                      <p className="leading-relaxed">Lots of instant help with common problems and quick tips for success, based on the author's many years of experience.</p>
-                                    </div>
-                                    <div>
-                                      <h4 className="text-gray-500 uppercase tracking-widest text-xs mb-1">TEST YOURSELF</h4>
-                                      <p className="leading-relaxed">Tests in the book and online to keep track of your progress.</p>
-                                    </div>
-                                  </>
-                                )}
                               </div>
-                              <div className="border-t border-gray-200 pt-6 space-y-4">
-                                <h4 className="text-gray-800 font-serif text-lg border-b border-gray-200 pb-2">Publisher information</h4>
-                                <ul className="text-sm text-gray-600 space-y-2 italic">
-                                  <li>Publisher: {product.bookConfig?.publisher || "John Murray Press"}</li>
-                                  <li>ISBN: {product.bookConfig?.isbn || "9781444105100"}</li>
-                                  <li>Number of pages: {product.bookConfig?.pages || "272"}</li>
-                                  <li>Dimensions: {product.bookConfig?.dimensions || "196 x 128 x 18 mm"}</li>
-                                  <li>Weight: {product.bookConfig?.weight || "220 g"}</li>
-                                  <li>Language: {product.bookConfig?.language || "English"}</li>
-                                </ul>
+                              
+                              {/* Publisher Info / Metadata Grid */}
+                              <div className="border-t border-stone-150 pt-5 space-y-3 font-sans">
+                                <h4 className="text-stone-900 font-bold text-xs uppercase tracking-wider">Book Information</h4>
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-stone-600 mt-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Publisher:</span>
+                                    <span className="truncate">{product.bookConfig?.publisher || "John Murray Press"}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">ISBN:</span>
+                                    <span className="truncate">{product.bookConfig?.isbn || "9781444105100"}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Pages:</span>
+                                    <span>{product.bookConfig?.pages || "272"} pages</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Dimensions:</span>
+                                    <span className="truncate">{product.bookConfig?.dimensions || "196 x 128 x 18 mm"}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Weight:</span>
+                                    <span>{product.bookConfig?.weight || "220 g"}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Language:</span>
+                                    <span>{product.bookConfig?.language || "English"}</span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         ) : (
                           <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-                          {product.description}
-                        </p>
+                            {product.description}
+                          </p>
                         )}
 
                       </div>
@@ -1263,14 +1607,21 @@ const MobileProductDetail = () => {
           {similarProducts.length > 0 && (
             <div className="mt-16 border-t border-gray-200 pt-10 px-4 lg:px-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">
-                You May Also Like
+                {isBookProduct ? "Other books you might like" : "You May Also Like"}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 {similarProducts.map((similarProduct) => (
-                  <ProductCard
-                    key={similarProduct.id}
-                    product={similarProduct}
-                  />
+                  isBookProduct ? (
+                    <BookProductCard
+                      key={similarProduct.id}
+                      product={similarProduct}
+                    />
+                  ) : (
+                    <ProductCard
+                      key={similarProduct.id}
+                      product={similarProduct}
+                    />
+                  )
                 ))}
               </div>
             </div>
@@ -1278,6 +1629,78 @@ const MobileProductDetail = () => {
         </div>
 
       </MobileLayout>
+
+      {/* Look Inside Preview Modal */}
+      <AnimatePresence>
+        {isLookInsideOpen && isBookProduct && product.bookConfig?.previewPages?.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-stone-900/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 lg:p-10"
+            onClick={() => setIsLookInsideOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#FAF8F6] border border-stone-200 shadow-2xl rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col font-serif"
+            >
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-stone-200/80 flex items-center justify-between bg-stone-50">
+                <div>
+                  <h3 className="text-lg font-bold text-stone-900 font-serif">Look Inside: {product.name}</h3>
+                  <p className="text-xs text-stone-500 font-sans mt-0.5">
+                    Page {lookInsideIndex + 1} of {product.bookConfig.previewPages.length} — {product.bookConfig.previewPages[lookInsideIndex].title}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsLookInsideOpen(false)}
+                  className="p-2 rounded-full hover:bg-stone-200 text-stone-500 hover:text-stone-800 transition-colors"
+                >
+                  <FiX className="text-xl" />
+                </button>
+              </div>
+
+              {/* Page Display Area */}
+              <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center bg-stone-100/50">
+                <div className="relative max-w-lg w-full bg-white shadow-lg rounded-lg border border-stone-200/60 overflow-hidden flex flex-col">
+                  {/* Parchment effect overlay */}
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-yellow-50/5 via-transparent to-stone-500/5 mix-blend-multiply" />
+                  
+                  <img
+                    src={product.bookConfig.previewPages[lookInsideIndex].url}
+                    alt={`Preview Page ${lookInsideIndex + 1}`}
+                    className="w-full h-auto max-h-[60vh] object-contain mx-auto"
+                  />
+                </div>
+              </div>
+
+              {/* Navigation Controls */}
+              <div className="px-6 py-4 border-t border-stone-200/80 flex items-center justify-between bg-stone-50 font-sans">
+                <button
+                  disabled={lookInsideIndex === 0}
+                  onClick={() => setLookInsideIndex(prev => Math.max(0, prev - 1))}
+                  className="px-4 py-2 rounded-lg border border-stone-200 hover:border-stone-400 bg-white font-medium text-sm text-stone-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-all flex items-center gap-1.5"
+                >
+                  <FiChevronLeft className="text-base" /> Previous Page
+                </button>
+                <span className="text-sm font-semibold text-stone-600">
+                  {lookInsideIndex + 1} / {product.bookConfig.previewPages.length}
+                </span>
+                <button
+                  disabled={lookInsideIndex === product.bookConfig.previewPages.length - 1}
+                  onClick={() => setLookInsideIndex(prev => Math.min(product.bookConfig.previewPages.length - 1, prev + 1))}
+                  className="px-4 py-2 rounded-lg border border-stone-200 hover:border-stone-400 bg-white font-medium text-sm text-stone-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 transition-all flex items-center gap-1.5"
+                >
+                  Next Page <FiChevronRight className="text-base" />
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageTransition>
   );
 };

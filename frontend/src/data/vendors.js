@@ -187,6 +187,27 @@ export const vendors = [
       zipCode: "10001",
       country: "USA",
     },
+  },
+  {
+    id: "muhebb",
+    name: "Muhebb",
+    storeName: "Muhebb",
+    status: "approved",
+    rating: 5.0,
+    reviewCount: 120,
+    totalProducts: 10,
+    isVerified: true,
+    joinDate: "2024-05-15",
+    address: {
+      street: "Sufi Lane",
+      sector: "Old Town",
+      city: "Toronto",
+      state: "ON",
+      zipCode: "M5V 2H1",
+      country: "Canada",
+    },
+    shippingPolicy: "Dispatched within 24 hours. Delivery takes 3-5 business days.",
+    refundPolicy: "Returns accepted within 14 days if the book is in original condition."
   }
 ];
 

@@ -34,7 +34,7 @@ const DesktopHeader = () => {
     const userMenuRef = useRef(null);
 
     const { scrollY } = useScroll();
-    const headerHeight = useTransform(scrollY, [0, 100], ["7.25rem", "5.5rem"]);
+    const headerHeight = useTransform(scrollY, [0, 100], ["5rem", "4.6rem"]);
     const logoScale = useTransform(scrollY, [0, 100], [1.05, 0.85]);
     const bgOpacity = useTransform(scrollY, [0, 100], ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"]);
     const backdropBlur = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(12px)"]);
@@ -96,7 +96,7 @@ const DesktopHeader = () => {
                     WebkitBackdropFilter: backdropBlur
                 }}
             >
-                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 h-full flex items-center gap-4 lg:gap-8 transition-all">
+                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 h-full flex items-center pb-3 gap-1.9 lg:gap-8 transition-all">
                     {/* Logo & Categories */}
                     <div className="flex items-center gap-5 lg:gap-8 flex-shrink-0">
                         <Link to="/home" className="flex-shrink-0 flex items-center gap-2.5">

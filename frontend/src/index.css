@@ -18,7 +18,7 @@
   --vendor-accent-hover: 245 166 35;
 
   /* Buyer brand variables */
-  --brand-bg: #FFFFFF;
+  --brand-bg: rgb(250, 248, 245);
   --brand-surface: #FFFFFF;
   --brand-navy: #111111;
   --brand-saffron: #111111;

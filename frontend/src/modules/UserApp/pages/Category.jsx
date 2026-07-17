@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiFilter, FiArrowLeft, FiGrid, FiList, FiX, FiSearch, FiChevronDown } from "react-icons/fi";
+import { FiFilter, FiArrowLeft, FiGrid, FiList, FiX, FiSearch, FiChevronDown, FiSliders, FiInfo, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import MobileLayout from "../components/Layout/MobileLayout";
@@ -17,6 +17,127 @@ import api from "../../../shared/utils/api";
 import TurbanLoader from "../../../shared/components/loaderanimation/TurbanLoader";
 
 const normalizeId = (value) => String(value ?? "").trim();
+
+const BookProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  const productLink = `/product/${product.id}`;
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const renderPrice = (val) => {
+    return `CA$ ${Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  const discountPercent = product.originalPrice && product.originalPrice > product.price
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
+  return (
+    <div 
+      onClick={() => navigate(productLink)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group cursor-pointer flex flex-col w-full h-full text-left bg-transparent"
+    >
+      {/* Image Container */}
+      <div className="relative w-full aspect-square bg-[#F4F4F4] rounded-xl overflow-hidden shadow-sm border border-gray-100 flex items-center justify-center">
+        {product.video && isHovered ? (
+          <video
+            src={product.video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover transition-all duration-300 rounded-xl"
+          />
+        ) : (
+          <LazyImage
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              e.target.src = "https://placehold.co/300x300?text=Book+Cover";
+            }}
+          />
+        )}
+
+        {/* Play Button Overlay */}
+        {product.hasVideo && !isHovered && (
+          <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-transform hover:scale-110">
+            <svg 
+              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        )}
+
+        {/* Free Shipping / USPS Logo Badge overlay */}
+        {product.id === 316 && (
+          <div className="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-sm border border-gray-200 px-1.5 py-0.5 rounded shadow-sm text-[8px] font-extrabold text-blue-800 flex items-center gap-0.5">
+            🚚 FREE SHIPPING
+          </div>
+        )}
+      </div>
+
+      {/* Info Block */}
+      <div className="flex-1 flex flex-col pt-2 pb-1">
+        {/* Designer / Rating Line */}
+        <div className="text-[11px] text-gray-600 flex items-center gap-1 flex-wrap">
+          <span className="font-semibold text-gray-800 truncate max-w-[120px]">
+            {product.vendorName || "Sikh Street"}
+          </span>
+          {product.rating > 0 && (
+            <span className="flex items-center text-orange-500 font-bold ml-1">
+              ★ {product.rating} <span className="text-gray-400 font-normal ml-0.5">({product.reviewCount})</span>
+            </span>
+          )}
+          {product.isAd && (
+            <span className="text-gray-400 text-[10px] font-medium ml-auto">Ad</span>
+          )}
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xs md:text-sm text-gray-800 font-normal mt-1 leading-snug line-clamp-2 group-hover:underline font-sans text-left">
+          {product.name}
+        </h3>
+
+        {/* Price and Discount */}
+        <div className="mt-1.5 flex items-baseline gap-1.5 flex-wrap">
+          <span className="font-bold text-gray-900 text-sm md:text-base">
+            {renderPrice(product.price)}
+          </span>
+          {discountPercent > 0 && (
+            <>
+              <span className="text-[11px] text-gray-400 line-through font-normal">
+                {renderPrice(product.originalPrice)}
+              </span>
+              <span className="text-green-700 text-xs font-semibold">
+                ({discountPercent}% off)
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* Delivery / Badges */}
+        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-gray-500">
+          {product.digitalDownload ? (
+            <span className="flex items-center gap-1 text-gray-500 font-medium">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Digital download
+            </span>
+          ) : product.freeDelivery ? (
+            <span className="text-gray-600 font-medium">
+              Free delivery
+            </span>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const getParentId = (category) => {
   const parent = category?.parentId;
@@ -215,6 +336,39 @@ const MobileCategory = () => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Sikh Street Books specific filter states
+  const [etsyHandmade, setEtsyHandmade] = useState(false);
+  const [etsyIncludesVideo, setEtsyIncludesVideo] = useState(false);
+  const [etsyPicks, setEtsyPicks] = useState(false);
+  const [etsyOriginIN, setEtsyOriginIN] = useState(false);
+  const [etsyUnderCA10, setEtsyUnderCA10] = useState(false);
+  const [etsyStarSeller, setEtsyStarSeller] = useState(false);
+  const [etsyPaperback, setEtsyPaperback] = useState(false);
+  const [etsySpiralBound, setEtsySpiralBound] = useState(false);
+  const [etsyEncyclopedia, setEtsyEncyclopedia] = useState(false);
+  const [etsyDigital, setEtsyDigital] = useState(false);
+  const [etsySentFrom, setEtsySentFrom] = useState(""); // 'IN', 'CA', 'US' etc.
+  const [etsyDelivery, setEtsyDelivery] = useState(""); // 'free', 'ready_1', 'ready_3'
+  const [etsySort, setEtsySort] = useState("most_relevant");
+
+  // Sidebar accordion open/close state
+  const [openSections, setOpenSections] = useState({
+    sikhStreetBest: true,
+    category: false,
+    specialOffers: false,
+    sentFrom: true,
+    itemFormat: true,
+    readyToDispatch: false,
+    price: true,
+    colour: false,
+    itemType: false,
+    orderingOptions: false,
+    deliverTo: false,
+  });
+
+  const toggleSection = (key) =>
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+
   const handleSubcategoryChange = (subId) => {
     if (subId === selectedSubcategoryId) return;
     setIsTransitioning(true);
@@ -376,54 +530,89 @@ const MobileCategory = () => {
       );
     }
 
-    if (filters.minPrice) {
-      result = result.filter(
-        (product) => product.price >= parseFloat(filters.minPrice)
-      );
-    }
-    if (filters.maxPrice) {
-      result = result.filter(
-        (product) => product.price <= parseFloat(filters.maxPrice)
-      );
-    }
-    if (filters.minRating) {
-      result = result.filter(
-        (product) => product.rating >= parseFloat(filters.minRating)
-      );
-    }
+      if (categoryId === 'books') {
+        if (etsyHandmade) result = result.filter(p => p.handmade === true);
+        if (etsyIncludesVideo) result = result.filter(p => p.hasVideo === true);
+        if (etsyOriginIN) result = result.filter(p => p.origin === 'IN');
+        if (etsyUnderCA10) result = result.filter(p => p.price < 10);
+        if (etsyStarSeller) result = result.filter(p => p.rating >= 4.8);
+        if (etsyPaperback) result = result.filter(p => p.type === 'paperback');
+        if (etsySpiralBound) result = result.filter(p => p.type === 'spiral_bound');
+        if (etsyEncyclopedia) result = result.filter(p => p.type === 'encyclopedia');
+        if (etsyDigital) result = result.filter(p => p.digitalDownload === true);
+        if (etsySentFrom) result = result.filter(p => p.origin === etsySentFrom);
+        if (etsyDelivery === 'free') result = result.filter(p => p.freeDelivery === true);
+        if (etsyDelivery === 'digital') result = result.filter(p => p.digitalDownload === true);
 
-    // Turban Filters
-    if (filters.color) {
-      result = result.filter((product) =>
-        product.attributes?.color === filters.color || product.name.toLowerCase().includes(filters.color.toLowerCase())
-      );
-    }
-    if (filters.clothType) {
-      result = result.filter((product) =>
-        product.attributes?.clothType === filters.clothType
-      );
-    }
-    if (filters.sizeInMeters) {
-      result = result.filter((product) =>
-        product.attributes?.sizeInMeters === parseFloat(filters.sizeInMeters)
-      );
-    }
+        // Sorting for Books
+      if (etsySort === "price_asc") {
+        result = result.sort((a, b) => a.price - b.price);
+      } else if (etsySort === "price_desc") {
+        result = result.sort((a, b) => b.price - a.price);
+      } else if (etsySort === "top_rated") {
+        result = result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      } else {
+        // most_relevant
+        const relevantOrder = [308, 311, 312, 313, 314, 315, 316, 317];
+        result = result.sort((a, b) => {
+          const idxA = relevantOrder.indexOf(Number(a.id));
+          const idxB = relevantOrder.indexOf(Number(b.id));
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return 0;
+        });
+      }
+    } else {
+      if (filters.minPrice) {
+        result = result.filter(
+          (product) => product.price >= parseFloat(filters.minPrice)
+        );
+      }
+      if (filters.maxPrice) {
+        result = result.filter(
+          (product) => product.price <= parseFloat(filters.maxPrice)
+        );
+      }
+      if (filters.minRating) {
+        result = result.filter(
+          (product) => product.rating >= parseFloat(filters.minRating)
+        );
+      }
 
-    // Sorting
-    if (filters.sortBy === "price_asc") {
-      result = result.sort((a, b) => a.price - b.price);
-    } else if (filters.sortBy === "price_desc") {
-      result = result.sort((a, b) => b.price - a.price);
-    } else if (filters.sortBy === "name_asc") {
-      result = result.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (filters.sortBy === "name_desc") {
-      result = result.sort((a, b) => b.name.localeCompare(a.name));
-    } else if (filters.sortBy === "rating") {
-      result = result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      // Turban Filters
+      if (filters.color) {
+        result = result.filter((product) =>
+          product.attributes?.color === filters.color || product.name.toLowerCase().includes(filters.color.toLowerCase())
+        );
+      }
+      if (filters.clothType) {
+        result = result.filter((product) =>
+          product.attributes?.clothType === filters.clothType
+        );
+      }
+      if (filters.sizeInMeters) {
+        result = result.filter((product) =>
+          product.attributes?.sizeInMeters === parseFloat(filters.sizeInMeters)
+        );
+      }
+
+      // Sorting (shared for books and non-books via etsySort)
+      if (etsySort === "price_asc") {
+        result = result.sort((a, b) => a.price - b.price);
+      } else if (etsySort === "price_desc") {
+        result = result.sort((a, b) => b.price - a.price);
+      } else if (etsySort === "top_rated" || filters.sortBy === "rating") {
+        result = result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      } else if (filters.sortBy === "name_asc") {
+        result = result.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (filters.sortBy === "name_desc") {
+        result = result.sort((a, b) => b.name.localeCompare(a.name));
+      }
     }
 
     return result;
-  }, [category, categoryProductsFeed, filters, searchQuery, selectedSubcategoryId]);
+  }, [category, categoryProductsFeed, filters, searchQuery, selectedSubcategoryId, etsyHandmade, etsyIncludesVideo, etsyPicks, etsyOriginIN, etsyUnderCA10, etsyStarSeller, etsyPaperback, etsySpiralBound, etsyEncyclopedia, etsyDigital, etsySentFrom, etsyDelivery, etsySort]);
 
   const { displayedItems, hasMore, isLoading, loadMore, loadMoreRef } =
     useInfiniteScroll(categoryProducts, 10, 10);
@@ -441,6 +630,27 @@ const MobileCategory = () => {
   }, [displayedItems]);
 
   const filterButtonRef = useRef(null);
+  const filtersScrollRef = useRef(null);
+  const [showScrollRight, setShowScrollRight] = useState(false);
+
+  const checkScroll = () => {
+    const el = filtersScrollRef.current;
+    if (el) {
+      const canScroll = el.scrollWidth > el.clientWidth;
+      const scrolledToEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setShowScrollRight(canScroll && !scrolledToEnd);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const timer = setTimeout(checkScroll, 300);
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [categoryId]);
 
   const handleFilterChange = (name, value) => {
     setFilters({ ...filters, [name]: value });
@@ -459,6 +669,19 @@ const MobileCategory = () => {
       sortBy: "newest",
     });
     setSearchQuery("");
+    setEtsyHandmade(false);
+    setEtsyIncludesVideo(false);
+    setEtsyPicks(false);
+    setEtsyOriginIN(false);
+    setEtsyUnderCA10(false);
+    setEtsyStarSeller(false);
+    setEtsyPaperback(false);
+    setEtsySpiralBound(false);
+    setEtsyEncyclopedia(false);
+    setEtsyDigital(false);
+    setEtsySentFrom("");
+    setEtsyDelivery("");
+    setEtsySort("most_relevant");
   };
 
   // Check if any filter is active
@@ -471,7 +694,19 @@ const MobileCategory = () => {
     filters.color ||
     filters.clothType ||
     filters.sizeInMeters ||
-    filters.sortBy !== "newest";
+    filters.sortBy !== "newest" ||
+    etsyHandmade ||
+    etsyIncludesVideo ||
+    etsyPicks ||
+    etsyOriginIN ||
+    etsyUnderCA10 ||
+    etsyStarSeller ||
+    etsyPaperback ||
+    etsySpiralBound ||
+    etsyEncyclopedia ||
+    etsyDigital ||
+    etsySentFrom ||
+    etsyDelivery;
 
   // Close filter dropdown when clicking outside
   useEffect(() => {
@@ -536,424 +771,679 @@ const MobileCategory = () => {
           }}
         >
           {/* Animated Header */}
-          <div className={`px-4 pt-6 pb-6 rounded-b-[2.5rem] shadow-sm sticky top-0 z-40 backdrop-blur-md transition-all duration-500 ${activeTheme.headerBg}`}>
-            <div className="flex flex-row items-center justify-between gap-4">
+          {categoryId !== 'books' && (
+            <div className={`px-4 pt-6 pb-6 rounded-b-[2.5rem] shadow-sm sticky top-0 z-40 backdrop-blur-md transition-all duration-500 ${activeTheme.headerBg}`}>
+              <div className="flex flex-row items-center justify-between gap-4">
 
-              {/* Left Side: Back button + Category Details */}
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => navigate(-1)}
-                  className="p-2.5 hover:bg-gray-100 rounded-full transition-colors text-black flex-shrink-0"
-                >
-                  <FiArrowLeft className="text-xl" />
-                </button>
-
-                <motion.div
-                  className="flex items-center gap-4"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                >
-                  <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-black flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
-                    {typeof category.image === 'string' && category.image.includes('<svg') ? (
-                      <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-12 h-12 md:w-16 md:h-16 filter brightness-0 invert" />
-                    ) : (
-                      <LazyImage
-                        src={category.image}
-                        alt={category.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.src = getPlaceholderImage(80, 80, "Category");
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <motion.h1
-                      className="text-xl md:text-3xl font-black font-heading text-black tracking-tight leading-none"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {category.name}
-                    </motion.h1>
-                    <motion.p
-                      className="text-xs md:text-sm text-gray-500 font-medium mt-1"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      {category.description || `Explore everything in ${category.name}`}
-                    </motion.p>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Right Side: Filters & Controls */}
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <div ref={filterButtonRef} className="relative">
+                {/* Left Side: Back button + Category Details */}
+                <div className="flex items-center gap-4">
                   <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className={`p-3 glass-card rounded-xl hover:bg-gray-100 transition-colors h-11 w-11 flex items-center justify-center shadow-sm border border-slate-200 ${showFilters ? "bg-gray-100" : ""}`}
+                    onClick={() => navigate(-1)}
+                    className="p-2.5 hover:bg-gray-100 rounded-full transition-colors text-black flex-shrink-0"
                   >
-                    <FiFilter className={`text-xl transition-colors ${hasActiveFilters ? "text-blue-600" : "text-black"}`} />
+                    <FiArrowLeft className="text-xl" />
                   </button>
+
+                  <motion.div
+                    className="flex items-center gap-4"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  >
+                    <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-black flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
+                      {typeof category.image === 'string' && category.image.includes('<svg') ? (
+                        <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-12 h-12 md:w-16 md:h-16 filter brightness-0 invert" />
+                      ) : (
+                        <LazyImage
+                          src={category.image}
+                          alt={category.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = getPlaceholderImage(80, 80, "Category");
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <motion.h1
+                        className="text-xl md:text-3xl font-black font-heading text-black tracking-tight leading-none"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        {category.name}
+                      </motion.h1>
+                      <motion.p
+                        className="text-xs md:text-sm text-gray-500 font-medium mt-1"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        {category.description || `Explore everything in ${category.name}`}
+                      </motion.p>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
-
             </div>
-          </div>
+          )}
 
           <div className="md:flex md:gap-6 px-4 py-6 items-start">
-            {/* LEFT SIDEBAR (Desktop) */}
-            {subcategories.length > 0 && (
-              <div className="w-full md:w-64 flex-shrink-0 hidden md:block sticky top-24">
-                <h3 className="text-xl font-bold text-black mb-5 uppercase tracking-wider">Categories</h3>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => handleSubcategoryChange(null)}
-                    className={`text-left px-4 py-3.5 rounded-xl text-base font-bold transition-all ${!selectedSubcategoryId ? "bg-black text-white shadow-md" : "bg-gray-50 text-gray-755 hover:bg-black hover:text-white transition-colors"}`}
-                  >
-                    All Items
-                  </button>
-                  {subcategories.map(sub => (
-                    <button
-                      key={sub.id}
-                      onClick={() => handleSubcategoryChange(sub.id)}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl text-base font-bold transition-all ${selectedSubcategoryId === sub.id ? "bg-black text-white shadow-md" : "bg-gray-50 text-gray-700 hover:bg-black hover:text-white transition-colors"}`}
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {typeof sub.image === 'string' && sub.image.includes('<svg') ? (
-                          <div dangerouslySetInnerHTML={{ __html: sub.image }} className={`w-6 h-6 filter ${selectedSubcategoryId === sub.id ? 'invert brightness-0' : 'invert-[.5] sepia-[1] saturate-[5] hue-rotate-[10deg]'}`} />
-                        ) : (
-                          <LazyImage src={sub.image} className="w-full h-full object-cover" />
-                        )}
-                      </div>
-                      <span className="truncate">{sub.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+
 
             {/* RIGHT CONTENT */}
             <div className="flex-1 min-w-0">
-              {/* Mobile Categories Scroll */}
-              {subcategories.length > 0 && (
-                <div className="w-full md:hidden mb-6 -mx-4 px-4 overflow-x-auto hide-scrollbar">
-                  <div className="flex gap-3 pb-2 w-max">
-                    <button
-                      onClick={() => handleSubcategoryChange(null)}
-                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${!selectedSubcategoryId ? "bg-black text-white shadow-md" : "bg-white text-gray-750 border border-gray-200 hover:bg-black hover:text-white hover:border-black transition-colors"}`}
-                    >
-                      All Items
-                    </button>
-                    {subcategories.map(sub => (
-                      <button
-                        key={sub.id}
-                        onClick={() => handleSubcategoryChange(sub.id)}
-                        className={`flex items-center gap-2 flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedSubcategoryId === sub.id ? "bg-black text-white shadow-md" : "bg-white text-gray-755 border border-gray-200 hover:bg-black hover:text-white hover:border-black transition-colors"}`}
+
+
+
+
+              {categoryId === 'books' ? (
+                /* Etsy Books Specific Filter Bar & Counter */
+                <div className="w-full mb-6">
+                  <div className="flex items-center justify-start gap-6 border-b border-gray-200 pb-4 flex-nowrap w-full">
+                    <div className="relative flex-shrink grow-0 min-w-0">
+                      <div
+                        ref={filtersScrollRef}
+                        onScroll={checkScroll}
+                        className="flex gap-3 flex-nowrap overflow-x-auto hide-scrollbar pb-1 scroll-smooth"
                       >
-                        {sub.name}
+                        <button
+                          onClick={() => setShowFilters(!showFilters)}
+                          className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
+                            showFilters
+                              ? "bg-gray-800 text-white border-gray-800 hover:bg-gray-700"
+                              : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
+                          }`}
+                        >
+                          <FiSliders className="text-xs" />
+                          {showFilters ? "Hide filters" : "Show filters"}
+                        </button>
+
+                        {(() => {
+                          const getPillClass = (isActive) => {
+                            return `px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
+                              isActive
+                                ? "bg-[#eaeaea] text-gray-900 border-[#1861bf]"
+                                : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
+                            }`;
+                          };
+
+                          return (
+                            <>
+                              <button
+                                onClick={() => setEtsyHandmade(!etsyHandmade)}
+                                className={getPillClass(etsyHandmade)}
+                              >
+                                Handmade only
+                              </button>
+
+                              <button
+                                onClick={() => setEtsyOriginIN(!etsyOriginIN)}
+                                className={getPillClass(etsyOriginIN)}
+                              >
+                                Sent from IN
+                              </button>
+
+                              <button
+                                onClick={() => setEtsyUnderCA10(!etsyUnderCA10)}
+                                className={getPillClass(etsyUnderCA10)}
+                              >
+                                Under CA$10
+                              </button>
+
+                              <button
+                                onClick={() => setEtsyStarSeller(!etsyStarSeller)}
+                                className={getPillClass(etsyStarSeller)}
+                              >
+                                Star Seller
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setEtsyPaperback(!etsyPaperback);
+                                  setEtsySpiralBound(false);
+                                  setEtsyEncyclopedia(false);
+                                }}
+                                className={getPillClass(etsyPaperback)}
+                              >
+                                Paperback
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setEtsySpiralBound(!etsySpiralBound);
+                                  setEtsyPaperback(false);
+                                  setEtsyEncyclopedia(false);
+                                }}
+                                className={getPillClass(etsySpiralBound)}
+                              >
+                                Spiral Bound
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setEtsyEncyclopedia(!etsyEncyclopedia);
+                                  setEtsyPaperback(false);
+                                  setEtsySpiralBound(false);
+                                }}
+                                className={getPillClass(etsyEncyclopedia)}
+                              >
+                                Encyclopedia
+                              </button>
+                            </>
+                          );
+                        })()}
+                      </div>
+
+                      {showScrollRight && (
+                        <div className="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-end pointer-events-none w-10 bg-gradient-to-l from-white via-white/80 to-transparent">
+                          <button
+                            onClick={() => {
+                              if (filtersScrollRef.current) {
+                                filtersScrollRef.current.scrollBy({ left: 150, behavior: "smooth" });
+                              }
+                            }}
+                            className="w-6 h-6 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-md pointer-events-auto hover:bg-gray-50 text-gray-700 transition-colors mr-1"
+                          >
+                            <FiChevronRight className="text-xs" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 flex-shrink-0 text-xs pl-2">
+                      <span className="text-gray-500 font-medium whitespace-nowrap flex items-center gap-1">
+                        1,000+ items with ads
+                        <FiInfo className="text-xs text-gray-400 cursor-pointer hover:text-gray-600" />
+                      </span>
+                      <div className="relative flex items-center gap-1 cursor-pointer">
+                        <select
+                          value={etsySort}
+                          onChange={(e) => setEtsySort(e.target.value)}
+                          className="appearance-none bg-transparent pr-4 font-bold text-gray-800 focus:outline-none cursor-pointer hover:text-black transition-colors text-xs select-none"
+                        >
+                          <option value="most_relevant">Most relevant</option>
+                          <option value="top_rated">Top rated</option>
+                          <option value="price_asc">Price: Low to High</option>
+                          <option value="price_desc">Price: High to Low</option>
+                        </select>
+                        <FiChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-850 pointer-events-none text-xs" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Non-books filter bar with Show/Hide filters pill */
+                <div className="w-full mb-4">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-4 flex-wrap gap-3">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
+                          showFilters
+                            ? "bg-gray-800 text-white border-gray-800 hover:bg-gray-700"
+                            : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
+                        }`}
+                      >
+                        <FiSliders className="text-xs" />
+                        {showFilters ? "Hide filters" : "Show filters"}
                       </button>
-                    ))}
+                      <span className={`text-xs font-extrabold px-3 py-1.5 rounded-lg shadow-sm ${activeTheme.badgeColor}`}>
+                        {categoryProducts.length} items
+                      </span>
+                    </div>
+                    <div className="relative flex items-center gap-1 cursor-pointer">
+                      <select
+                        value={etsySort}
+                        onChange={(e) => setEtsySort(e.target.value)}
+                        className="appearance-none bg-transparent pr-5 font-bold text-gray-800 focus:outline-none cursor-pointer hover:text-black transition-colors text-xs"
+                      >
+                        <option value="most_relevant">Most relevant</option>
+                        <option value="top_rated">Top rated</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                      </select>
+                      <FiChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs" />
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Search Bar */}
-              <div className="mb-6 relative max-w-md">
-                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
-                <input
-                  type="text"
-                  placeholder={activeTheme.searchPlaceholder}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-11 pr-10 py-3.5 bg-white border-2 border-gray-300 rounded-2xl text-base font-semibold focus:outline-none transition-all placeholder:text-gray-400 shadow-sm ${activeTheme.searchFocusBorder}`}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 p-1 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    <FiX className="text-base" />
-                  </button>
-                )}
-              </div>
 
-              <div className="mb-5 flex items-center justify-between">
-                <h2 className="text-xl md:text-blackxl font-black text-slate-800 uppercase tracking-tight">Featured Items</h2>
-                <span className={`text-xs font-extrabold px-3 py-1.5 rounded-lg shadow-sm transition-all ${activeTheme.badgeColor}`}>
-                  {categoryProducts.length} items
-                </span>
-              </div>
+              {/* Books: Inline sidebar + product grid layout */}
+              <div className="flex gap-0 items-start w-full">
 
-              {/* Filter Dropdown */}
-              <AnimatePresence>
-                {showFilters && (
-                  <>
-                    {/* Backdrop */}
+                {/* === INLINE FILTER SIDEBAR (slides in from left, pushes grid) === */}
+                <AnimatePresence>
+                  {showFilters && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      onClick={() => setShowFilters(false)}
-                      className="fixed inset-0 bg-black/20 z-[10000]"
-                    />
-                    <motion.div
-                      initial={{ x: "100%" }}
-                      animate={{ x: 0 }}
-                      exit={{ x: "100%" }}
-                      transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                      className="filter-dropdown fixed inset-y-0 right-0 w-80 bg-[#FAFAFA] shadow-[0_0_40px_rgba(10,25,47,0.15)] z-[10001] flex flex-col"
+                      key="filter-sidebar"
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: 240, opacity: 1 }}
+                      exit={{ width: 0, opacity: 0 }}
+                      transition={{ type: "tween", duration: 0.25, ease: "easeInOut" }}
+                      className="flex-shrink-0 overflow-hidden"
                     >
-                      {/* Header */}
-                      <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 bg-white">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center">
-                            <FiFilter className="text-black" />
+                      {/* Inner panel — auto height, scrolls when content overflows viewport */}
+                      <div className="w-[240px] sticky top-20 max-h-[calc(100vh-90px)] overflow-y-auto border-r border-gray-200 bg-white">
+                        {/* Sidebar header */}
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-10">
+                          <div className="flex items-center gap-2">
+                            <FiSliders className="text-gray-700 text-sm" />
+                            <span className="text-sm font-bold text-black">Filters</span>
                           </div>
-                          <h3 className="text-lg font-bold text-black tracking-tight">
-                            Refine Search
-                          </h3>
-                        </div>
-                        <button
-                          onClick={() => setShowFilters(false)}
-                          className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
-                          <FiX size={20} />
-                        </button>
-                      </div>
-
-                      {/* Filter Content */}
-                      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8 custom-scrollbar">
-
-                        {/* Sort Options */}
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-black text-sm uppercase tracking-wider">
-                            Sort Items By
-                          </h4>
-                          <div className="relative">
-                            <select
-                              value={filters.sortBy}
-                              onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-                              className="w-full pl-3 pr-8 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm font-extrabold text-black cursor-pointer outline-none"
-                            >
-                              <option value="newest">Newest</option>
-                              <option value="name_asc">Name (A-Z)</option>
-                              <option value="name_desc">Name (Z-A)</option>
-                              <option value="price_asc">Price (Low-High)</option>
-                              <option value="price_desc">Price (High-Low)</option>
-                              <option value="rating">Highest Rated</option>
-                            </select>
+                          <div className="flex items-center gap-2">
+                            {hasActiveFilters && (
+                              <button onClick={clearFilters} className="text-xs font-semibold text-[#1861bf] hover:underline">Reset</button>
+                            )}
+                            <button onClick={() => setShowFilters(false)} className="p-1 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                              <FiX size={16} />
+                            </button>
                           </div>
                         </div>
 
-                        {/* Price Range (Always show) */}
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-black text-sm uppercase tracking-wider flex items-center justify-between">
-                            Price Range
-                            <span className="text-xs font-normal text-gray-400 capitalize">Custom</span>
-                          </h4>
-                          <div className="flex items-center gap-3">
-                            <div className="relative flex-1">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                              <input
-                                type="number"
-                                placeholder="Min"
-                                value={filters.minPrice}
-                                onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                                className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm"
-                              />
-                            </div>
-                            <div className="h-px w-4 bg-gray-300"></div>
-                            <div className="relative flex-1">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                              <input
-                                type="number"
-                                placeholder="Max"
-                                value={filters.maxPrice}
-                                onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                                className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-gray-200 bg-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all text-sm"
-                              />
-                            </div>
+                        {/* Filter sections — books or generic */}
+                        <div>
+
+                          {categoryId === 'books' ? (
+                            /* ===== BOOKS-SPECIFIC FILTER SECTIONS ===== */
+                            <>
+
+                          {/* === SIKH STREET'S BEST === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('sikhStreetBest')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Sikh Street's best</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sikhStreetBest ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.sikhStreetBest && (
+                              <div className="px-4 pb-3 space-y-2.5">
+                                {[
+                                  { label: 'Handmade only', info: true, state: etsyHandmade, toggle: () => setEtsyHandmade(!etsyHandmade) },
+                                  { label: 'Includes video', info: false, state: etsyIncludesVideo, toggle: () => setEtsyIncludesVideo(!etsyIncludesVideo) },
+                                  { label: "Sikh Street's Picks", info: true, state: etsyPicks, toggle: () => setEtsyPicks(!etsyPicks) },
+                                  { label: 'Star Seller', info: true, state: etsyStarSeller, toggle: () => setEtsyStarSeller(!etsyStarSeller) },
+                                ].map(({ label, info, state, toggle }) => (
+                                  <label key={label} className="flex items-center justify-between cursor-pointer group">
+                                    <div className="flex items-center gap-2">
+                                      <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                        {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                      </div>
+                                      <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                    </div>
+                                    {info && <FiInfo className="text-xs text-gray-400 flex-shrink-0" />}
+                                  </label>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        </div>
 
-                        {(categoryId === "turbans" || parentIdForSwipe === "turbans") ? (
-                          <>
-                            {/* Turban Specific Filters */}
-
-                            {/* Cloth Type */}
-                            <div className="space-y-4">
-                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
-                                Cloth Type
-                              </h4>
-                              <div className="space-y-2">
-                                {['Rubia / Heavy Weight', 'Rubia Voile / Medium Weight', 'Full Voile / Light Weight'].map((type) => (
-                                  <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${filters.clothType === type ? 'border-[#D4AF37]' : 'border-gray-300 group-hover:border-[#D4AF37]'}`}>
-                                      {filters.clothType === type && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
-                                    </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{type}</span>
-                                    <input
-                                      type="radio"
-                                      className="hidden"
-                                      checked={filters.clothType === type}
-                                      onChange={() => handleFilterChange("clothType", type)}
-                                      onClick={() => filters.clothType === type && handleFilterChange("clothType", "")} // allow uncheck
-                                    />
+                          {/* === CATEGORY === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('category')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Category</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.category ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.category && (
+                              <div className="px-4 pb-3 space-y-2">
+                                {['All Books', 'Sikh History', 'Spiritual & Devotional', 'Children Books', 'Reference & Study'].map((label) => (
+                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                    <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
                                   </label>
                                 ))}
                               </div>
-                            </div>
+                            )}
+                          </div>
 
-                            {/* Color Options */}
-                            <div className="space-y-4">
-                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
-                                Color Options
-                              </h4>
-                              <div className="grid grid-cols-2 gap-2">
-                                {['Yellow/Orange', 'Blue', 'Pink/Purple', 'Grey', 'Red/Maroon', 'Brown', 'White/Black', 'Green', 'Others'].map((c) => (
-                                  <label key={c} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.color === c ? 'bg-black border-black' : 'border-gray-300 bg-white group-hover:border-[#F5A623]'}`}>
-                                      {filters.color === c && <FiX className="text-white text-xs rotate-45" />}
+                          {/* === SPECIAL OFFERS === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('specialOffers')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Special offers</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.specialOffers ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.specialOffers && (
+                              <div className="px-4 pb-3 space-y-2.5">
+                                {[
+                                  { label: 'On sale items', state: etsyUnderCA10, toggle: () => setEtsyUnderCA10(!etsyUnderCA10) },
+                                  { label: 'Free shipping', state: etsyDelivery === 'free', toggle: () => setEtsyDelivery(etsyDelivery === 'free' ? '' : 'free') },
+                                ].map(({ label, state, toggle }) => (
+                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                    <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                      {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{c}</span>
-                                    <input
-                                      type="radio"
-                                      className="hidden"
-                                      checked={filters.color === c}
-                                      onChange={() => handleFilterChange("color", c)}
-                                      onClick={() => filters.color === c && handleFilterChange("color", "")} // allow uncheck
-                                    />
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
                                   </label>
                                 ))}
                               </div>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            {/* Standard Filters */}
+                            )}
+                          </div>
 
-                            {/* Location Radius */}
-                            <div className="space-y-4">
-                              <h4 className="font-bold text-black text-sm uppercase tracking-wider flex items-center justify-between">
-                                Location Radius
-                                <span className="text-xs font-normal text-[#D4AF37] capitalize">{filters.radius} km</span>
-                              </h4>
-                              <input
-                                type="range"
-                                min="1"
-                                max="100"
-                                value={filters.radius}
-                                onChange={(e) => handleFilterChange("radius", e.target.value)}
-                                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D4AF37]"
-                              />
-                              <div className="flex justify-between text-xs text-gray-400 font-medium">
-                                <span>1 km</span>
-                                <span>50 km</span>
-                                <span>100 km</span>
-                              </div>
-                            </div>
-
-                            {/* Material (Multi-select mock) */}
-                            <div className="space-y-4">
-                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
-                                Material
-                              </h4>
-                              <div className="grid grid-cols-2 gap-2">
-                                {['Cotton', 'Silk', 'Linen', 'Wool'].map((mat) => (
-                                  <label key={mat} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${filters.material.includes(mat) ? 'bg-black border-black' : 'border-gray-300 bg-white group-hover:border-[#F5A623]'}`}>
-                                      {filters.material.includes(mat) && <FiX className="text-white text-xs rotate-45" />}
+                          {/* === SENT FROM === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('sentFrom')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Sent from</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sentFrom ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.sentFrom && (
+                              <div className="px-4 pb-3 space-y-2">
+                                {[{ label: 'India', code: 'IN' }, { label: 'Canada', code: 'CA' }, { label: 'United Kingdom', code: 'UK' }, { label: 'United States', code: 'US' }].map(({ label, code }) => (
+                                  <label key={code} className="flex items-center gap-2 cursor-pointer group">
+                                    <div onClick={() => setEtsySentFrom(etsySentFrom === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsySentFrom === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                      {etsySentFrom === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">{mat}</span>
-                                    <input
-                                      type="checkbox"
-                                      className="hidden"
-                                      checked={filters.material.includes(mat)}
-                                      onChange={(e) => {
-                                        const newMats = e.target.checked
-                                          ? [...filters.material, mat]
-                                          : filters.material.filter(m => m !== mat);
-                                        handleFilterChange("material", newMats);
-                                      }}
-                                    />
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
                                   </label>
                                 ))}
                               </div>
-                            </div>
+                            )}
+                          </div>
 
-                            {/* Rating */}
-                            <div className="space-y-4">
-                              <h4 className="font-bold text-black text-sm uppercase tracking-wider">
-                                Minimum Rating
-                              </h4>
-                              <div className="space-y-2">
-                                {[4, 3, 2, 1].map((rating) => (
-                                  <label
-                                    key={rating}
-                                    className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${filters.minRating === rating.toString() ? 'border-[#D4AF37]' : 'border-gray-300 group-hover:border-[#D4AF37]'}`}>
-                                      {filters.minRating === rating.toString() && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
+                          {/* === ITEM FORMAT === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('itemFormat')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Item format</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemFormat ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.itemFormat && (
+                              <div className="px-4 pb-3 space-y-2">
+                                {[
+                                  { label: 'Paperback', state: etsyPaperback, toggle: () => { setEtsyPaperback(!etsyPaperback); setEtsySpiralBound(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
+                                  { label: 'Hardcover / Encyclopedia', state: etsyEncyclopedia, toggle: () => { setEtsyEncyclopedia(!etsyEncyclopedia); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyDigital(false); } },
+                                  { label: 'Spiral Bound', state: etsySpiralBound, toggle: () => { setEtsySpiralBound(!etsySpiralBound); setEtsyPaperback(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
+                                  { label: 'Digital download', state: etsyDigital, toggle: () => { setEtsyDigital(!etsyDigital); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyEncyclopedia(false); } },
+                                ].map(({ label, state, toggle }) => (
+                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                    <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                      {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                                     </div>
-                                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">
-                                      {rating}+ Stars
-                                    </span>
-                                    <input
-                                      type="radio"
-                                      name="minRating"
-                                      value={rating}
-                                      className="hidden"
-                                      checked={filters.minRating === rating.toString()}
-                                      onChange={(e) => handleFilterChange("minRating", e.target.value)}
-                                    />
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
                                   </label>
                                 ))}
                               </div>
-                            </div>
-                          </>
-                        )}
+                            )}
+                          </div>
 
-                      </div>
+                          {/* === READY TO DISPATCH === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('readyToDispatch')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Ready to dispatch in</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.readyToDispatch ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.readyToDispatch && (
+                              <div className="px-4 pb-3 space-y-2">
+                                {[{ label: '1 business day', code: 'ready_1' }, { label: '3 business days', code: 'ready_3' }, { label: '5 business days', code: 'ready_5' }].map(({ label, code }) => (
+                                  <label key={code} className="flex items-center gap-2 cursor-pointer group">
+                                    <div onClick={() => setEtsyDelivery(etsyDelivery === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsyDelivery === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                      {etsyDelivery === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
+                                    </div>
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
 
-                      {/* Footer */}
-                      <div className="p-6 bg-white border-t border-gray-100 flex gap-3">
-                        <button
-                          onClick={clearFilters}
-                          className="px-6 py-3.5 border-2 border-gray-200 text-gray-600 rounded-xl font-bold text-sm hover:bg-gray-50 hover:border-gray-300 transition-all">
-                          Reset
-                        </button>
-                        <button
-                          onClick={() => setShowFilters(false)}
-                          className="flex-1 py-3.5 bg-black text-white rounded-xl font-bold text-sm hover:bg-black/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-                          Show Results
-                        </button>
-                      </div>
+                          {/* === PRICE === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('price')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Price</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.price ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.price && (
+                              <div className="px-4 pb-4">
+                                <div className="flex items-center gap-2 mt-1">
+                                  <div className="relative flex-1">
+                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                    <input type="number" placeholder="From" value={filters.minPrice} onChange={(e) => handleFilterChange("minPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                  </div>
+                                  <span className="text-gray-400 text-xs">—</span>
+                                  <div className="relative flex-1">
+                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                    <input type="number" placeholder="To" value={filters.maxPrice} onChange={(e) => handleFilterChange("maxPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* === COLOUR === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('colour')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Colour</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.colour ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.colour && (
+                              <div className="px-4 pb-3">
+                                <div className="grid grid-cols-6 gap-1.5 mt-1">
+                                  {[{ label: 'Red', hex: '#c0392b' }, { label: 'Orange', hex: '#e67e22' }, { label: 'Yellow', hex: '#f1c40f' }, { label: 'Green', hex: '#27ae60' }, { label: 'Blue', hex: '#2980b9' }, { label: 'Purple', hex: '#8e44ad' }, { label: 'Pink', hex: '#e91e8c' }, { label: 'White', hex: '#f5f5f5' }, { label: 'Black', hex: '#1a1a1a' }, { label: 'Brown', hex: '#7B3F00' }, { label: 'Gold', hex: '#D4AF37' }, { label: 'Multi', hex: 'linear-gradient(135deg, red, blue, green)' }].map(({ label, hex }) => (
+                                    <button key={label} title={label} onClick={() => handleFilterChange('color', filters.color === label ? '' : label)} className={`w-7 h-7 rounded-full border-2 transition-all ${filters.color === label ? 'border-[#1861bf] scale-110 shadow-md' : 'border-gray-200 hover:border-gray-400'}`} style={{ background: hex }} />
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* === ITEM TYPE === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('itemType')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Item type</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemType ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.itemType && (
+                              <div className="px-4 pb-3 space-y-2">
+                                {['Handmade', 'Vintage', 'Craft supplies'].map((type) => (
+                                  <label key={type} className="flex items-center gap-2 cursor-pointer group">
+                                    <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                    <span className="text-xs text-gray-700 group-hover:text-black">{type}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* === ORDERING OPTIONS === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('orderingOptions')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Ordering options</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.orderingOptions ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.orderingOptions && (
+                              <div className="px-4 pb-3 space-y-2">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                  <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                  <span className="text-xs text-gray-700 group-hover:text-black">Accepts custom orders</span>
+                                </label>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* === DELIVER TO === */}
+                          <div className="border-b border-gray-200">
+                            <button onClick={() => toggleSection('deliverTo')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                              <span className="font-semibold text-sm text-gray-900">Deliver to</span>
+                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.deliverTo ? 'rotate-180' : ''}`} />
+                            </button>
+                            {openSections.deliverTo && (
+                              <div className="px-4 pb-4">
+                                <div className="relative">
+                                  <select
+                                    defaultValue=""
+                                    className="w-full appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-xs text-gray-700 bg-white focus:outline-none focus:border-[#1861bf] cursor-pointer"
+                                  >
+                                    <option value="" disabled>Select destination...</option>
+                                    {['Canada', 'United States', 'United Kingdom', 'India', 'Worldwide'].map((dest) => (
+                                      <option key={dest} value={dest}>{dest}</option>
+                                    ))}
+                                  </select>
+                                  <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                            </>) : (
+                            /* ===== NON-BOOKS GENERIC FILTER SECTIONS ===== */
+                            <>
+                              {/* === SUBCATEGORIES === */}
+                              {subcategories.length > 0 && (
+                                <div className="border-b border-gray-200">
+                                  <button onClick={() => toggleSection('category')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                    <span className="font-semibold text-sm text-gray-900">Category</span>
+                                    <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.category ? 'rotate-180' : ''}`} />
+                                  </button>
+                                  {openSections.category && (
+                                    <div className="px-4 pb-3 space-y-1">
+                                      <button
+                                        onClick={() => handleSubcategoryChange(null)}
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all ${!selectedSubcategoryId ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                      >
+                                        All Items
+                                      </button>
+                                      {subcategories.map(sub => (
+                                        <button
+                                          key={sub.id}
+                                          onClick={() => handleSubcategoryChange(sub.id)}
+                                          className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all ${selectedSubcategoryId === sub.id ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        >
+                                          {sub.name}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* === PRICE RANGE === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('price')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Price</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.price ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.price && (
+                                  <div className="px-4 pb-4">
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <div className="relative flex-1">
+                                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                        <input type="number" placeholder="From" value={filters.minPrice} onChange={(e) => handleFilterChange("minPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                      </div>
+                                      <span className="text-gray-400 text-xs">—</span>
+                                      <div className="relative flex-1">
+                                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                        <input type="number" placeholder="To" value={filters.maxPrice} onChange={(e) => handleFilterChange("maxPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === COLOUR === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('colour')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Colour</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.colour ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.colour && (
+                                  <div className="px-4 pb-3">
+                                    <div className="grid grid-cols-6 gap-1.5 mt-1">
+                                      {[{ label: 'Red', hex: '#c0392b' }, { label: 'Orange', hex: '#e67e22' }, { label: 'Yellow', hex: '#f1c40f' }, { label: 'Green', hex: '#27ae60' }, { label: 'Blue', hex: '#2980b9' }, { label: 'Purple', hex: '#8e44ad' }, { label: 'Pink', hex: '#e91e8c' }, { label: 'White', hex: '#f5f5f5' }, { label: 'Black', hex: '#1a1a1a' }, { label: 'Brown', hex: '#7B3F00' }, { label: 'Gold', hex: '#D4AF37' }, { label: 'Multi', hex: 'linear-gradient(135deg, red, blue, green)' }].map(({ label, hex }) => (
+                                        <button key={label} title={label} onClick={() => handleFilterChange('color', filters.color === label ? '' : label)} className={`w-7 h-7 rounded-full border-2 transition-all ${filters.color === label ? 'border-[#1861bf] scale-110 shadow-md' : 'border-gray-200 hover:border-gray-400'}`} style={{ background: hex }} />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === ITEM TYPE === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('itemType')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Item type</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemType ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.itemType && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {['Handmade', 'Vintage', 'Craft supplies'].map((type) => (
+                                      <label key={type} className="flex items-center gap-2 cursor-pointer group">
+                                        <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{type}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === ORDERING OPTIONS === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('orderingOptions')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Ordering options</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.orderingOptions ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.orderingOptions && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                      <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                      <span className="text-xs text-gray-700 group-hover:text-black">Accepts custom orders</span>
+                                    </label>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === DELIVER TO === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('deliverTo')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Deliver to</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.deliverTo ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.deliverTo && (
+                                  <div className="px-4 pb-4">
+                                    <div className="relative">
+                                      <select defaultValue="" className="w-full appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-xs text-gray-700 bg-white focus:outline-none focus:border-[#1861bf] cursor-pointer">
+                                        <option value="" disabled>Select destination...</option>
+                                        {['Canada', 'United States', 'United Kingdom', 'India', 'Worldwide'].map((dest) => (
+                                          <option key={dest} value={dest}>{dest}</option>
+                                        ))}
+                                      </select>
+                                      <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>{/* end filter sections */}
+                      </div>{/* end inner panel */}
                     </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
+                  )}
+                </AnimatePresence>
 
-              {/* Products List */}
-              <div className={`pt-2 transition-all duration-200 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
-                {categoryProducts.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
-                      No products found
-                    </h3>
-                    <p className="text-gray-600">
-                      There are no products available in this category at the
-                      moment.
-                    </p>
-                  </div>
-                ) : viewMode === "grid" ? (
+                {/* === PRODUCT GRID (shrinks when sidebar opens) === */}
+                <div className="flex-1 min-w-0">
+                <div className={`pt-2 transition-all duration-200 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
+                  {categoryProducts.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">
+                        No products found
+                      </h3>
+                      <p className="text-gray-600">
+                        There are no products available in this category at the
+                        moment.
+                      </p>
+                    </div>
+                  ) : viewMode === "grid" ? (
                   <>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" ref={gridRef}>
+                    <div className={categoryId === 'books'
+                      ? (showFilters
+                        ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 w-full"
+                        : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-8 w-full")
+                      : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+                    } ref={gridRef}>
                       {displayedItems.map((product) => (
-                        <div key={product.id} className="product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl">
-                          <ProductCard product={product} />
+                        <div key={product.id} className={categoryId === 'books' ? "product-card-gsap" : "product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl"}>
+                          {categoryId === 'books' ? (
+                            <BookProductCard product={product} />
+                          ) : (
+                            <ProductCard product={product} />
+                          )}
                         </div>
                       ))}
                     </div>
@@ -1011,7 +1501,9 @@ const MobileCategory = () => {
                     )}
                   </>
                 )}
-              </div> {/* End Products List */}
+                </div> {/* End Products List */}
+                </div> {/* End Product grid flex column */}
+              </div> {/* End inline sidebar + grid row */}
             </div> {/* End Right Content */}
           </div> {/* End Flex Wrapper */}
         </motion.div>

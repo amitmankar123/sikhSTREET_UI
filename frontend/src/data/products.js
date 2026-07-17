@@ -557,6 +557,13 @@ export const products = [
     description: "A comprehensive guide to understanding Sikhism, its history, and its practices.",
     variants: {},
     bookConfig: {
+      synopsis: "This book is a comprehensive introduction to the Sikh faith. Ideal for those with little knowledge of the religion, it will give you a clear understanding of what Sikh's believe, and how they practise their faith. Covering all aspects, from the history of Sikhism, to Sikh ethics, to the practicalities of living a Sikh life, learn what it means to be Sikh today.",
+      publisher: "John Murray Press",
+      isbn: "9781444105100",
+      pages: "272",
+      dimensions: "196 x 128 x 18 mm",
+      weight: "220 g",
+      language: "English",
       formatOptions: [
         { id: 'paperback', label: 'Paperback', priceOffset: 0 },
         { id: 'hardcover', label: 'Hardcover', priceOffset: 10 },
@@ -577,6 +584,71 @@ export const products = [
     vendorId: 1,
     vendorName: "Sikh Heritage Store",
     brandId: 1
+  },
+  {
+    id: 308,
+    name: "Pearls of Sufism - A Book for the Anxious, Stressed, Longing Heart | Healing and Comfort for the Soul",
+    categoryId: "books",
+    unit: "Piece",
+    price: 14.93,
+    originalPrice: 59.72,
+    image: "/images/books/pearls_of_sufism_cover.png",
+    images: [
+      "/images/books/pearls_of_sufism_cover.png",
+      "/images/books/pearls_of_sufism_pages.png",
+      "/images/books/pearls_of_sufism_tablet.jpg",
+      "/images/books/pearls_of_sufism_intro.png"
+    ],
+    description: "A Book for the Anxious, Stressed, Longing Heart | Healing and Comfort for the Soul",
+    isBestseller: true,
+    variants: {},
+    bookConfig: {
+      synopsis: "This book was written for the broken hearts, the anxious souls, and the tired minds searching for comfort in a world that often feels too heavy. These pages carry thoughts born from silence, pain, reflection, and the quiet emotions many people struggle to explain. It is not a book of perfection. It is a collection of reflections, scribbles, and pieces of my heart written for the hearts of others. Every page was written with sincerity, hoping that someone somewhere feels less alone while reading it. May this book become a source of benefit for you and for the Ummah of Sayyiduna Taha.",
+      publisher: "Muhebb Publishing",
+      isbn: "9780368945209",
+      pages: "121",
+      dimensions: "196 x 128 x 10 mm",
+      weight: "150 g",
+      language: "English / Arabic",
+      formatOptions: [
+        { id: 'paperback', label: 'Paperback', priceOffset: 0 },
+        { id: 'hardcover', label: 'Hardcover', priceOffset: 15.00 },
+        { id: 'ebook', label: 'E-Book', priceOffset: -7.00 }
+      ],
+      languageOptions: [
+        { id: 'english', label: 'English', priceOffset: 0 },
+        { id: 'arabic', label: 'Arabic', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Sufi Wisdom", url: "/images/books/pearls_of_sufism_pages.png" },
+        { title: "Introduction", url: "/images/books/pearls_of_sufism_intro.png" }
+      ],
+      recommendsBundle: {
+        title: "Muhebb recommends this bundle",
+        bundlePrice: 19.99,
+        originalBundlePrice: 79.99,
+        items: [
+          { name: "Pearls of Sufism - A Book for the Anxious", price: 14.96, originalPrice: 59.78, image: "/images/books/pearls_of_sufism_cover.png" },
+          { name: "Premium Handmade Wooden Bookmark", price: 5.03, originalPrice: 20.21, image: "/images/books/pearls_of_sufism_tablet.jpg" }
+        ]
+      }
+    },
+    flashSale: true,
+    isNewArrival: true,
+    stock: "in_stock",
+    stockQuantity: 45,
+    rating: 4.9,
+    reviewCount: 39,
+    vendorId: "muhebb",
+    vendorName: "Designed by Qissa",
+    brandId: 1,
+    isAd: true,
+    hasVideo: true,
+    video: "https://res.cloudinary.com/dcevwsxsn/video/upload/v1784269514/bookvideo_ujuvhp.mp4",
+    type: "paperback",
+    handmade: true,
+    origin: "IN",
+    digitalDownload: true
   },
   {
     id: 302,
@@ -788,7 +860,7 @@ export const products = [
     brandId: 1
   },
   {
-    id: 308,
+    id: 318,
     name: "Classic Black Sikh Turban",
     categoryId: "2e70d5e5-ae8f-4c72-823c-8568f12877a8",
     unit: "Piece",
@@ -885,6 +957,441 @@ export const products = [
     reviewCount: 5,
     vendorId: 1,
     vendorName: "Sikh Heritage Store"
+  },
+  {
+    id: 311,
+    name: "Crescent City Paperback Box Set: All three paperbacks of Sarah J. Maas (House of Earth and Blood, House of Sky and Breath, House of Flame and Shadow)",
+    categoryId: "books",
+    unit: "Set",
+    price: 30.80,
+    image: "/images/books/crescent_city_box_set.png",
+    images: ["/images/books/crescent_city_box_set.png"],
+    description: "Crescent City Paperback Box Set by Sarah J. Maas.",
+    rating: 4.8,
+    reviewCount: 152,
+    vendorName: "By Muhammad",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "US",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 20
+  },
+  {
+    id: 312,
+    name: "Children's Book Starter Package: Custom Book Illustration and Cover Design",
+    categoryId: "books",
+    unit: "Package",
+    price: 1314.92,
+    image: "/images/books/children_book_illustrations.png",
+    images: ["/images/books/children_book_illustrations.png"],
+    description: "Custom children's book illustrations package.",
+    rating: 5.0,
+    reviewCount: 103,
+    vendorName: "By Quynh and Chris",
+    isAd: true,
+    hasVideo: false,
+    type: "spiral_bound",
+    handmade: true,
+    origin: "VN",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 15
+  },
+  {
+    id: 313,
+    name: "Perdix The Partridge by Leslie Sprake, First Edition 1930 Antique Book",
+    categoryId: "books",
+    unit: "Piece",
+    price: 62372.96,
+    image: "/images/books/perdix_the_partridge.png",
+    images: ["/images/books/perdix_the_partridge.png"],
+    description: "First edition antique book 'Perdix The Partridge' by Leslie Sprake.",
+    rating: 5.0,
+    reviewCount: 185,
+    vendorName: "Handpicked by Samuel",
+    isAd: true,
+    hasVideo: false,
+    type: "encyclopedia",
+    handmade: false,
+    origin: "UK",
+    stock: "in_stock",
+    stockQuantity: 1
+  },
+  {
+    id: 314,
+    name: "PALESTINE - A Book of Art, Culture and Resistance: Images, Stories and Historical Context",
+    categoryId: "books",
+    unit: "Piece",
+    price: 19.50,
+    originalPrice: 39.00,
+    image: "/images/books/palestine_book.png",
+    images: ["/images/books/palestine_book.png"],
+    description: "Palestine art, culture and resistance book.",
+    rating: 4.9,
+    reviewCount: 35,
+    vendorName: "Designed by Qissa",
+    isAd: false,
+    hasVideo: true,
+    video: "https://res.cloudinary.com/dcevwsxsn/video/upload/v1784270072/book2_video_ldhoy3.mp4",
+    type: "paperback",
+    handmade: true,
+    origin: "IN",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 40
+  },
+  {
+    id: 315,
+    name: "The Natural Healing Handbook - 3 Books Set: Natural Remedies, Herbal Medicine and Essential Oils",
+    categoryId: "books",
+    unit: "Set",
+    price: 49.99,
+    image: "/images/books/natural_healing_3books.png",
+    images: ["/images/books/natural_healing_3books.png"],
+    description: "Three books set for natural healing handbook.",
+    rating: 4.7,
+    reviewCount: 64,
+    vendorName: "Designed by Victor",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: true,
+    origin: "CA",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 18
+  },
+  {
+    id: 316,
+    name: "The Natural Healing Handbook: Simple Recipes & Remedies for Every Condition (Spiral Bound Edition)",
+    categoryId: "books",
+    unit: "Piece",
+    price: 24.99,
+    originalPrice: 34.99,
+    image: "/images/books/natural_healing_spiral.png",
+    images: ["/images/books/natural_healing_spiral.png"],
+    description: "Spiral bound edition of the Natural Healing Handbook.",
+    rating: 4.6,
+    reviewCount: 42,
+    vendorName: "By Muhammad Haider",
+    isAd: false,
+    hasVideo: false,
+    type: "spiral_bound",
+    handmade: false,
+    origin: "US",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 25
+  },
+  {
+    id: 317,
+    name: "Sikh History Book: Sacred Literature and Teachings on Table Library Scene",
+    categoryId: "books",
+    unit: "Piece",
+    price: 39.99,
+    image: "/images/books/sikh_history_library.png",
+    images: ["/images/books/sikh_history_library.png"],
+    description: "Sikh history and teachings library edition.",
+    rating: 3.6,
+    reviewCount: 8,
+    vendorName: "Designed by Hafiz",
+    isAd: false,
+    hasVideo: false,
+    type: "encyclopedia",
+    handmade: true,
+    origin: "IN",
+    stock: "in_stock",
+    stockQuantity: 3
+  },
+  {
+    id: 319,
+    name: "Maharani Jindan Book by Sohan Singh Seetal, Sikh History",
+    categoryId: "books",
+    unit: "Piece",
+    price: 37.49,
+    originalPrice: 49.99,
+    image: "/images/books/maharani_jindan.png",
+    images: ["/images/books/maharani_jindan.png", "/images/books/look_inside_manuscript.png"],
+    description: "Deep historical account of Maharani Jindan Kaur, the last Sikh Queen of the Sikh Empire. Written by the famous Sohan Singh Seetal, exploring her resistance and courage.",
+    rating: 4.7,
+    reviewCount: 229,
+    vendorName: "By Khalsa",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "IN",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 15,
+    bookConfig: {
+      synopsis: "The legendary story of the last queen of the Sikh Empire, Maharani Jindan. Her bravery, struggles, and persistent rebellion against the British East India Company are vividly captured in this classic account.",
+      publisher: "Seetal Publications",
+      isbn: "9788170701121",
+      pages: "312",
+      dimensions: "196 x 128 x 20 mm",
+      weight: "350 g",
+      language: "Punjabi",
+      formatOptions: [
+        { id: 'paperback', label: 'Paperback', priceOffset: 0 },
+        { id: 'hardcover', label: 'Hardcover', priceOffset: 12.50 }
+      ],
+      languageOptions: [
+        { id: 'punjabi', label: 'Punjabi', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Inside Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 321,
+    name: "Maharaja Ranjit Singh Book, Sikh History Novel, Digital Edition",
+    categoryId: "books",
+    unit: "Download",
+    price: 29.99,
+    originalPrice: 39.99,
+    image: "/images/books/maharaja_ranjit_singh.png",
+    images: ["/images/books/maharaja_ranjit_singh.png", "/images/books/look_inside_manuscript.png"],
+    description: "Digital edition book chronicling the golden age of the Sikh Empire under the reign of Maharaja Ranjit Singh.",
+    rating: 4.7,
+    reviewCount: 229,
+    vendorName: "Handmade by Khalsa",
+    isAd: false,
+    hasVideo: false,
+    type: "encyclopedia",
+    handmade: true,
+    origin: "IN",
+    digitalDownload: true,
+    stock: "in_stock",
+    stockQuantity: 999,
+    bookConfig: {
+      synopsis: "An in-depth biography of Maharaja Ranjit Singh, detailing the unification of Punjab, the consolidation of the empire, and the magnificent defense systems created in the Northwest frontier. Instant digital delivery.",
+      publisher: "Khalsa digital Press",
+      isbn: "9788170701123",
+      pages: "420",
+      dimensions: "E-Book",
+      weight: "0 g",
+      language: "English / Punjabi",
+      formatOptions: [
+        { id: 'pdf', label: 'PDF Download', priceOffset: 0 },
+        { id: 'epub', label: 'ePub / Kindle', priceOffset: 0 },
+        { id: 'audiobook', label: 'Audiobook (MP3)', priceOffset: 10.00 }
+      ],
+      languageOptions: [
+        { id: 'english', label: 'English', priceOffset: 0 },
+        { id: 'punjabi', label: 'Punjabi', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Digital Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 322,
+    name: "Sant Jarnail Singh Bhindranwale: Saint and Martyr of modern Sikh History",
+    categoryId: "books",
+    unit: "Piece",
+    price: 55.99,
+    image: "/images/books/sant_jarnail_singh.png",
+    images: ["/images/books/sant_jarnail_singh.png", "/images/books/look_inside_manuscript.png"],
+    description: "Detailed analysis and biography of Sant Jarnail Singh Bhindranwale's life, teachings, speeches, and martyrdom.",
+    rating: 4.3,
+    reviewCount: 71,
+    vendorName: "Designed by TLYSTA",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "CA",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 12,
+    bookConfig: {
+      synopsis: "A detailed modern account documenting the socio-political movements of the late 20th century in Punjab, focused on the speeches, philosophy, and historical impact of Sant Jarnail Singh Bhindranwale.",
+      publisher: "Tlysta Publications",
+      isbn: "9788170701124",
+      pages: "380",
+      dimensions: "220 x 140 x 25 mm",
+      weight: "480 g",
+      language: "English",
+      formatOptions: [
+        { id: 'paperback', label: 'Paperback', priceOffset: 0 },
+        { id: 'hardcover', label: 'Hardcover', priceOffset: 20.00 }
+      ],
+      languageOptions: [
+        { id: 'english', label: 'English', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Inside Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 323,
+    name: "Sikh Book: Sou Sakhi Mangal Parkash, 100 Sakhi and Teachings",
+    categoryId: "books",
+    unit: "Piece",
+    price: 33.74,
+    originalPrice: 44.99,
+    image: "/images/books/sou_sakhi.png",
+    images: ["/images/books/sou_sakhi.png", "/images/books/look_inside_manuscript.png"],
+    description: "Classical Sikh text detailing the 100 sakhis and spiritual discourses compiled from traditional manuscripts.",
+    rating: 4.7,
+    reviewCount: 914,
+    vendorName: "By Sacred Style",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "IN",
+    freeDelivery: true,
+    stock: "in_stock",
+    stockQuantity: 30,
+    bookConfig: {
+      synopsis: "A sacred anthology of one hundred prophecies, narratives, and letters containing deep spiritual guidance, teachings, and ethical codes for Gursikhs.",
+      publisher: "Sacred Literature Press",
+      isbn: "9788170701125",
+      pages: "290",
+      dimensions: "210 x 135 x 18 mm",
+      weight: "310 g",
+      language: "Punjabi / Hindi",
+      formatOptions: [
+        { id: 'paperback', label: 'Paperback', priceOffset: 0 },
+        { id: 'hardcover', label: 'Hardcover', priceOffset: 15.00 }
+      ],
+      languageOptions: [
+        { id: 'punjabi', label: 'Punjabi', priceOffset: 0 },
+        { id: 'hindi', label: 'Hindi', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Manuscript Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 324,
+    name: "Sri Dasam Granth Sahib Ate Charitropakhyan- Sikh Studies, Digital Edition",
+    categoryId: "books",
+    unit: "Download",
+    price: 45.99,
+    image: "/images/books/sikh_history_library.png",
+    images: ["/images/books/sikh_history_library.png", "/images/books/look_inside_manuscript.png"],
+    description: "Instant PDF and E-book download covering complete text translation and deep analysis of Sri Dasam Granth Sahib compositions.",
+    rating: 4.3,
+    reviewCount: 71,
+    vendorName: "By TLYSTA",
+    isAd: false,
+    hasVideo: false,
+    type: "encyclopedia",
+    handmade: false,
+    origin: "IN",
+    digitalDownload: true,
+    stock: "in_stock",
+    stockQuantity: 999,
+    bookConfig: {
+      synopsis: "A comprehensive digital resource containing accurate translations, historical contexts, and comparative literary analyses of the compositions from Sri Dasam Granth Sahib.",
+      publisher: "Tlysta Academic Press",
+      isbn: "9788170701126",
+      pages: "650",
+      dimensions: "E-Book",
+      weight: "0 g",
+      language: "English / Punjabi",
+      formatOptions: [
+        { id: 'pdf', label: 'PDF E-Book', priceOffset: 0 },
+        { id: 'epub', label: 'EPUB / MOBI format', priceOffset: 0 }
+      ],
+      languageOptions: [
+        { id: 'english', label: 'English', priceOffset: 0 },
+        { id: 'punjabi', label: 'Punjabi', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Page Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 325,
+    name: "Operation Blue Star - 1984 Books, Sikhism Books",
+    categoryId: "books",
+    unit: "Piece",
+    price: 23.99,
+    image: "/images/books/operation_blue_star.png",
+    images: ["/images/books/operation_blue_star.png", "/images/books/look_inside_manuscript.png"],
+    description: "A comprehensive and objective documentary study analyzing the military assault on Harimandir Sahib in June 1984.",
+    rating: 4.3,
+    reviewCount: 71,
+    vendorName: "Designed by TLYSTA",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "CA",
+    freeDelivery: false,
+    stock: "in_stock",
+    stockQuantity: 14,
+    bookConfig: {
+      synopsis: "A collection of eye-witness reports, government documents, and interviews that recreate the lead-up to, events of, and legacy of the military operations inside the Golden Temple complex in 1984.",
+      publisher: "Tlysta Publications",
+      isbn: "9788170701127",
+      pages: "240",
+      dimensions: "196 x 128 x 15 mm",
+      weight: "260 g",
+      language: "English",
+      formatOptions: [
+        { id: 'paperback', label: 'Paperback', priceOffset: 0 }
+      ],
+      languageOptions: [
+        { id: 'english', label: 'English', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "Inside Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
+  },
+  {
+    id: 326,
+    name: "Kharku Sangharash di Sakhi part 2, Bhai diljit Singh, Digital E-Book",
+    categoryId: "books",
+    unit: "Download",
+    price: 37.49,
+    originalPrice: 49.99,
+    image: "/images/books/perdix_the_partridge.png",
+    images: ["/images/books/perdix_the_partridge.png", "/images/books/look_inside_manuscript.png"],
+    description: "Digital download of Part 2 of the Kharku Sangharash di Sakhi by Bhai Diljit Singh.",
+    rating: 4.7,
+    reviewCount: 914,
+    vendorName: "By Sacred Style",
+    isAd: false,
+    hasVideo: false,
+    type: "paperback",
+    handmade: false,
+    origin: "IN",
+    digitalDownload: true,
+    stock: "in_stock",
+    stockQuantity: 999,
+    bookConfig: {
+      synopsis: "Part 2 of the memoir by Bhai Diljit Singh, tracing historical accounts, internal dynamics, and first-hand experiences of the Sikh resistance movement from the late 1980s. Delivered instantly as e-book file.",
+      publisher: "Sacred Literature Press",
+      isbn: "9788170701128",
+      pages: "350",
+      dimensions: "E-Book",
+      weight: "0 g",
+      language: "Punjabi",
+      formatOptions: [
+        { id: 'pdf', label: 'PDF Download', priceOffset: 0 },
+        { id: 'epub', label: 'EPUB Format', priceOffset: 0 }
+      ],
+      languageOptions: [
+        { id: 'punjabi', label: 'Punjabi', priceOffset: 0 }
+      ],
+      previewPages: [
+        { title: "E-Book Preview", url: "/images/books/look_inside_manuscript.png" }
+      ]
+    }
   }
 ];
 

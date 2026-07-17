@@ -66,8 +66,7 @@ const MobileHeader = () => {
           </Link>
 
           {/* Desktop Search Bar (Inline Etsy Style) */}
-          <div className="hidden md:flex flex-1 max-w-2xl relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <div className="hidden md:flex flex-1 max-w-2xl relative items-center">
             <input
               type="text"
               value={searchQuery}
@@ -80,9 +79,14 @@ const MobileHeader = () => {
                 }
               }}
               placeholder="Search for anything"
-              className="w-full bg-[#f8f8f8] border border-gray-200 focus:border-[#F5A623] focus:bg-white rounded-full py-2.5 pl-11 pr-4 text-xs outline-none transition-all shadow-inner"
+              className="w-full bg-white border-2 border-gray-900 rounded-full py-2.5 pl-5 pr-14 text-sm outline-none transition-all placeholder-gray-500 font-sans shadow-sm"
             />
-            {/* Desktop Search Suggestions Popover */}
+            <button
+              onClick={() => searchQuery.trim() && navigate(`/search?q=${encodeURIComponent(searchQuery)}`)}
+              className="absolute right-1 w-9 h-9 bg-[#F1641E] hover:bg-[#D54B0E] rounded-full flex items-center justify-center text-white transition-colors active:scale-95 shadow-sm"
+            >
+              <Search size={18} className="stroke-[2.5]" />
+            </button>
             <AnimatePresence>
               {isSearchFocused && (
                 <motion.div

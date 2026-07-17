@@ -105,8 +105,14 @@ const VariantSelector = ({ variants, onVariantChange, currentPrice, isKada, useD
 
       if (selected) nextSelection[axis.key] = selected;
     });
-    setSelectedVariant(nextSelection);
-  }, [axes, variants]);
+
+    const isSelectionChanged = Object.keys(nextSelection).length !== Object.keys(selectedVariant || {}).length ||
+      Object.keys(nextSelection).some((k) => nextSelection[k] !== selectedVariant?.[k]);
+
+    if (isSelectionChanged) {
+      setSelectedVariant(nextSelection);
+    }
+  }, [axes, variants, selectedVariant]);
 
   useEffect(() => {
     onVariantChange?.(selectedVariant || {});
