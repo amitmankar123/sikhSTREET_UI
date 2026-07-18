@@ -182,22 +182,20 @@ const ProductCard = ({ product, hideRating = false, isFlashSale = false }) => {
               onClick={handleFavorite}
               className="p-2 bg-white/95 rounded-full shadow-md transition-all duration-300 hover:scale-110 flex items-center justify-center">
               <FiHeart
-                className={`text-sm md:text-base transition-all duration-300 ${
-                  isFavorite
+                className={`text-sm md:text-base transition-all duration-300 ${isFavorite
                     ? "text-[#F5A623] fill-brand-saffron scale-110"
                     : "text-brand-muted hover:text-[#F5A623]"
-                }`}
+                  }`}
               />
             </button>
           </div>
 
           {/* Discount Badge */}
           {product.originalPrice > 0 && (
-            <div className={`absolute top-2 left-2 text-white text-[8px] md:text-[10px] font-extrabold px-2 py-0.5 rounded-full z-10 shadow-sm ${
-              isFlashSale
+            <div className={`absolute top-2 left-2 text-white text-[8px] md:text-[10px] font-extrabold px-2 py-0.5 rounded-full z-10 shadow-sm ${isFlashSale
                 ? "bg-gradient-to-r from-red-600 to-orange-500"
                 : "bg-brand-sale"
-            }`}>
+              }`}>
               {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
             </div>
           )}

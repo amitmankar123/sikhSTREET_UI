@@ -139,7 +139,7 @@ const MobileHome = () => {
                     Established in Heritage
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-[2.25rem] font-bold font-serif mb-4 text-black leading-[1.1]">
-                    Artisanship<br/>Rooted in<br/>Heritage
+                    Artisanship<br />Rooted in<br />Heritage
                   </h2>
                   <button
                     onClick={() => navigate("/categories")}

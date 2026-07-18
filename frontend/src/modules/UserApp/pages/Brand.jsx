@@ -31,7 +31,7 @@ const normalizeProduct = (raw) => ({
     price: Number(raw?.price) || 0,
     rating: Number(raw?.rating) || 0,
     reviewCount: Number(raw?.reviewCount) || 0,
-});const mockBrandsMap = {
+}); const mockBrandsMap = {
     "heritage-forge": {
         id: "heritage-forge",
         name: "Heritage Forge",
@@ -130,20 +130,20 @@ const EtsyProductCard = ({ product }) => {
     const discountPct = isDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
     return (
-        <div 
+        <div
             onClick={() => navigate(`/product/${product.id}`)}
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col cursor-pointer border border-gray-150 group"
         >
             <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
-                <img 
-                    src={product.image} 
-                    alt={product.name} 
+                <img
+                    src={product.image}
+                    alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                         e.target.src = getPlaceholderImage(300, 300, product.name?.charAt(0) || "P");
                     }}
                 />
-                
+
                 {/* Media Play Button Overlay */}
                 <div className="absolute bottom-2.5 right-2.5 bg-white/90 p-2 rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform z-10">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gray-800">
@@ -163,7 +163,7 @@ const EtsyProductCard = ({ product }) => {
                     <h4 className="text-xs md:text-sm font-medium text-gray-800 line-clamp-2 leading-snug transition-colors font-sans">
                         {product.name}
                     </h4>
-                    
+
                     {/* Star Rating */}
                     <div className="flex items-center gap-1 mt-1">
                         <div className="flex items-center text-yellow-500">
@@ -186,7 +186,7 @@ const EtsyProductCard = ({ product }) => {
                             </span>
                         )}
                     </div>
-                    
+
                     <div className="text-[10px] text-green-700 font-semibold mt-1">
                         {isFreeShipping ? "Free shipping eligible" : "Eligible orders get 10% off"}
                     </div>
@@ -244,8 +244,8 @@ const Brand = () => {
 
         let local = [];
         if (brandId === "heritage-forge") {
-            local = getCatalogProducts().filter(p => 
-                String(p.categoryId).toLowerCase().includes("turban") || 
+            local = getCatalogProducts().filter(p =>
+                String(p.categoryId).toLowerCase().includes("turban") ||
                 String(p.categoryId).toLowerCase().includes("kara") ||
                 String(p.categoryId).toLowerCase().includes("art") ||
                 String(p.categoryId).toLowerCase().includes("book") ||
@@ -256,7 +256,7 @@ const Brand = () => {
             );
         } else if (brandId === "heritage-woodcarvers") {
             // Woodcarving artwork products
-            local = getCatalogProducts().filter(p => 
+            local = getCatalogProducts().filter(p =>
                 p.name?.toLowerCase().includes("kada") ||
                 p.name?.toLowerCase().includes("silver") ||
                 p.name?.toLowerCase().includes("frame") ||
@@ -265,7 +265,7 @@ const Brand = () => {
             );
         } else if (brandId === "amritsar-fine-arts") {
             // Painting fine arts products
-            local = getCatalogProducts().filter(p => 
+            local = getCatalogProducts().filter(p =>
                 p.name?.toLowerCase().includes("art") ||
                 p.name?.toLowerCase().includes("fish") ||
                 p.name?.toLowerCase().includes("paint") ||
@@ -273,7 +273,7 @@ const Brand = () => {
             );
         } else if (brandId === "sikh-heritage-weaves") {
             // Turban / apparel weaves products
-            local = getCatalogProducts().filter(p => 
+            local = getCatalogProducts().filter(p =>
                 p.name?.toLowerCase().includes("turban") ||
                 p.name?.toLowerCase().includes("scarf") ||
                 p.name?.toLowerCase().includes("kurta") ||
@@ -385,7 +385,7 @@ const Brand = () => {
         filters.maxPrice ||
         filters.minRating;
 
-     // Toggle favorite shop
+    // Toggle favorite shop
     const handleFavoriteShop = () => {
         const newValue = !isFavoriteShop;
         setIsFavoriteShop(newValue);
@@ -587,9 +587,9 @@ const Brand = () => {
                     {/* Shop Banner Header */}
                     <div className="relative w-full h-36 md:h-[280px] md:rounded-2xl overflow-hidden bg-gradient-to-r from-[#ece4db] to-[#dfd3c3]">
                         {brand.storeBanner ? (
-                            <img 
-                                src={brand.storeBanner} 
-                                alt={`${brand.storeName || brand.name} Banner`} 
+                            <img
+                                src={brand.storeBanner}
+                                alt={`${brand.storeName || brand.name} Banner`}
                                 className="w-full h-full object-cover"
                                 onError={(e) => { e.target.style.display = 'none'; }}
                             />
@@ -598,16 +598,16 @@ const Brand = () => {
                                 Established in Heritage
                             </div>
                         )}
-                        
+
                         {/* Floating Action Buttons on Banner (Mobile Only) */}
                         <div className="absolute bottom-3 right-3 flex items-center gap-2.5 z-10 md:hidden">
-                            <button 
+                            <button
                                 onClick={() => navigate("/chat")}
                                 className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F5A623] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
                             >
                                 <FiMessageSquare className="text-base" />
                             </button>
-                            <button 
+                            <button
                                 onClick={handleFavoriteShop}
                                 className="p-2.5 bg-white/95 text-gray-700 hover:text-[#F5A623] rounded-full shadow-md transition-all duration-300 hover:scale-105 flex items-center justify-center"
                             >
@@ -641,12 +641,12 @@ const Brand = () => {
                                         </svg>
                                     </span>
                                 </div>
-                                
+
                                 <div className="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-3 mt-1.5">
                                     <p className="text-xs text-gray-500 font-medium font-sans">
                                         {brand.address?.city || "Mohali"}, {brand.address?.country || "India"}
                                     </p>
-                                    
+
                                     {/* Desktop Inline Stats Box */}
                                     <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 font-semibold before:content-['|'] before:text-gray-300 before:hidden md:before:inline">
                                         <span className="flex items-center gap-1 text-gray-900 font-bold">
@@ -664,14 +664,14 @@ const Brand = () => {
 
                         {/* Desktop Action Buttons */}
                         <div className="hidden md:flex items-center gap-3">
-                            <button 
+                            <button
                                 onClick={() => navigate("/chat")}
                                 className="px-5 py-2 border border-gray-300 hover:bg-gray-55 rounded-full font-bold text-sm text-gray-800 flex items-center gap-1.5 shadow-sm transition-all animate-none"
                             >
                                 <FiMessageSquare className="text-sm" />
                                 Contact
                             </button>
-                            <button 
+                            <button
                                 onClick={handleFavoriteShop}
                                 className="px-5 py-2 border border-gray-300 hover:bg-gray-55 rounded-full font-bold text-sm text-gray-800 flex items-center gap-1.5 shadow-sm transition-all"
                             >
@@ -727,11 +727,10 @@ const Brand = () => {
                                             }, 800);
                                         }
                                     }}
-                                    className={`py-3.5 px-1 border-b-2 text-sm font-bold tracking-wide transition-all duration-300 ${
-                                        activeTab === tab.id
+                                    className={`py-3.5 px-1 border-b-2 text-sm font-bold tracking-wide transition-all duration-300 ${activeTab === tab.id
                                             ? "border-gray-900 text-gray-900 font-bold"
                                             : "border-transparent text-gray-400 hover:text-gray-600 font-semibold"
-                                    }`}
+                                        }`}
                                 >
                                     {tab.label}
                                 </button>
@@ -740,7 +739,7 @@ const Brand = () => {
 
                         {/* Desktop Search Inside Shop */}
                         <div className="hidden md:block relative w-72">
-                            <input 
+                            <input
                                 type="text"
                                 placeholder={`Search all ${sortedProducts.length} items`}
                                 className="w-full pl-4 pr-10 py-2 bg-gray-100 hover:bg-gray-200/80 rounded-full text-xs font-semibold placeholder:text-gray-500 focus:outline-none focus:bg-white focus:ring-1 focus:ring-gray-300 border-0 transition-all font-sans"
@@ -751,7 +750,7 @@ const Brand = () => {
 
                     {/* Tab Contents */}
                     <div className="px-4 md:px-0 py-6 space-y-16">
-                        
+
                         {/* Items Section */}
                         <div id="items-section" className="scroll-mt-48">
                             <div className="flex flex-col md:flex-row gap-8">
@@ -765,11 +764,10 @@ const Brand = () => {
                                                 <button
                                                     key={cat}
                                                     onClick={() => setSelectedCategory(cat)}
-                                                    className={`w-full text-left py-2 px-3 text-xs md:text-sm font-semibold rounded-lg transition-colors flex items-center justify-between ${
-                                                        isActive 
-                                                            ? "bg-black font-bold text-white" 
+                                                    className={`w-full text-left py-2 px-3 text-xs md:text-sm font-semibold rounded-lg transition-colors flex items-center justify-between ${isActive
+                                                            ? "bg-black font-bold text-white"
                                                             : "text-gray-600 hover:bg-black hover:text-white transition-colors"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <span>{cat === "All" ? "All" : cat}</span>
                                                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-400"}`}>
@@ -785,7 +783,7 @@ const Brand = () => {
                                 <div className="flex-1">
                                     {/* Categories Filter & Sort Bar */}
                                     <div className="flex flex-col gap-4 mb-5">
-                                        
+
                                         {/* Category Filter Selector Dropdown - Wide Pill (Mobile Only) */}
                                         <div ref={categoryDropdownRef} className="relative w-full md:hidden">
                                             <button
@@ -797,7 +795,7 @@ const Brand = () => {
                                                 </span>
                                                 <FiChevronDown className="text-gray-600 text-lg" />
                                             </button>
-                                            
+
                                             <AnimatePresence>
                                                 {showCategoryDropdown && (
                                                     <motion.div
@@ -813,11 +811,10 @@ const Brand = () => {
                                                                     setSelectedCategory(cat);
                                                                     setShowCategoryDropdown(false);
                                                                 }}
-                                                                className={`w-full px-4 py-3 text-left text-sm transition-colors flex items-center justify-between ${
-                                                                    selectedCategory === cat 
-                                                                        ? "bg-black font-bold text-white" 
+                                                                className={`w-full px-4 py-3 text-left text-sm transition-colors flex items-center justify-between ${selectedCategory === cat
+                                                                        ? "bg-black font-bold text-white"
                                                                         : "text-gray-700 hover:bg-black hover:text-white transition-colors"
-                                                                }`}
+                                                                    }`}
                                                             >
                                                                 <span>{cat === "All" ? "All" : cat}</span>
                                                                 <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${selectedCategory === cat ? "bg-white/20 text-white" : "bg-gray-100 text-gray-505"}`}>
@@ -833,7 +830,7 @@ const Brand = () => {
                                         {/* Section title & sort */}
                                         <div className="flex items-center justify-between w-full mt-2 border-b border-gray-100 pb-3">
                                             <h3 className="text-lg md:text-xl font-bold text-gray-955 font-serif tracking-tight">Featured items</h3>
-                                            
+
                                             <div className="flex items-center gap-2">
                                                 {/* Sorting button (two arrows) */}
                                                 <div ref={sortDropdownRef} className="relative">
@@ -844,7 +841,7 @@ const Brand = () => {
                                                         <span>Sort: {sortBy === "newest" ? "Custom" : sortBy === "rating" ? "Top Rated" : sortBy === "price-asc" ? "Price Low-High" : "Price High-Low"}</span>
                                                         <FiChevronDown />
                                                     </button>
-                                                    
+
                                                     <AnimatePresence>
                                                         {showSortDropdown && (
                                                             <motion.div
@@ -865,11 +862,10 @@ const Brand = () => {
                                                                             setSortBy(item.id);
                                                                             setShowSortDropdown(false);
                                                                         }}
-                                                                        className={`w-full px-4 py-2 text-left text-xs md:text-sm transition-colors ${
-                                                                            sortBy === item.id 
-                                                                                ? "bg-black font-bold text-white" 
+                                                                        className={`w-full px-4 py-2 text-left text-xs md:text-sm transition-colors ${sortBy === item.id
+                                                                                ? "bg-black font-bold text-white"
                                                                                 : "text-gray-700 hover:bg-black hover:text-white transition-colors"
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         {item.label}
                                                                     </button>
@@ -888,7 +884,7 @@ const Brand = () => {
                                                     >
                                                         <FiFilter className="text-xl" />
                                                     </button>
-                                                    
+
                                                     <AnimatePresence>
                                                         {showFilters && (
                                                             <motion.div
@@ -1086,9 +1082,9 @@ const Brand = () => {
 
                                 <div className="pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center gap-6">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border border-gray-200 shadow-sm bg-gray-50 flex-shrink-0">
-                                        <img 
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqMDXl2T65jyXSB9qeTJbnhG6G63aSMxrS9MUh0AbYVUdIDbGb1C9q5zVZDceaN7_Pwv058Lj-KsSgRwEzCJFUMAbtCByAMBt9t7qPEnVu8OX9GKowcLmKAy2DvI40dzo_tFZ-gk8-G2CdQgVtTQ64920GdgIjQGlqIp1wp_iUPpoTgquKdxgTjN9WLcy5cFXNMKqcU8uaA07icHP82RYxtFURIju60gx7_rTdvMXYc1NrM643G5Q7z1Bz2xHFltW_geS4P_MmP9Ow" 
-                                            alt="Store Owner" 
+                                        <img
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqMDXl2T65jyXSB9qeTJbnhG6G63aSMxrS9MUh0AbYVUdIDbGb1C9q5zVZDceaN7_Pwv058Lj-KsSgRwEzCJFUMAbtCByAMBt9t7qPEnVu8OX9GKowcLmKAy2DvI40dzo_tFZ-gk8-G2CdQgVtTQ64920GdgIjQGlqIp1wp_iUPpoTgquKdxgTjN9WLcy5cFXNMKqcU8uaA07icHP82RYxtFURIju60gx7_rTdvMXYc1NrM643G5Q7z1Bz2xHFltW_geS4P_MmP9Ow"
+                                            alt="Store Owner"
                                             className="w-full h-full object-cover"
                                         />
                                     </div>

@@ -22,7 +22,7 @@ const BookProductCard = ({ product }) => {
   const navigate = useNavigate();
   const productLink = `/product/${product.id}`;
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const renderPrice = (val) => {
     return `CA$ ${Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
@@ -32,7 +32,7 @@ const BookProductCard = ({ product }) => {
     : 0;
 
   return (
-    <div 
+    <div
       onClick={() => navigate(productLink)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -63,8 +63,8 @@ const BookProductCard = ({ product }) => {
         {/* Play Button Overlay */}
         {product.hasVideo && !isHovered && (
           <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-transform hover:scale-110">
-            <svg 
-              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5" 
+            <svg
+              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5"
               viewBox="0 0 24 24"
             >
               <path d="M8 5v14l11-7z" />
@@ -394,6 +394,7 @@ const MobileCategory = () => {
   }, [categories, resolvedCategoryId]);
 
   const gridRef = useRef(null);
+  const gsapCtxRef = useRef(null);
 
   const parentIdForSwipe = category ? getParentId(category) : null;
 
@@ -530,21 +531,21 @@ const MobileCategory = () => {
       );
     }
 
-      if (categoryId === 'books') {
-        if (etsyHandmade) result = result.filter(p => p.handmade === true);
-        if (etsyIncludesVideo) result = result.filter(p => p.hasVideo === true);
-        if (etsyOriginIN) result = result.filter(p => p.origin === 'IN');
-        if (etsyUnderCA10) result = result.filter(p => p.price < 10);
-        if (etsyStarSeller) result = result.filter(p => p.rating >= 4.8);
-        if (etsyPaperback) result = result.filter(p => p.type === 'paperback');
-        if (etsySpiralBound) result = result.filter(p => p.type === 'spiral_bound');
-        if (etsyEncyclopedia) result = result.filter(p => p.type === 'encyclopedia');
-        if (etsyDigital) result = result.filter(p => p.digitalDownload === true);
-        if (etsySentFrom) result = result.filter(p => p.origin === etsySentFrom);
-        if (etsyDelivery === 'free') result = result.filter(p => p.freeDelivery === true);
-        if (etsyDelivery === 'digital') result = result.filter(p => p.digitalDownload === true);
+    if (categoryId === 'books') {
+      if (etsyHandmade) result = result.filter(p => p.handmade === true);
+      if (etsyIncludesVideo) result = result.filter(p => p.hasVideo === true);
+      if (etsyOriginIN) result = result.filter(p => p.origin === 'IN');
+      if (etsyUnderCA10) result = result.filter(p => p.price < 10);
+      if (etsyStarSeller) result = result.filter(p => p.rating >= 4.8);
+      if (etsyPaperback) result = result.filter(p => p.type === 'paperback');
+      if (etsySpiralBound) result = result.filter(p => p.type === 'spiral_bound');
+      if (etsyEncyclopedia) result = result.filter(p => p.type === 'encyclopedia');
+      if (etsyDigital) result = result.filter(p => p.digitalDownload === true);
+      if (etsySentFrom) result = result.filter(p => p.origin === etsySentFrom);
+      if (etsyDelivery === 'free') result = result.filter(p => p.freeDelivery === true);
+      if (etsyDelivery === 'digital') result = result.filter(p => p.digitalDownload === true);
 
-        // Sorting for Books
+      // Sorting for Books
       if (etsySort === "price_asc") {
         result = result.sort((a, b) => a.price - b.price);
       } else if (etsySort === "price_desc") {
@@ -619,15 +620,38 @@ const MobileCategory = () => {
 
   useEffect(() => {
     if (!gridRef.current) return;
-    const ctx = gsap.context(() => {
+    
+    if (!gsapCtxRef.current) {
+      gsapCtxRef.current = gsap.context(() => {}, gridRef);
+    }
+
+    gsapCtxRef.current.add(() => {
       gsap.fromTo(
-        ".product-card-gsap",
+        ".product-card-gsap:not(.animated)",
         { opacity: 0, y: 30, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.6, ease: "power3.out", overwrite: "auto" }
+        { 
+          opacity: 1, 
+          y: 0, 
+          scale: 1, 
+          stagger: 0.1, 
+          duration: 0.6, 
+          ease: "power3.out", 
+          overwrite: "auto",
+          onComplete: function() {
+            this.targets().forEach(t => t.classList.add('animated'));
+          }
+        }
       );
-    }, gridRef);
-    return () => ctx.revert();
+    });
   }, [displayedItems]);
+
+  useEffect(() => {
+    return () => {
+      if (gsapCtxRef.current) {
+        gsapCtxRef.current.revert();
+      }
+    };
+  }, []);
 
   const filterButtonRef = useRef(null);
   const filtersScrollRef = useRef(null);
@@ -849,11 +873,10 @@ const MobileCategory = () => {
                       >
                         <button
                           onClick={() => setShowFilters(!showFilters)}
-                          className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
-                            showFilters
+                          className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${showFilters
                               ? "bg-gray-800 text-white border-gray-800 hover:bg-gray-700"
                               : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
-                          }`}
+                            }`}
                         >
                           <FiSliders className="text-xs" />
                           {showFilters ? "Hide filters" : "Show filters"}
@@ -861,11 +884,10 @@ const MobileCategory = () => {
 
                         {(() => {
                           const getPillClass = (isActive) => {
-                            return `px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
-                              isActive
+                            return `px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${isActive
                                 ? "bg-[#eaeaea] text-gray-900 border-[#1861bf]"
                                 : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
-                            }`;
+                              }`;
                           };
 
                           return (
@@ -979,11 +1001,10 @@ const MobileCategory = () => {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${
-                          showFilters
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${showFilters
                             ? "bg-gray-800 text-white border-gray-800 hover:bg-gray-700"
                             : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
-                        }`}
+                          }`}
                       >
                         <FiSliders className="text-xs" />
                         {showFilters ? "Hide filters" : "Show filters"}
@@ -1049,237 +1070,237 @@ const MobileCategory = () => {
                             /* ===== BOOKS-SPECIFIC FILTER SECTIONS ===== */
                             <>
 
-                          {/* === SIKH STREET'S BEST === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('sikhStreetBest')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Sikh Street's best</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sikhStreetBest ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.sikhStreetBest && (
-                              <div className="px-4 pb-3 space-y-2.5">
-                                {[
-                                  { label: 'Handmade only', info: true, state: etsyHandmade, toggle: () => setEtsyHandmade(!etsyHandmade) },
-                                  { label: 'Includes video', info: false, state: etsyIncludesVideo, toggle: () => setEtsyIncludesVideo(!etsyIncludesVideo) },
-                                  { label: "Sikh Street's Picks", info: true, state: etsyPicks, toggle: () => setEtsyPicks(!etsyPicks) },
-                                  { label: 'Star Seller', info: true, state: etsyStarSeller, toggle: () => setEtsyStarSeller(!etsyStarSeller) },
-                                ].map(({ label, info, state, toggle }) => (
-                                  <label key={label} className="flex items-center justify-between cursor-pointer group">
-                                    <div className="flex items-center gap-2">
-                                      <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
-                                        {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-                                      </div>
-                                      <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                    </div>
-                                    {info && <FiInfo className="text-xs text-gray-400 flex-shrink-0" />}
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === CATEGORY === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('category')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Category</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.category ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.category && (
-                              <div className="px-4 pb-3 space-y-2">
-                                {['All Books', 'Sikh History', 'Spiritual & Devotional', 'Children Books', 'Reference & Study'].map((label) => (
-                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
-                                    <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === SPECIAL OFFERS === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('specialOffers')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Special offers</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.specialOffers ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.specialOffers && (
-                              <div className="px-4 pb-3 space-y-2.5">
-                                {[
-                                  { label: 'On sale items', state: etsyUnderCA10, toggle: () => setEtsyUnderCA10(!etsyUnderCA10) },
-                                  { label: 'Free shipping', state: etsyDelivery === 'free', toggle: () => setEtsyDelivery(etsyDelivery === 'free' ? '' : 'free') },
-                                ].map(({ label, state, toggle }) => (
-                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
-                                    <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
-                                      {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-                                    </div>
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === SENT FROM === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('sentFrom')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Sent from</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sentFrom ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.sentFrom && (
-                              <div className="px-4 pb-3 space-y-2">
-                                {[{ label: 'India', code: 'IN' }, { label: 'Canada', code: 'CA' }, { label: 'United Kingdom', code: 'UK' }, { label: 'United States', code: 'US' }].map(({ label, code }) => (
-                                  <label key={code} className="flex items-center gap-2 cursor-pointer group">
-                                    <div onClick={() => setEtsySentFrom(etsySentFrom === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsySentFrom === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
-                                      {etsySentFrom === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
-                                    </div>
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === ITEM FORMAT === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('itemFormat')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Item format</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemFormat ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.itemFormat && (
-                              <div className="px-4 pb-3 space-y-2">
-                                {[
-                                  { label: 'Paperback', state: etsyPaperback, toggle: () => { setEtsyPaperback(!etsyPaperback); setEtsySpiralBound(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
-                                  { label: 'Hardcover / Encyclopedia', state: etsyEncyclopedia, toggle: () => { setEtsyEncyclopedia(!etsyEncyclopedia); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyDigital(false); } },
-                                  { label: 'Spiral Bound', state: etsySpiralBound, toggle: () => { setEtsySpiralBound(!etsySpiralBound); setEtsyPaperback(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
-                                  { label: 'Digital download', state: etsyDigital, toggle: () => { setEtsyDigital(!etsyDigital); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyEncyclopedia(false); } },
-                                ].map(({ label, state, toggle }) => (
-                                  <label key={label} className="flex items-center gap-2 cursor-pointer group">
-                                    <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
-                                      {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-                                    </div>
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === READY TO DISPATCH === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('readyToDispatch')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Ready to dispatch in</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.readyToDispatch ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.readyToDispatch && (
-                              <div className="px-4 pb-3 space-y-2">
-                                {[{ label: '1 business day', code: 'ready_1' }, { label: '3 business days', code: 'ready_3' }, { label: '5 business days', code: 'ready_5' }].map(({ label, code }) => (
-                                  <label key={code} className="flex items-center gap-2 cursor-pointer group">
-                                    <div onClick={() => setEtsyDelivery(etsyDelivery === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsyDelivery === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
-                                      {etsyDelivery === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
-                                    </div>
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === PRICE === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('price')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Price</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.price ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.price && (
-                              <div className="px-4 pb-4">
-                                <div className="flex items-center gap-2 mt-1">
-                                  <div className="relative flex-1">
-                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
-                                    <input type="number" placeholder="From" value={filters.minPrice} onChange={(e) => handleFilterChange("minPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
-                                  </div>
-                                  <span className="text-gray-400 text-xs">—</span>
-                                  <div className="relative flex-1">
-                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
-                                    <input type="number" placeholder="To" value={filters.maxPrice} onChange={(e) => handleFilterChange("maxPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === COLOUR === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('colour')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Colour</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.colour ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.colour && (
-                              <div className="px-4 pb-3">
-                                <div className="grid grid-cols-6 gap-1.5 mt-1">
-                                  {[{ label: 'Red', hex: '#c0392b' }, { label: 'Orange', hex: '#e67e22' }, { label: 'Yellow', hex: '#f1c40f' }, { label: 'Green', hex: '#27ae60' }, { label: 'Blue', hex: '#2980b9' }, { label: 'Purple', hex: '#8e44ad' }, { label: 'Pink', hex: '#e91e8c' }, { label: 'White', hex: '#f5f5f5' }, { label: 'Black', hex: '#1a1a1a' }, { label: 'Brown', hex: '#7B3F00' }, { label: 'Gold', hex: '#D4AF37' }, { label: 'Multi', hex: 'linear-gradient(135deg, red, blue, green)' }].map(({ label, hex }) => (
-                                    <button key={label} title={label} onClick={() => handleFilterChange('color', filters.color === label ? '' : label)} className={`w-7 h-7 rounded-full border-2 transition-all ${filters.color === label ? 'border-[#1861bf] scale-110 shadow-md' : 'border-gray-200 hover:border-gray-400'}`} style={{ background: hex }} />
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === ITEM TYPE === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('itemType')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Item type</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemType ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.itemType && (
-                              <div className="px-4 pb-3 space-y-2">
-                                {['Handmade', 'Vintage', 'Craft supplies'].map((type) => (
-                                  <label key={type} className="flex items-center gap-2 cursor-pointer group">
-                                    <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
-                                    <span className="text-xs text-gray-700 group-hover:text-black">{type}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === ORDERING OPTIONS === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('orderingOptions')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Ordering options</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.orderingOptions ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.orderingOptions && (
-                              <div className="px-4 pb-3 space-y-2">
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                  <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
-                                  <span className="text-xs text-gray-700 group-hover:text-black">Accepts custom orders</span>
-                                </label>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* === DELIVER TO === */}
-                          <div className="border-b border-gray-200">
-                            <button onClick={() => toggleSection('deliverTo')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                              <span className="font-semibold text-sm text-gray-900">Deliver to</span>
-                              <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.deliverTo ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openSections.deliverTo && (
-                              <div className="px-4 pb-4">
-                                <div className="relative">
-                                  <select
-                                    defaultValue=""
-                                    className="w-full appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-xs text-gray-700 bg-white focus:outline-none focus:border-[#1861bf] cursor-pointer"
-                                  >
-                                    <option value="" disabled>Select destination...</option>
-                                    {['Canada', 'United States', 'United Kingdom', 'India', 'Worldwide'].map((dest) => (
-                                      <option key={dest} value={dest}>{dest}</option>
+                              {/* === SIKH STREET'S BEST === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('sikhStreetBest')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Sikh Street's best</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sikhStreetBest ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.sikhStreetBest && (
+                                  <div className="px-4 pb-3 space-y-2.5">
+                                    {[
+                                      { label: 'Handmade only', info: true, state: etsyHandmade, toggle: () => setEtsyHandmade(!etsyHandmade) },
+                                      { label: 'Includes video', info: false, state: etsyIncludesVideo, toggle: () => setEtsyIncludesVideo(!etsyIncludesVideo) },
+                                      { label: "Sikh Street's Picks", info: true, state: etsyPicks, toggle: () => setEtsyPicks(!etsyPicks) },
+                                      { label: 'Star Seller', info: true, state: etsyStarSeller, toggle: () => setEtsyStarSeller(!etsyStarSeller) },
+                                    ].map(({ label, info, state, toggle }) => (
+                                      <label key={label} className="flex items-center justify-between cursor-pointer group">
+                                        <div className="flex items-center gap-2">
+                                          <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                            {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                          </div>
+                                          <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                        </div>
+                                        {info && <FiInfo className="text-xs text-gray-400 flex-shrink-0" />}
+                                      </label>
                                     ))}
-                                  </select>
-                                  <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
-                                </div>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
+
+                              {/* === CATEGORY === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('category')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Category</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.category ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.category && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {['All Books', 'Sikh History', 'Spiritual & Devotional', 'Children Books', 'Reference & Study'].map((label) => (
+                                      <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                        <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === SPECIAL OFFERS === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('specialOffers')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Special offers</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.specialOffers ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.specialOffers && (
+                                  <div className="px-4 pb-3 space-y-2.5">
+                                    {[
+                                      { label: 'On sale items', state: etsyUnderCA10, toggle: () => setEtsyUnderCA10(!etsyUnderCA10) },
+                                      { label: 'Free shipping', state: etsyDelivery === 'free', toggle: () => setEtsyDelivery(etsyDelivery === 'free' ? '' : 'free') },
+                                    ].map(({ label, state, toggle }) => (
+                                      <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                        <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                          {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                        </div>
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === SENT FROM === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('sentFrom')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Sent from</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.sentFrom ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.sentFrom && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {[{ label: 'India', code: 'IN' }, { label: 'Canada', code: 'CA' }, { label: 'United Kingdom', code: 'UK' }, { label: 'United States', code: 'US' }].map(({ label, code }) => (
+                                      <label key={code} className="flex items-center gap-2 cursor-pointer group">
+                                        <div onClick={() => setEtsySentFrom(etsySentFrom === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsySentFrom === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                          {etsySentFrom === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
+                                        </div>
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === ITEM FORMAT === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('itemFormat')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Item format</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemFormat ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.itemFormat && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {[
+                                      { label: 'Paperback', state: etsyPaperback, toggle: () => { setEtsyPaperback(!etsyPaperback); setEtsySpiralBound(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
+                                      { label: 'Hardcover / Encyclopedia', state: etsyEncyclopedia, toggle: () => { setEtsyEncyclopedia(!etsyEncyclopedia); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyDigital(false); } },
+                                      { label: 'Spiral Bound', state: etsySpiralBound, toggle: () => { setEtsySpiralBound(!etsySpiralBound); setEtsyPaperback(false); setEtsyEncyclopedia(false); setEtsyDigital(false); } },
+                                      { label: 'Digital download', state: etsyDigital, toggle: () => { setEtsyDigital(!etsyDigital); setEtsyPaperback(false); setEtsySpiralBound(false); setEtsyEncyclopedia(false); } },
+                                    ].map(({ label, state, toggle }) => (
+                                      <label key={label} className="flex items-center gap-2 cursor-pointer group">
+                                        <div onClick={toggle} className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${state ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                          {state && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                        </div>
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === READY TO DISPATCH === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('readyToDispatch')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Ready to dispatch in</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.readyToDispatch ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.readyToDispatch && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {[{ label: '1 business day', code: 'ready_1' }, { label: '3 business days', code: 'ready_3' }, { label: '5 business days', code: 'ready_5' }].map(({ label, code }) => (
+                                      <label key={code} className="flex items-center gap-2 cursor-pointer group">
+                                        <div onClick={() => setEtsyDelivery(etsyDelivery === code ? '' : code)} className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${etsyDelivery === code ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                          {etsyDelivery === code && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
+                                        </div>
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === PRICE === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('price')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Price</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.price ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.price && (
+                                  <div className="px-4 pb-4">
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <div className="relative flex-1">
+                                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                        <input type="number" placeholder="From" value={filters.minPrice} onChange={(e) => handleFilterChange("minPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                      </div>
+                                      <span className="text-gray-400 text-xs">—</span>
+                                      <div className="relative flex-1">
+                                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                        <input type="number" placeholder="To" value={filters.maxPrice} onChange={(e) => handleFilterChange("maxPrice", e.target.value)} className="w-full pl-6 pr-2 py-1.5 rounded border border-gray-300 text-xs focus:outline-none focus:border-[#1861bf]" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === COLOUR === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('colour')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Colour</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.colour ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.colour && (
+                                  <div className="px-4 pb-3">
+                                    <div className="grid grid-cols-6 gap-1.5 mt-1">
+                                      {[{ label: 'Red', hex: '#c0392b' }, { label: 'Orange', hex: '#e67e22' }, { label: 'Yellow', hex: '#f1c40f' }, { label: 'Green', hex: '#27ae60' }, { label: 'Blue', hex: '#2980b9' }, { label: 'Purple', hex: '#8e44ad' }, { label: 'Pink', hex: '#e91e8c' }, { label: 'White', hex: '#f5f5f5' }, { label: 'Black', hex: '#1a1a1a' }, { label: 'Brown', hex: '#7B3F00' }, { label: 'Gold', hex: '#D4AF37' }, { label: 'Multi', hex: 'linear-gradient(135deg, red, blue, green)' }].map(({ label, hex }) => (
+                                        <button key={label} title={label} onClick={() => handleFilterChange('color', filters.color === label ? '' : label)} className={`w-7 h-7 rounded-full border-2 transition-all ${filters.color === label ? 'border-[#1861bf] scale-110 shadow-md' : 'border-gray-200 hover:border-gray-400'}`} style={{ background: hex }} />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === ITEM TYPE === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('itemType')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Item type</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.itemType ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.itemType && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    {['Handmade', 'Vintage', 'Craft supplies'].map((type) => (
+                                      <label key={type} className="flex items-center gap-2 cursor-pointer group">
+                                        <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                        <span className="text-xs text-gray-700 group-hover:text-black">{type}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === ORDERING OPTIONS === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('orderingOptions')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Ordering options</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.orderingOptions ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.orderingOptions && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                      <div className="w-4 h-4 rounded border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
+                                      <span className="text-xs text-gray-700 group-hover:text-black">Accepts custom orders</span>
+                                    </label>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* === DELIVER TO === */}
+                              <div className="border-b border-gray-200">
+                                <button onClick={() => toggleSection('deliverTo')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                  <span className="font-semibold text-sm text-gray-900">Deliver to</span>
+                                  <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.deliverTo ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openSections.deliverTo && (
+                                  <div className="px-4 pb-4">
+                                    <div className="relative">
+                                      <select
+                                        defaultValue=""
+                                        className="w-full appearance-none pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-xs text-gray-700 bg-white focus:outline-none focus:border-[#1861bf] cursor-pointer"
+                                      >
+                                        <option value="" disabled>Select destination...</option>
+                                        {['Canada', 'United States', 'United Kingdom', 'India', 'Worldwide'].map((dest) => (
+                                          <option key={dest} value={dest}>{dest}</option>
+                                        ))}
+                                      </select>
+                                      <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
 
                             </>) : (
                             /* ===== NON-BOOKS GENERIC FILTER SECTIONS ===== */
@@ -1417,91 +1438,91 @@ const MobileCategory = () => {
 
                 {/* === PRODUCT GRID (shrinks when sidebar opens) === */}
                 <div className="flex-1 min-w-0">
-                <div className={`pt-2 transition-all duration-200 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
-                  {categoryProducts.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
-                        No products found
-                      </h3>
-                      <p className="text-gray-600">
-                        There are no products available in this category at the
-                        moment.
-                      </p>
-                    </div>
-                  ) : viewMode === "grid" ? (
-                  <>
-                    <div className={categoryId === 'books'
-                      ? (showFilters
-                        ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 w-full"
-                        : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-8 w-full")
-                      : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
-                    } ref={gridRef}>
-                      {displayedItems.map((product) => (
-                        <div key={product.id} className={categoryId === 'books' ? "product-card-gsap" : "product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl"}>
-                          {categoryId === 'books' ? (
-                            <BookProductCard product={product} />
-                          ) : (
-                            <ProductCard product={product} />
-                          )}
+                  <div className={`pt-2 transition-all duration-200 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
+                    {categoryProducts.length === 0 ? (
+                      <div className="text-center py-12">
+                        <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
+                        <h3 className="text-xl font-bold text-gray-800 mb-2">
+                          No products found
+                        </h3>
+                        <p className="text-gray-600">
+                          There are no products available in this category at the
+                          moment.
+                        </p>
+                      </div>
+                    ) : viewMode === "grid" ? (
+                      <>
+                        <div className={categoryId === 'books'
+                          ? (showFilters
+                            ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 w-full"
+                            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-8 w-full")
+                          : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+                        } ref={gridRef}>
+                          {displayedItems.map((product) => (
+                            <div key={product.id} className={categoryId === 'books' ? "product-card-gsap" : "product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl"}>
+                              {categoryId === 'books' ? (
+                                <BookProductCard product={product} />
+                              ) : (
+                                <ProductCard product={product} />
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
 
-                    {hasMore && (
-                      <div
-                        ref={loadMoreRef}
-                        className="mt-6 flex flex-col items-center gap-4">
-                        {isLoading && (
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <span className="text-sm">
-                              Loading more products...
-                            </span>
+                        {hasMore && (
+                          <div
+                            ref={loadMoreRef}
+                            className="mt-6 flex flex-col items-center gap-4">
+                            {isLoading && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <span className="text-sm">
+                                  Loading more products...
+                                </span>
+                              </div>
+                            )}
+                            <button
+                              onClick={loadMore}
+                              disabled={isLoading}
+                              className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                              {isLoading ? "Loading..." : "Load More"}
+                            </button>
                           </div>
                         )}
-                        <button
-                          onClick={loadMore}
-                          disabled={isLoading}
-                          className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                          {isLoading ? "Loading..." : "Load More"}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div className="space-y-3">
-                      {displayedItems.map((product, index) => (
-                        <ProductListItem
-                          key={product.id}
-                          product={product}
-                          index={index}
-                        />
-                      ))}
-                    </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-3">
+                          {displayedItems.map((product, index) => (
+                            <ProductListItem
+                              key={product.id}
+                              product={product}
+                              index={index}
+                            />
+                          ))}
+                        </div>
 
-                    {hasMore && (
-                      <div
-                        ref={loadMoreRef}
-                        className="mt-6 flex flex-col items-center gap-4">
-                        {isLoading && (
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <span className="text-sm">
-                              Loading more products...
-                            </span>
+                        {hasMore && (
+                          <div
+                            ref={loadMoreRef}
+                            className="mt-6 flex flex-col items-center gap-4">
+                            {isLoading && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <span className="text-sm">
+                                  Loading more products...
+                                </span>
+                              </div>
+                            )}
+                            <button
+                              onClick={loadMore}
+                              disabled={isLoading}
+                              className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                              {isLoading ? "Loading..." : "Load More"}
+                            </button>
                           </div>
                         )}
-                        <button
-                          onClick={loadMore}
-                          disabled={isLoading}
-                          className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                          {isLoading ? "Loading..." : "Load More"}
-                        </button>
-                      </div>
+                      </>
                     )}
-                  </>
-                )}
-                </div> {/* End Products List */}
+                  </div> {/* End Products List */}
                 </div> {/* End Product grid flex column */}
               </div> {/* End inline sidebar + grid row */}
             </div> {/* End Right Content */}

@@ -129,7 +129,7 @@ const BookProductCard = ({ product }) => {
   const navigate = useNavigate();
   const productLink = `/product/${product.id}`;
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const renderPrice = (val) => {
     return `CA$ ${Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
@@ -139,7 +139,7 @@ const BookProductCard = ({ product }) => {
     : 0;
 
   return (
-    <div 
+    <div
       onClick={() => {
         navigate(productLink);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -173,8 +173,8 @@ const BookProductCard = ({ product }) => {
         {/* Play Button Overlay */}
         {product.hasVideo && !isHovered && (
           <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-transform hover:scale-110">
-            <svg 
-              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5" 
+            <svg
+              className="w-3.5 h-3.5 text-gray-800 fill-current ml-0.5"
               viewBox="0 0 24 24"
             >
               <path d="M8 5v14l11-7z" />
@@ -268,7 +268,7 @@ const MobileProductDetail = () => {
   const [isPersonalMessageOpen, setIsPersonalMessageOpen] = useState(false);
   const [selectedArtSize, setSelectedArtSize] = useState(null);
   const [selectedArtMaterial, setSelectedArtMaterial] = useState(null);
-  
+
   // Book Product States
   const [selectedBookFormat, setSelectedBookFormat] = useState(null);
   const [selectedBookLanguage, setSelectedBookLanguage] = useState(null);
@@ -336,7 +336,7 @@ const MobileProductDetail = () => {
   }, [product]);
 
   // isArtProduct: completely separate from isTurbanProduct — artConfig never mixes with turbanConfig
-  
+
   const isBookProduct = useMemo(() => {
     if (!product) return false;
     const catMatch = (product.categoryName || "").toLowerCase().includes("book");
@@ -932,674 +932,675 @@ const MobileProductDetail = () => {
           <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-12 lg:px-8 lg:items-start max-w-[1400px] mx-auto">
             {/* LEFT COLUMN: Image Gallery + Reviews (Spans 7 columns) */}
             <div className="lg:col-span-7 p-0 lg:p-0">
-               {/* Gallery */}
-               <div className="mb-8 relative">
-                  <ImageGallery
-                    images={productImages}
-                    video={product.video}
-                    productName={product.name}
-                    showFavorite={true}
-                    isFavorite={isFavorite}
-                    onFavoriteClick={handleFavorite}
-                    isBestseller={product.isBestseller}
-                    onLookInsideClick={isBookProduct && product.bookConfig?.previewPages?.length > 0 ? () => {
-                      setLookInsideIndex(0);
-                      setIsLookInsideOpen(true);
-                    } : null}
-                  />
-               </div>
+              {/* Gallery */}
+              <div className="mb-8 relative">
+                <ImageGallery
+                  images={productImages}
+                  video={product.video}
+                  productName={product.name}
+                  showFavorite={true}
+                  isFavorite={isFavorite}
+                  onFavoriteClick={handleFavorite}
+                  isBestseller={product.isBestseller}
+                  onLookInsideClick={isBookProduct && product.bookConfig?.previewPages?.length > 0 ? () => {
+                    setLookInsideIndex(0);
+                    setIsLookInsideOpen(true);
+                  } : null}
+                />
+              </div>
 
-               {/* Report to Etsy placeholder */}
-               <div className="flex justify-end mb-12 text-sm text-gray-500 font-medium hover:underline cursor-pointer">
-                 <FiFlag className="inline mr-2" /> Report this item to SikhStreet
-               </div>
+              {/* Report to Etsy placeholder */}
+              <div className="flex justify-end mb-12 text-sm text-gray-500 font-medium hover:underline cursor-pointer">
+                <FiFlag className="inline mr-2" /> Report this item to SikhStreet
+              </div>
 
-               {/* Reviews Section (Desktop Only) */}
-               <div className="hidden lg:block">
-                  {reviewsSection}
-               </div>
-               
-               {/* Community Q&A (Desktop Only) */}
-               <div className="hidden lg:block mt-12 max-w-4xl border-t border-gray-200 pt-10">
-                 <ProductQA productId={product.id} />
-               </div>
+              {/* Reviews Section (Desktop Only) */}
+              <div className="hidden lg:block">
+                {reviewsSection}
+              </div>
+
+              {/* Community Q&A (Desktop Only) */}
+              <div className="hidden lg:block mt-12 max-w-4xl border-t border-gray-200 pt-10">
+                <ProductQA productId={product.id} />
+              </div>
             </div>
 
             {/* RIGHT COLUMN: Info + Configuration (Spans 5 columns) */}
             <div className="lg:col-span-5 px-4 py-4 lg:p-0 lg:sticky lg:top-24 flex flex-col gap-5">
-                {/* Scarcity */}
+              {/* Scarcity */}
+              {isBookProduct ? (
+                <p className="text-xs md:text-sm font-bold text-[#C82333] font-sans">
+                  In 20+ baskets
+                </p>
+              ) : (
+                selectedAvailableStock < 10 && selectedAvailableStock > 0 && (
+                  <p className="text-sm font-bold text-red-600">In {selectedAvailableStock + 3} baskets</p>
+                )
+              )}
+
+              {/* Price */}
+              <div className="flex flex-col gap-1">
                 {isBookProduct ? (
-                  <p className="text-xs md:text-sm font-bold text-[#C82333] font-sans">
-                    In 20+ baskets
-                  </p>
+                  <div className="space-y-1 font-sans">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-2xl font-bold text-gray-900">
+                        Now {formatPrice(ratePerMeter)}
+                      </span>
+                    </div>
+                    {product.originalPrice && (
+                      <div className="text-sm text-gray-500 line-through font-medium">
+                        {formatPrice(product.originalPrice)}
+                      </div>
+                    )}
+
+                    {product.originalPrice && (
+                      <div className="flex items-center gap-1 text-sm font-semibold text-green-700">
+                        <span>{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off</span>
+                        <span className="text-gray-400 font-light mx-0.5">•</span>
+                        <span className="text-green-700">Sale ends on 05 August</span>
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 font-medium mt-0.5">GST Included</p>
+                  </div>
                 ) : (
-                  selectedAvailableStock < 10 && selectedAvailableStock > 0 && (
-                     <p className="text-sm font-bold text-red-600">In {selectedAvailableStock + 3} baskets</p>
-                  )
+                  <>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl font-black text-gray-900">
+                        {formatPrice(ratePerMeter)}
+                      </span>
+                      {isTurbanProduct && <span className="text-sm text-gray-500 font-normal">+ per meter</span>}
+                    </div>
+                    {product.originalPrice && (
+                      <span className="text-sm text-gray-500 line-through font-medium">
+                        {formatPrice(product.originalPrice)}
+                      </span>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">* Seller GST included (where applicable). Additional GST may be applied at checkout.</p>
+                  </>
                 )}
-                
-                {/* Price */}
-                <div className="flex flex-col gap-1">
-                  {isBookProduct ? (
-                    <div className="space-y-1 font-sans">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-2xl font-bold text-gray-900">
-                          Now {formatPrice(ratePerMeter)}
-                        </span>
-                      </div>
-                      {product.originalPrice && (
-                        <div className="text-sm text-gray-500 line-through font-medium">
-                          {formatPrice(product.originalPrice)}
-                        </div>
-                      )}
-                      
-                      {product.originalPrice && (
-                        <div className="flex items-center gap-1 text-sm font-semibold text-green-700">
-                          <span>{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off</span>
-                          <span className="text-gray-400 font-light mx-0.5">•</span>
-                          <span className="text-green-700">Sale ends on 05 August</span>
-                        </div>
-                      )}
-                      <p className="text-xs text-gray-500 font-medium mt-0.5">GST Included</p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl font-black text-gray-900">
-                          {formatPrice(ratePerMeter)}
-                        </span>
-                        {isTurbanProduct && <span className="text-sm text-gray-500 font-normal">+ per meter</span>}
-                      </div>
-                      {product.originalPrice && (
-                        <span className="text-sm text-gray-500 line-through font-medium">
-                          {formatPrice(product.originalPrice)}
-                        </span>
-                      )}
-                      <p className="text-xs text-gray-500 mt-1">* Seller GST included (where applicable). Additional GST may be applied at checkout.</p>
-                    </>
-                  )}
-                </div>
+              </div>
 
-                {/* Title & Description */}
-                <h1 className={`text-lg lg:text-xl font-normal leading-relaxed text-gray-900 font-sans mt-2`}>
-                  {product.name} - {product.description || "Premium quality Sikh artifact"}
-                </h1>
-                
-                {/* Store Name & Rating */}
-                <div className="flex items-center gap-2">
-                  {vendor && (
-                    <Link
-                      to={`/seller/${vendor.id}`}
-                      className="text-sm font-medium text-gray-900 hover:underline flex items-center gap-1 group"
-                    >
-                      <span>{vendor.storeName || vendor.name}</span>
-                      {isBookProduct ? (
-                        <FiCheckCircle className="text-purple-600 text-xs" title="Star Seller" />
-                      ) : vendor.isVerified && (
-                        <FiCheckCircle className="text-blue-500 text-xs" title="Verified Vendor" />
-                      )}
-                    </Link>
-                  )}
-                  {product.rating > 0 && (
-                    <div className="flex items-center gap-0.5 cursor-pointer text-gray-800">
-                      {[...Array(5)].map((_, i) => (
-                        <FiStar
-                          key={i}
-                          className={`text-xs ${i < Math.floor(product.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
+              {/* Title & Description */}
+              <h1 className={`text-lg lg:text-xl font-normal leading-relaxed text-gray-900 font-sans mt-2`}>
+                {product.name} - {product.description || "Premium quality Sikh artifact"}
+              </h1>
 
-                {/* Configuration Dropdowns */}
-                <div className="space-y-4 mt-2">
-                  
-                  {/* Book Configuration (Format & Language Selector) */}
-                  {isBookProduct && product?.bookConfig && (
-                    <div className="space-y-4 mb-4 font-sans">
-                      {/* Format Options */}
-                      {Array.isArray(product.bookConfig.formatOptions) && product.bookConfig.formatOptions.length > 0 && (
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-stone-800">Format</label>
-                          <div className="grid grid-cols-3 gap-2">
-                            {product.bookConfig.formatOptions.map((opt) => (
-                              <button
-                                key={opt.id}
-                                type="button"
-                                onClick={() => setSelectedBookFormat(opt)}
-                                className={`px-3 py-2.5 rounded-xl border text-xs font-bold text-center transition-all flex flex-col items-center justify-center ${
-                                  selectedBookFormat?.id === opt.id
-                                    ? "border-stone-900 bg-stone-900 text-white shadow-sm"
-                                    : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+              {/* Store Name & Rating */}
+              <div className="flex items-center gap-2">
+                {vendor && (
+                  <Link
+                    to={`/seller/${vendor.id}`}
+                    className="text-sm font-medium text-gray-900 hover:underline flex items-center gap-1 group"
+                  >
+                    <span>{vendor.storeName || vendor.name}</span>
+                    {isBookProduct ? (
+                      <FiCheckCircle className="text-purple-600 text-xs" title="Star Seller" />
+                    ) : vendor.isVerified && (
+                      <FiCheckCircle className="text-blue-500 text-xs" title="Verified Vendor" />
+                    )}
+                  </Link>
+                )}
+                {product.rating > 0 && (
+                  <div className="flex items-center gap-0.5 cursor-pointer text-gray-800">
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={i}
+                        className={`text-xs ${i < Math.floor(product.rating) ? "text-gray-900 fill-gray-900" : "text-gray-300"}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Configuration Dropdowns */}
+              <div className="space-y-4 mt-2">
+
+                {/* Book Configuration (Format & Language Selector) */}
+                {isBookProduct && product?.bookConfig && (
+                  <div className="space-y-4 mb-4 font-sans">
+                    {/* Format Options */}
+                    {Array.isArray(product.bookConfig.formatOptions) && product.bookConfig.formatOptions.length > 0 && (
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-stone-800">Format</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {product.bookConfig.formatOptions.map((opt) => (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => setSelectedBookFormat(opt)}
+                              className={`px-3 py-2.5 rounded-xl border text-xs font-bold text-center transition-all flex flex-col items-center justify-center ${selectedBookFormat?.id === opt.id
+                                ? "border-stone-900 bg-stone-900 text-white shadow-sm"
+                                : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
                                 }`}
-                              >
-                                <span className="truncate">{opt.label}</span>
-                                <span className={`text-[10px] mt-0.5 ${selectedBookFormat?.id === opt.id ? "text-stone-300" : "text-stone-500"}`}>
-                                  {formatPrice(product.price + opt.priceOffset)}
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Language Options */}
-                      {Array.isArray(product.bookConfig.languageOptions) && product.bookConfig.languageOptions.length > 0 && (
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-stone-800">Language</label>
-                          <div className="relative">
-                            <select
-                              value={selectedBookLanguage?.id || ""}
-                              onChange={(e) => {
-                                const lang = product.bookConfig.languageOptions.find((l) => l.id === e.target.value);
-                                if (lang) setSelectedBookLanguage(lang);
-                              }}
-                              className="w-full px-4 py-3 border border-stone-200 rounded-xl text-sm font-medium text-stone-900 bg-white appearance-none focus:outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900 transition-colors cursor-pointer shadow-sm"
                             >
-                              {product.bookConfig.languageOptions.map((lang) => (
-                                <option key={lang.id} value={lang.id}>
-                                  {lang.label}
-                                </option>
-                              ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                              <FiChevronDown className="text-stone-600" />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* Length / Sizes Selector (Turbans Only) */}
-                  {isTurbanProduct && (() => {
-                    let sizes = product?.variants?.sizes || [];
-                    if (sizes.length === 0 && Array.isArray(product?.variants?.attributes)) {
-                      const sizeAttr = product.variants.attributes.find(
-                        (a) => ["size", "length", "dimension"].includes(String(a.name || "").toLowerCase())
-                      );
-                      if (sizeAttr && Array.isArray(sizeAttr.values)) {
-                        sizes = sizeAttr.values;
-                      }
-                    }
-                    if (sizes.length === 0 && isTurbanProduct) {
-                      sizes = ["5m", "5.5m", "6m", "6.5m", "7m", "7.5m", "8m"];
-                    }
-                    if (sizes.length === 0) return null;
-                    return (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-900">Length of Fabric</label>
-                        <div className="relative">
-                          <select
-                            value={selectedVariant?.size || ""}
-                            onChange={(e) => setSelectedVariant(prev => ({ ...prev, size: e.target.value }))}
-                            className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 bg-white appearance-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors cursor-pointer"
-                          >
-                            <option value="" disabled>Select an option</option>
-                            {sizes.map((sizeVal) => (
-                              <option key={sizeVal} value={sizeVal}>{sizeVal}</option>
-                            ))}
-                          </select>
-                          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                            <FiChevronDown className="text-gray-600" />
-                          </div>
-                        </div>
-
-                        {/* Custom Length Input Option */}
-                        <div className="mt-2 flex items-center gap-3">
-                          <label className="text-xs font-semibold text-gray-700 whitespace-nowrap">Or Custom Length:</label>
-                          <div className="flex items-center gap-1.5">
-                            <input
-                              type="number"
-                              min="0.5"
-                              max="30"
-                              step="0.1"
-                              value={(() => {
-                                const sizeStr = selectedVariant?.size || "";
-                                const match = sizeStr.match(/^([\d.]+)/);
-                                return match ? match[1] : "";
-                              })()}
-                              onChange={(e) => {
-                                const valStr = e.target.value;
-                                if (valStr === "") {
-                                  setSelectedVariant(prev => ({ ...prev, size: "" }));
-                                } else {
-                                  setSelectedVariant(prev => ({ ...prev, size: `${valStr}m` }));
-                                }
-                              }}
-                              className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
-                            />
-                            <span className="text-xs text-gray-500 font-semibold">meters</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Fabric Selector */}
-                  {isTurbanProduct && product?.turbanConfig?.fabric?.length > 0 && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-900">Fabric Type</label>
-                      <div className="relative">
-                        <select
-                          value={selectedFabric?.type || ""}
-                          onChange={(e) => {
-                            const fabric = product.turbanConfig.fabric.find(f => f.type === e.target.value);
-                            if (fabric) setSelectedFabric(fabric);
-                          }}
-                          className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 bg-white appearance-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors cursor-pointer"
-                        >
-                          <option value="" disabled>Select an option</option>
-                          {product.turbanConfig.fabric.map((fabric) => (
-                            <option key={fabric.type} value={fabric.type}>{fabric.type}</option>
+                              <span className="truncate">{opt.label}</span>
+                              <span className={`text-[10px] mt-0.5 ${selectedBookFormat?.id === opt.id ? "text-stone-300" : "text-stone-500"}`}>
+                                {formatPrice(product.price + opt.priceOffset)}
+                              </span>
+                            </button>
                           ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                          <FiChevronDown className="text-gray-600" />
                         </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {/* Color Selector (Turbans Only) */}
-                  {isTurbanProduct && (() => {
-                    let colors = product?.variants?.colors || [];
-                    if (colors.length === 0 && Array.isArray(product?.variants?.attributes)) {
-                      const colorAttr = product.variants.attributes.find(
-                        (a) => String(a.name || "").toLowerCase() === "color"
-                      );
-                      if (colorAttr && Array.isArray(colorAttr.values)) {
-                        colors = colorAttr.values;
-                      }
-                    }
-                    if (colors.length === 0) return null;
-                    return (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-900">Color</label>
-                        <div className="relative">
-                          <select
-                            value={selectedVariant?.color || ""}
-                            onChange={(e) => setSelectedVariant(prev => ({ ...prev, color: e.target.value }))}
-                            className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 bg-white appearance-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors cursor-pointer"
-                          >
-                            <option value="" disabled>Select an option</option>
-                            {colors.map((colorName) => (
-                              <option key={colorName} value={colorName}>{colorName}</option>
-                            ))}
-                          </select>
-                          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                            <FiChevronDown className="text-gray-600" />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
+                    )}
 
-                                    {/* Artwork Config UI */}
-                  {product?.artworkConfig && (
-                    <div className="space-y-4 mb-6">
-                      <div>
-                        <label className="block text-sm font-medium text-brand-dark mb-1">
-                          Size
-                        </label>
+                    {/* Language Options */}
+                    {Array.isArray(product.bookConfig.languageOptions) && product.bookConfig.languageOptions.length > 0 && (
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block">Language</label>
                         <div className="relative">
                           <select
-                            value={selectedArtSize?.label || ""}
+                            value={selectedBookLanguage?.id || ""}
                             onChange={(e) => {
-                              const sz = product.artworkConfig.sizes.find(s => s.label === e.target.value);
-                              setSelectedArtSize(sz);
+                              const lang = product.bookConfig.languageOptions.find((l) => l.id === e.target.value);
+                              if (lang) setSelectedBookLanguage(lang);
                             }}
-                            className="w-full appearance-none border border-brand-muted/30 rounded-xl px-4 py-3 bg-white text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-saffron/20 focus:border-brand-saffron transition-all shadow-sm"
+                            className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
                           >
-                            <option value="" disabled>Select an option</option>
-                            {product.artworkConfig.sizes.map((s, idx) => (
-                              <option key={idx} value={s.label}>{s.label}</option>
-                            ))}
-                          </select>
-                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-dark">
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-brand-dark mb-1">
-                          Stretched or Unstretched
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={selectedArtMaterial?.label || ""}
-                            onChange={(e) => {
-                              const mat = product.artworkConfig.materials.find(m => m.label === e.target.value);
-                              setSelectedArtMaterial(mat);
-                            }}
-                            className="w-full appearance-none border border-brand-muted/30 rounded-xl px-4 py-3 bg-white text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-saffron/20 focus:border-brand-saffron transition-all shadow-sm"
-                          >
-                            <option value="" disabled>Select an option</option>
-                            {product.artworkConfig.materials.map((m, idx) => (
-                              <option key={idx} value={m.label}>
-                                {m.label} ({formatPrice((selectedArtSize?.basePrice || 0) * m.priceMultiplier)})
+                            {product.bookConfig.languageOptions.map((lang) => (
+                              <option key={lang.id} value={lang.id}>
+                                {lang.label}
                               </option>
                             ))}
                           </select>
-                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-dark">
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                          <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                            <FiChevronDown className="text-gray-500 text-base" />
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-{/* General Variants Selector for Non-Turban Products */}
-                  {!isTurbanProduct && product.variants && (
-                    <div className="mb-2">
-                      <VariantSelector
-                        variants={product.variants}
-                        onVariantChange={setSelectedVariant}
-                        currentPrice={product.price}
-                        isKada={isKada}
-                        useDropdowns={true}
-                      />
-                    </div>
-                  )}
-
-                  {/* Quantity Selector Dropdown */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900">Quantity</label>
-                    <div className="relative">
-                      <select
-                        value={quantity}
-                        onChange={handleQuantityInput}
-                        className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 bg-white appearance-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors cursor-pointer"
-                      >
-                        {Array.from({ length: Math.min(10, selectedAvailableStock || 10) }, (_, i) => i + 1).map(num => (
-                          <option key={num} value={num}>{num}</option>
-                        ))}
-                      </select>
-                      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <FiChevronDown className="text-gray-600" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Total Price breakdown */}
-                  {finalCalculatedPrice > 0 && (
-                    <div className="py-2 text-right">
-                      <p className="text-sm font-bold text-gray-900">
-                        Total: {formatPrice(finalCalculatedPrice)}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Add-ons Configuration */}
-                  {isTurbanProduct && (product?.turbanConfig?.embroidery?.enabled || product?.turbanConfig?.giftWrap?.enabled) && (
-                    <div className="space-y-2.5 pt-4 border-t border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">Add-ons</p>
-                      <div className="space-y-3">
-                        {product.turbanConfig.embroidery?.enabled && (
-                          <div className="space-y-2">
-                            <label className="flex items-center gap-2 cursor-pointer text-sm font-normal text-gray-700">
-                              <input
-                                type="checkbox"
-                                checked={embroideryEnabled}
-                                onChange={(e) => setEmbroideryEnabled(e.target.checked)}
-                                className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900"
-                              />
-                              <span>Embroidery (+{formatPrice(product.turbanConfig.embroidery.price)})</span>
-                            </label>
-                            {embroideryEnabled && (
-                              <input
-                                type="text"
-                                value={embroideryDemand}
-                                onChange={(e) => setEmbroideryDemand(e.target.value)}
-                                placeholder="Enter custom embroidery demand"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
-                              />
-                            )}
-                          </div>
-                        )}
-                        {product.turbanConfig.giftWrap?.enabled && (
-                          <div className="space-y-2">
-                            <label className="flex items-center gap-2 cursor-pointer text-sm font-normal text-gray-700">
-                              <input
-                                type="checkbox"
-                                checked={giftWrapEnabled}
-                                onChange={(e) => setGiftWrapEnabled(e.target.checked)}
-                                className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900"
-                              />
-                              <span>Gift Packaging (+{formatPrice(product.turbanConfig.giftWrap.price)})</span>
-                            </label>
-                            {giftWrapEnabled && (
-                              <input
-                                type="text"
-                                value={giftWrapDemand}
-                                onChange={(e) => setGiftWrapDemand(e.target.value)}
-                                placeholder="Enter gift note or packaging demand"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-
-
-                  {/* Bundle Recommendations (Etsy Style) */}
-                  {isBookProduct && product.bookConfig?.recommendsBundle && (
-                    <div className="border border-stone-200/80 bg-white rounded-xl p-4 space-y-4 font-sans mt-2 shadow-sm">
-                      <h4 className="text-sm font-bold text-stone-900">{product.bookConfig.recommendsBundle.title}</h4>
-                      <div className="space-y-3">
-                        {product.bookConfig.recommendsBundle.items.map((item, idx) => (
-                          <div key={idx} className="flex gap-3 items-center">
-                            <div className="w-12 h-14 bg-stone-50 rounded-lg overflow-hidden flex-shrink-0 border border-stone-100">
-                              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-semibold text-stone-800 truncate">{item.name}</p>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-xs font-bold text-stone-900">{formatPrice(item.price)}</span>
-                                <span className="text-[10px] text-stone-400 line-through">{formatPrice(item.originalPrice)}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-                        <div>
-                          <p className="text-[10px] text-stone-500 font-medium">Bundle Price</p>
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-base font-extrabold text-stone-900">
-                              {formatPrice(product.bookConfig.recommendsBundle.bundlePrice)}
-                            </span>
-                            <span className="text-xs text-stone-400 line-through">
-                              {formatPrice(product.bookConfig.recommendsBundle.originalBundlePrice)}
-                            </span>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const bundle = product.bookConfig.recommendsBundle;
-                            handleAddToCart(false);
-                            addItem({
-                              id: `bundle_item_${product.id}`,
-                              name: bundle.items[1].name,
-                              price: bundle.items[1].price,
-                              image: bundle.items[1].image,
-                              quantity: 1,
-                              variant: { type: "Companion Bundle Addon" },
-                              stockQuantity: 99,
-                              vendorId: product.vendorId,
-                              vendorName: product.vendorName,
-                              unit: "Piece"
-                            }, true);
-                            toast.success("Added bundle to basket!");
-                          }}
-                          className="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-all shadow-sm active:scale-95"
-                        >
-                          Add bundle to basket
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Buy Buttons */}
-                  <div className="flex flex-col gap-3 mt-4">
-                    <button
-                      type="button"
-                      onClick={() => handleAddToCart(true)}
-                      disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-black bg-white border-2 border-black hover:bg-[#F5A623] hover:text-black hover:border-[#F5A623] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                    >
-                      Buy it now
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleAddToCart(false)}
-                      disabled={selectedAvailableStock <= 0}
-                      className="w-full py-3.5 rounded-full font-bold text-white bg-black hover:bg-[#F5A623] hover:text-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Add to basket
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleFavorite}
-                      className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-black hover:bg-[#F5A623] hover:text-black rounded-full transition-colors mt-2"
-                    >
-                      <FiHeart className={`text-lg ${isFavorite ? "fill-[#F5A623] text-[#F5A623]" : ""}`} />
-                      {isFavorite ? "Remove from collection" : "Add to collection"}
-                    </button>
-
-                    {/* Star Seller Card (Etsy Style) */}
-                    {isBookProduct && (
-                      <div className="flex gap-3.5 font-sans mt-3 items-start border-t border-b border-gray-200 py-3">
-                        <div className="w-10 h-10 rounded-full bg-[#FAF0F8] flex items-center justify-center text-[#A24B91] flex-shrink-0">
-                          <FiStar className="fill-[#A24B91] text-base animate-pulse" />
-                        </div>
-                        <div className="text-xs text-gray-600 leading-relaxed mt-0.5 text-left">
-                          <span className="font-bold text-gray-900">Star Seller.</span> This seller consistently earned 5-star reviews, dispatched on time, and replied quickly to any messages they received.
                         </div>
                       </div>
                     )}
                   </div>
+                )}
 
-                  {/* Accordions */}
-                  <div className="border-t border-gray-200 mt-6 pt-2 divide-y divide-gray-200">
-                    <details className="group" open>
+                {/* Length / Sizes Selector (Turbans Only) */}
+                {isTurbanProduct && (() => {
+                  let sizes = product?.variants?.sizes || [];
+                  if (sizes.length === 0 && Array.isArray(product?.variants?.attributes)) {
+                    const sizeAttr = product.variants.attributes.find(
+                      (a) => ["size", "length", "dimension"].includes(String(a.name || "").toLowerCase())
+                    );
+                    if (sizeAttr && Array.isArray(sizeAttr.values)) {
+                      sizes = sizeAttr.values;
+                    }
+                  }
+                  if (sizes.length === 0 && isTurbanProduct) {
+                    sizes = ["5m", "5.5m", "6m", "6.5m", "7m", "7.5m", "8m"];
+                  }
+                  if (sizes.length === 0) return null;
+                  return (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Length of Fabric</label>
+                        {selectedVariant?.size && (
+                          <span className="text-xs font-bold text-gray-900 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">{selectedVariant.size}</span>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <select
+                          value={selectedVariant?.size || ""}
+                          onChange={(e) => setSelectedVariant(prev => ({ ...prev, size: e.target.value }))}
+                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
+                        >
+                          <option value="" disabled>Select an option</option>
+                          {sizes.map((sizeVal) => (
+                            <option key={sizeVal} value={sizeVal}>{sizeVal}</option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <FiChevronDown className="text-gray-500 text-base" />
+                        </div>
+                      </div>
+
+                      {/* Custom Length Input Option */}
+                      <div className="mt-2 flex items-center gap-3">
+                        <label className="text-xs font-semibold text-gray-700 whitespace-nowrap">Or Custom Length:</label>
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            type="number"
+                            min="0.5"
+                            max="30"
+                            step="0.1"
+                            value={(() => {
+                              const sizeStr = selectedVariant?.size || "";
+                              const match = sizeStr.match(/^([\d.]+)/);
+                              return match ? match[1] : "";
+                            })()}
+                            onChange={(e) => {
+                              const valStr = e.target.value;
+                              if (valStr === "") {
+                                setSelectedVariant(prev => ({ ...prev, size: "" }));
+                              } else {
+                                setSelectedVariant(prev => ({ ...prev, size: `${valStr}m` }));
+                              }
+                            }}
+                            className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
+                          />
+                          <span className="text-xs text-gray-500 font-semibold">meters</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Fabric Selector */}
+                {isTurbanProduct && product?.turbanConfig?.fabric?.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block">Fabric Type</label>
+                    <div className="relative">
+                      <select
+                        value={selectedFabric?.type || ""}
+                        onChange={(e) => {
+                          const fabric = product.turbanConfig.fabric.find(f => f.type === e.target.value);
+                          if (fabric) setSelectedFabric(fabric);
+                        }}
+                        className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
+                      >
+                        <option value="" disabled>Select an option</option>
+                        {product.turbanConfig.fabric.map((fabric) => (
+                          <option key={fabric.type} value={fabric.type}>{fabric.type}</option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                        <FiChevronDown className="text-gray-500 text-base" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Color Selector (Turbans Only) */}
+                {isTurbanProduct && (() => {
+                  let colors = product?.variants?.colors || [];
+                  if (colors.length === 0 && Array.isArray(product?.variants?.attributes)) {
+                    const colorAttr = product.variants.attributes.find(
+                      (a) => String(a.name || "").toLowerCase() === "color"
+                    );
+                    if (colorAttr && Array.isArray(colorAttr.values)) {
+                      colors = colorAttr.values;
+                    }
+                  }
+                  if (colors.length === 0) return null;
+                  return (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Color</label>
+                        {selectedVariant?.color && (
+                          <span className="text-xs font-bold text-gray-900 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">{selectedVariant.color}</span>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <select
+                          value={selectedVariant?.color || ""}
+                          onChange={(e) => setSelectedVariant(prev => ({ ...prev, color: e.target.value }))}
+                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
+                        >
+                          <option value="" disabled>Select an option</option>
+                          {colors.map((colorName) => (
+                            <option key={colorName} value={colorName}>{colorName}</option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <FiChevronDown className="text-gray-500 text-base" />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Artwork Config UI */}
+                {product?.artworkConfig && (
+                  <div className="space-y-4 mb-6">
+                    <div>
+                      <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Size</label>
+                      <div className="relative">
+                        <select
+                          value={selectedArtSize?.label || ""}
+                          onChange={(e) => {
+                            const sz = product.artworkConfig.sizes.find(s => s.label === e.target.value);
+                            setSelectedArtSize(sz);
+                          }}
+                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
+                        >
+                          <option value="" disabled>Select an option</option>
+                          {product.artworkConfig.sizes.map((s, idx) => (
+                            <option key={idx} value={s.label}>{s.label}</option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <FiChevronDown className="text-gray-500 text-base" />
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Stretched or Unstretched</label>
+                      <div className="relative">
+                        <select
+                          value={selectedArtMaterial?.label || ""}
+                          onChange={(e) => {
+                            const mat = product.artworkConfig.materials.find(m => m.label === e.target.value);
+                            setSelectedArtMaterial(mat);
+                          }}
+                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 appearance-none focus:outline-none focus:border-gray-900 focus:shadow-[0_0_0_3px_rgba(17,24,39,0.08)] cursor-pointer shadow-sm hover:border-gray-400 transition-all"
+                        >
+                          <option value="" disabled>Select an option</option>
+                          {product.artworkConfig.materials.map((m, idx) => (
+                            <option key={idx} value={m.label}>
+                              {m.label} ({formatPrice((selectedArtSize?.basePrice || 0) * m.priceMultiplier)})
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <FiChevronDown className="text-gray-500 text-base" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* General Variants Selector for Non-Turban Products */}
+                {!isTurbanProduct && product.variants && (
+                  <div className="mb-2">
+                    <VariantSelector
+                      variants={product.variants}
+                      onVariantChange={setSelectedVariant}
+                      currentPrice={product.price}
+                      isKada={isKada}
+                      useDropdowns={true}
+                    />
+                  </div>
+                )}
+
+                {/* Quantity Selector Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-900">Quantity</label>
+                  <div className="relative">
+                    <select
+                      value={quantity}
+                      onChange={handleQuantityInput}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 bg-white appearance-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors cursor-pointer"
+                    >
+                      {Array.from({ length: Math.min(10, selectedAvailableStock || 10) }, (_, i) => i + 1).map(num => (
+                        <option key={num} value={num}>{num}</option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                      <FiChevronDown className="text-gray-600" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Total Price breakdown */}
+                {finalCalculatedPrice > 0 && (
+                  <div className="py-2 text-right">
+                    <p className="text-sm font-bold text-gray-900">
+                      Total: {formatPrice(finalCalculatedPrice)}
+                    </p>
+                  </div>
+                )}
+
+                {/* Add-ons Configuration */}
+                {isTurbanProduct && (product?.turbanConfig?.embroidery?.enabled || product?.turbanConfig?.giftWrap?.enabled) && (
+                  <div className="space-y-2.5 pt-4 border-t border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">Add-ons</p>
+                    <div className="space-y-3">
+                      {product.turbanConfig.embroidery?.enabled && (
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-normal text-gray-700">
+                            <input
+                              type="checkbox"
+                              checked={embroideryEnabled}
+                              onChange={(e) => setEmbroideryEnabled(e.target.checked)}
+                              className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900"
+                            />
+                            <span>Embroidery (+{formatPrice(product.turbanConfig.embroidery.price)})</span>
+                          </label>
+                          {embroideryEnabled && (
+                            <input
+                              type="text"
+                              value={embroideryDemand}
+                              onChange={(e) => setEmbroideryDemand(e.target.value)}
+                              placeholder="Enter custom embroidery demand"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
+                            />
+                          )}
+                        </div>
+                      )}
+                      {product.turbanConfig.giftWrap?.enabled && (
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-normal text-gray-700">
+                            <input
+                              type="checkbox"
+                              checked={giftWrapEnabled}
+                              onChange={(e) => setGiftWrapEnabled(e.target.checked)}
+                              className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900"
+                            />
+                            <span>Gift Packaging (+{formatPrice(product.turbanConfig.giftWrap.price)})</span>
+                          </label>
+                          {giftWrapEnabled && (
+                            <input
+                              type="text"
+                              value={giftWrapDemand}
+                              onChange={(e) => setGiftWrapDemand(e.target.value)}
+                              placeholder="Enter gift note or packaging demand"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+
+
+                {/* Bundle Recommendations (Etsy Style) */}
+                {isBookProduct && product.bookConfig?.recommendsBundle && (
+                  <div className="border border-stone-200/80 bg-white rounded-xl p-4 space-y-4 font-sans mt-2 shadow-sm">
+                    <h4 className="text-sm font-bold text-stone-900">{product.bookConfig.recommendsBundle.title}</h4>
+                    <div className="space-y-3">
+                      {product.bookConfig.recommendsBundle.items.map((item, idx) => (
+                        <div key={idx} className="flex gap-3 items-center">
+                          <div className="w-12 h-14 bg-stone-50 rounded-lg overflow-hidden flex-shrink-0 border border-stone-100">
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-stone-800 truncate">{item.name}</p>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-xs font-bold text-stone-900">{formatPrice(item.price)}</span>
+                              <span className="text-[10px] text-stone-400 line-through">{formatPrice(item.originalPrice)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] text-stone-500 font-medium">Bundle Price</p>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-base font-extrabold text-stone-900">
+                            {formatPrice(product.bookConfig.recommendsBundle.bundlePrice)}
+                          </span>
+                          <span className="text-xs text-stone-400 line-through">
+                            {formatPrice(product.bookConfig.recommendsBundle.originalBundlePrice)}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const bundle = product.bookConfig.recommendsBundle;
+                          handleAddToCart(false);
+                          addItem({
+                            id: `bundle_item_${product.id}`,
+                            name: bundle.items[1].name,
+                            price: bundle.items[1].price,
+                            image: bundle.items[1].image,
+                            quantity: 1,
+                            variant: { type: "Companion Bundle Addon" },
+                            stockQuantity: 99,
+                            vendorId: product.vendorId,
+                            vendorName: product.vendorName,
+                            unit: "Piece"
+                          }, true);
+                          toast.success("Added bundle to basket!");
+                        }}
+                        className="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-all shadow-sm active:scale-95"
+                      >
+                        Add bundle to basket
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Buy Buttons */}
+                <div className="flex flex-col gap-3 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => handleAddToCart(true)}
+                    disabled={selectedAvailableStock <= 0}
+                    className="w-full py-3.5 rounded-full font-bold text-black bg-white border-2 border-black hover:bg-[#F5A623] hover:text-black hover:border-[#F5A623] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  >
+                    Buy it now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddToCart(false)}
+                    disabled={selectedAvailableStock <= 0}
+                    className="w-full py-3.5 rounded-full font-bold text-white bg-black hover:bg-[#F5A623] hover:text-black transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Add to basket
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFavorite}
+                    className="w-full py-2 flex items-center justify-center gap-2 text-sm font-semibold text-black hover:bg-[#F5A623] hover:text-black rounded-full transition-colors mt-2"
+                  >
+                    <FiHeart className={`text-lg ${isFavorite ? "fill-[#F5A623] text-[#F5A623]" : ""}`} />
+                    {isFavorite ? "Remove from collection" : "Add to collection"}
+                  </button>
+
+                  {/* Star Seller Card (Etsy Style) */}
+                  {isBookProduct && (
+                    <div className="flex gap-3.5 font-sans mt-3 items-start border-t border-b border-gray-200 py-3">
+                      <div className="w-10 h-10 rounded-full bg-[#FAF0F8] flex items-center justify-center text-[#A24B91] flex-shrink-0">
+                        <FiStar className="fill-[#A24B91] text-base animate-pulse" />
+                      </div>
+                      <div className="text-xs text-gray-600 leading-relaxed mt-0.5 text-left">
+                        <span className="font-bold text-gray-900">Star Seller.</span> This seller consistently earned 5-star reviews, dispatched on time, and replied quickly to any messages they received.
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Accordions */}
+                <div className="border-t border-gray-200 mt-6 pt-2 divide-y divide-gray-200">
+                  <details className="group" open>
+                    <summary className="flex items-center justify-between py-4 cursor-pointer list-none font-bold text-gray-900 outline-none">
+                      Item details
+                      <span className="transition group-open:rotate-180">
+                        <FiChevronDown className="text-xl" />
+                      </span>
+                    </summary>
+                    <div className="pb-4 space-y-4">
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold text-gray-900">Highlights</p>
+                        <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
+                          {vendor && (
+                            <li>Made by <strong>{vendor.storeName || vendor.name}</strong></li>
+                          )}
+                          {product.specifications?.map((spec, idx) => (
+                            <li key={idx}>{spec.name}: {spec.value}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {isBookProduct ? (
+                        <div className="mt-6 border border-stone-200 rounded-xl overflow-hidden bg-white shadow-sm font-sans">
+                          {/* Synopsis Header */}
+                          <div className="border-b border-stone-200 bg-stone-50 px-5 py-3 flex items-center justify-between">
+                            <h3 className="text-stone-800 font-extrabold tracking-wide uppercase text-xs">Synopsis & Details</h3>
+                          </div>
+                          <div className="p-6 flex flex-col gap-6">
+                            {/* Synopsis Text */}
+                            <div className="space-y-4 text-stone-700 text-sm font-serif leading-relaxed">
+                              <p className="first-letter:text-3xl first-letter:font-bold first-letter:text-stone-900 first-letter:float-left first-letter:mr-2">
+                                {product.bookConfig?.synopsis || product.description}
+                              </p>
+                            </div>
+
+                            {/* Publisher Info / Metadata Grid */}
+                            <div className="border-t border-stone-150 pt-5 space-y-3 font-sans">
+                              <h4 className="text-stone-900 font-bold text-xs uppercase tracking-wider">Book Information</h4>
+                              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-stone-600 mt-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Publisher:</span>
+                                  <span className="truncate">{product.bookConfig?.publisher || "John Murray Press"}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">ISBN:</span>
+                                  <span className="truncate">{product.bookConfig?.isbn || "9781444105100"}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Pages:</span>
+                                  <span>{product.bookConfig?.pages || "272"} pages</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Dimensions:</span>
+                                  <span className="truncate">{product.bookConfig?.dimensions || "196 x 128 x 18 mm"}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Weight:</span>
+                                  <span>{product.bookConfig?.weight || "220 g"}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Language:</span>
+                                  <span>{product.bookConfig?.language || "English"}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                          {product.description}
+                        </p>
+                      )}
+
+                    </div>
+                  </details>
+
+                  {vendor && (vendor.storePolicies || vendor.shippingPolicy || vendor.refundPolicy) && (
+                    <details className="group">
                       <summary className="flex items-center justify-between py-4 cursor-pointer list-none font-bold text-gray-900 outline-none">
-                        Item details
+                        Delivery and return policies
                         <span className="transition group-open:rotate-180">
                           <FiChevronDown className="text-xl" />
                         </span>
                       </summary>
                       <div className="pb-4 space-y-4">
-                        <div className="space-y-2">
-                          <p className="text-sm font-semibold text-gray-900">Highlights</p>
-                          <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
-                            {vendor && (
-                              <li>Made by <strong>{vendor.storeName || vendor.name}</strong></li>
-                            )}
-                            {product.specifications?.map((spec, idx) => (
-                              <li key={idx}>{spec.name}: {spec.value}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        {isBookProduct ? (
-                          <div className="mt-6 border border-stone-200 rounded-xl overflow-hidden bg-white shadow-sm font-sans">
-                            {/* Synopsis Header */}
-                            <div className="border-b border-stone-200 bg-stone-50 px-5 py-3 flex items-center justify-between">
-                              <h3 className="text-stone-800 font-extrabold tracking-wide uppercase text-xs">Synopsis & Details</h3>
-                            </div>
-                            <div className="p-6 flex flex-col gap-6">
-                              {/* Synopsis Text */}
-                              <div className="space-y-4 text-stone-700 text-sm font-serif leading-relaxed">
-                                <p className="first-letter:text-3xl first-letter:font-bold first-letter:text-stone-900 first-letter:float-left first-letter:mr-2">
-                                  {product.bookConfig?.synopsis || product.description}
-                                </p>
-                              </div>
-                              
-                              {/* Publisher Info / Metadata Grid */}
-                              <div className="border-t border-stone-150 pt-5 space-y-3 font-sans">
-                                <h4 className="text-stone-900 font-bold text-xs uppercase tracking-wider">Book Information</h4>
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-stone-600 mt-2">
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Publisher:</span>
-                                    <span className="truncate">{product.bookConfig?.publisher || "John Murray Press"}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">ISBN:</span>
-                                    <span className="truncate">{product.bookConfig?.isbn || "9781444105100"}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Pages:</span>
-                                    <span>{product.bookConfig?.pages || "272"} pages</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Dimensions:</span>
-                                    <span className="truncate">{product.bookConfig?.dimensions || "196 x 128 x 18 mm"}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Weight:</span>
-                                    <span>{product.bookConfig?.weight || "220 g"}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-stone-500 w-20 flex-shrink-0">Language:</span>
-                                    <span>{product.bookConfig?.language || "English"}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                        {vendor.shippingPolicy && (
+                          <div className="text-sm text-gray-700">
+                            <p className="font-semibold mb-1">Shipping Information</p>
+                            <p className="whitespace-pre-line text-xs text-gray-600">{vendor.shippingPolicy}</p>
                           </div>
-                        ) : (
-                          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-                            {product.description}
-                          </p>
                         )}
-
+                        {vendor.refundPolicy && (
+                          <div className="text-sm text-gray-700">
+                            <p className="font-semibold mb-1">Returns & Exchanges</p>
+                            <p className="whitespace-pre-line text-xs text-gray-600">{vendor.refundPolicy}</p>
+                          </div>
+                        )}
                       </div>
                     </details>
-                    
-                    {vendor && (vendor.storePolicies || vendor.shippingPolicy || vendor.refundPolicy) && (
-                      <details className="group">
-                        <summary className="flex items-center justify-between py-4 cursor-pointer list-none font-bold text-gray-900 outline-none">
-                          Delivery and return policies
-                          <span className="transition group-open:rotate-180">
-                            <FiChevronDown className="text-xl" />
-                          </span>
-                        </summary>
-                        <div className="pb-4 space-y-4">
-                          {vendor.shippingPolicy && (
-                            <div className="text-sm text-gray-700">
-                              <p className="font-semibold mb-1">Shipping Information</p>
-                              <p className="whitespace-pre-line text-xs text-gray-600">{vendor.shippingPolicy}</p>
-                            </div>
-                          )}
-                          {vendor.refundPolicy && (
-                            <div className="text-sm text-gray-700">
-                              <p className="font-semibold mb-1">Returns & Exchanges</p>
-                              <p className="whitespace-pre-line text-xs text-gray-600">{vendor.refundPolicy}</p>
-                            </div>
-                          )}
-                        </div>
-                      </details>
-                    )}
-                  </div>
+                  )}
+                </div>
 
-                  {/* Reviews & QA (Mobile Only) */}
-                  <div className="block lg:hidden mt-8 space-y-8">
-                    {reviewsSection}
-                    <div className="border-t border-gray-200 pt-8">
-                      <ProductQA productId={product.id} />
-                    </div>
+                {/* Reviews & QA (Mobile Only) */}
+                <div className="block lg:hidden mt-8 space-y-8">
+                  {reviewsSection}
+                  <div className="border-t border-gray-200 pt-8">
+                    <ProductQA productId={product.id} />
                   </div>
                 </div>
+              </div>
             </div>
           </div>
 
@@ -1668,7 +1669,7 @@ const MobileProductDetail = () => {
                 <div className="relative max-w-lg w-full bg-white shadow-lg rounded-lg border border-stone-200/60 overflow-hidden flex flex-col">
                   {/* Parchment effect overlay */}
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-yellow-50/5 via-transparent to-stone-500/5 mix-blend-multiply" />
-                  
+
                   <img
                     src={product.bookConfig.previewPages[lookInsideIndex].url}
                     alt={`Preview Page ${lookInsideIndex + 1}`}
