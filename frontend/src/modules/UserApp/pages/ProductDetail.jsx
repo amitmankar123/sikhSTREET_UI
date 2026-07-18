@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   FiStar,
@@ -18,6 +18,8 @@ import {
   FiChevronLeft,
   FiFlag,
   FiX,
+  FiMail,
+  FiMessageSquare,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore, useUIStore } from "../../../shared/store/useStore";
@@ -243,6 +245,305 @@ const BookProductCard = ({ product }) => {
               Free delivery
             </span>
           ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SellerShopCard = ({ product }) => {
+  const navigate = useNavigate();
+  const [isFollowing, setIsFollowing] = useState(() => {
+    try {
+      const saved = localStorage.getItem("favorite_shops");
+      const favs = saved ? JSON.parse(saved) : {};
+      return !!favs[product.vendorId || "mock-book-vendor"];
+    } catch {
+      return false;
+    }
+  });
+
+  const resolvedVendor = useMemo(() => {
+    const name = product.vendorName || "Qissa of Islam";
+    const ownerName = name.replace(/^(By|Designed by)\s+/i, "").split(" ")[0] || "Muhebb";
+    return {
+      id: product.vendorId || "mock-book-vendor",
+      storeName: name,
+      ownerName: ownerName,
+      rating: 4.9,
+      reviewCount: 39,
+      totalSales: "1.3k",
+      yearsOnPlatform: "1 year on SikhStreet",
+      location: "United States",
+      logo: "/images/books/book_vendor_avatar.png",
+    };
+  }, [product]);
+
+  const handleFollowToggle = (e) => {
+    e.preventDefault();
+    setIsFollowing(prev => {
+      const next = !prev;
+      try {
+        const saved = localStorage.getItem("favorite_shops");
+        const favs = saved ? JSON.parse(saved) : {};
+        if (next) {
+          favs[resolvedVendor.id] = true;
+          toast.success(`Following ${resolvedVendor.storeName}!`);
+        } else {
+          delete favs[resolvedVendor.id];
+          toast.success(`Unfollowed ${resolvedVendor.storeName}`);
+        }
+        localStorage.setItem("favorite_shops", JSON.stringify(favs));
+      } catch (err) {
+        console.error(err);
+      }
+      return next;
+    });
+  };
+
+  const shopReviews = useMemo(() => {
+    return [
+      {
+        id: "shop-rev-1",
+        user: "Erum",
+        rating: 5,
+        comment: "Delivered to email immediately and easy to download. Great quality!",
+        date: "09 Jul, 2026",
+        productId: "321", // Maharaja Ranjit Singh Book (Digital Edition)
+      },
+      {
+        id: "shop-rev-2",
+        user: "Iqtidaar",
+        rating: 5,
+        comment: "It was a pdf sent, not a physical book. Very helpful content.",
+        date: "06 Jul, 2026",
+        productId: "321",
+      },
+      {
+        id: "shop-rev-3",
+        user: "Syed",
+        rating: 5,
+        comment: "Good book giving solid foundation of Sikh History and values.",
+        date: "02 Jul, 2026",
+        productId: "319", // Maharani Jindan Book
+      },
+      {
+        id: "shop-rev-4",
+        user: "Jaspreet",
+        rating: 5,
+        comment: "Excellent print and clean translation. Highly recommended seller.",
+        date: "28 Jun, 2026",
+        productId: "319",
+      }
+    ];
+  }, []);
+
+  const resolvedReviews = useMemo(() => {
+    // Try to resolve actual product image and name from getProductById fallback if available
+    return shopReviews.map(rev => {
+      const prod = getProductById(rev.productId);
+      return {
+        ...rev,
+        productImage: prod?.image || "/images/books/maharani_jindan.png",
+        productName: prod?.name || "Sikh History Book",
+      };
+    });
+  }, [shopReviews]);
+
+  const carouselRef = useRef(null);
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+  };
+
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <div className="border border-gray-200 rounded-[2rem] p-6 bg-white shadow-sm space-y-6 max-w-4xl text-left font-sans">
+      {/* Profile Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {/* Avatar Container with Etsy-like shape */}
+          <Link to={`/seller/${resolvedVendor.id}`} className="relative group flex-shrink-0">
+            <div className="w-16 h-16 rounded-full bg-purple-100 border-2 border-purple-200 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+              <span className="text-xl font-bold text-purple-700">
+                {resolvedVendor.storeName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            {/* Flower Badge */}
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-pink-500 border-2 border-white flex items-center justify-center text-[10px] text-white font-bold">
+              ✿
+            </div>
+          </Link>
+
+          {/* Shop Details */}
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link 
+                to={`/seller/${resolvedVendor.id}`}
+                className="text-lg font-bold text-gray-900 hover:underline transition-colors"
+              >
+                {resolvedVendor.storeName}
+              </Link>
+              <Link 
+                to={`/seller/${resolvedVendor.id}`}
+                className="text-xs text-gray-500 underline hover:text-black"
+              >
+                {resolvedVendor.ownerName}
+              </Link>
+              <span className="text-xs text-gray-400">•</span>
+              <span className="text-xs text-gray-500">{resolvedVendor.location}</span>
+            </div>
+            <div className="flex items-center gap-2 mt-1 flex-wrap text-xs text-gray-600 font-medium">
+              <span className="flex items-center gap-0.5 text-black font-bold">
+                ★ {resolvedVendor.rating} <span className="text-gray-400 font-normal">({resolvedVendor.reviewCount})</span>
+              </span>
+              <span className="text-gray-300">|</span>
+              <span>{resolvedVendor.totalSales} sales</span>
+              <span className="text-gray-300">|</span>
+              <span>{resolvedVendor.yearsOnPlatform}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col items-stretch sm:items-end gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleFollowToggle}
+              className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold border transition-all active:scale-95 ${
+                isFollowing 
+                  ? "bg-gray-100 text-gray-800 border-gray-200" 
+                  : "bg-white text-gray-900 border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              <FiHeart className={isFollowing ? "fill-red-500 text-red-500" : "text-gray-600"} />
+              {isFollowing ? "Following" : "Follow shop"}
+            </button>
+            
+            <Link
+              to="/chat"
+              className="flex items-center justify-center px-4 py-2 rounded-full text-xs font-bold border border-black text-black hover:bg-gray-50 transition-all active:scale-95"
+            >
+              Message seller
+            </Link>
+          </div>
+          <span className="text-[10px] text-gray-500 self-center sm:self-auto">Typically responds within a few hours</span>
+        </div>
+      </div>
+
+      {/* Highlights Row */}
+      <div className="border-t border-gray-150 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-600 font-medium">
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center mt-0.5">
+            <FiMail className="text-gray-700 text-sm" />
+          </div>
+          <div>
+            <strong className="text-gray-900 block font-bold">Speedy replies</strong>
+            Has a history of replying to messages quickly.
+          </div>
+        </div>
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center mt-0.5">
+            <FiMessageSquare className="text-gray-700 text-sm" />
+          </div>
+          <div>
+            <strong className="text-gray-900 block font-bold">Rave reviews</strong>
+            Average review rating is 4.8 or higher.
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews Carousel Header */}
+      <div className="border-t border-gray-150 pt-6">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-base font-bold text-gray-900 font-serif">
+            All reviews from this shop ({resolvedVendor.reviewCount})
+          </h4>
+          <Link
+            to={`/seller/${resolvedVendor.id}`}
+            className="flex items-center justify-center rounded-full border border-black px-4 py-1.5 text-xs font-bold hover:bg-gray-50 transition-all"
+          >
+            Show all
+          </Link>
+        </div>
+
+        {/* Carousel Container */}
+        <div className="relative group/carousel">
+          {/* Scroll Buttons */}
+          <button 
+            onClick={scrollLeft}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-md hover:bg-gray-50 transition-all z-10 opacity-0 group-hover/carousel:opacity-100"
+          >
+            <FiChevronLeft className="text-gray-600" />
+          </button>
+          
+          <button 
+            onClick={scrollRight}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-md hover:bg-gray-50 transition-all z-10 opacity-0 group-hover/carousel:opacity-100"
+          >
+            <FiChevronRight className="text-gray-600" />
+          </button>
+
+          {/* Horizontally scrollable list */}
+          <div 
+            ref={carouselRef}
+            className="flex gap-4 overflow-x-auto pb-4 pt-1 px-1 scroll-smooth scrollbar-none snap-x"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {resolvedReviews.map((rev) => (
+              <div 
+                key={rev.id} 
+                className="flex-shrink-0 w-[290px] sm:w-[320px] bg-white border border-gray-200 hover:border-gray-300 rounded-2xl p-4 flex flex-col justify-between shadow-sm cursor-pointer transition-colors snap-start"
+                onClick={() => navigate(`/product/${rev.productId}`)}
+              >
+                <div className="space-y-2">
+                  {/* Rating Stars */}
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar 
+                        key={i} 
+                        className={`text-xs ${i < rev.rating ? "text-gray-900 fill-gray-900" : "text-gray-200"}`} 
+                      />
+                    ))}
+                  </div>
+                  {/* Comment */}
+                  <div className="flex gap-2">
+                    <p className="text-xs text-gray-700 leading-relaxed flex-1 line-clamp-3">
+                      {rev.comment}
+                    </p>
+                    {rev.productImage && (
+                      <div className="w-12 h-12 rounded-lg bg-gray-50 overflow-hidden flex-shrink-0 border border-gray-100">
+                        <img 
+                          src={rev.productImage} 
+                          alt={rev.productName} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Reviewer Details */}
+                <div className="mt-4 pt-3 border-t border-gray-50 space-y-1">
+                  <div className="text-[10px] text-gray-400 font-medium">
+                    <span className="font-semibold text-gray-600">{rev.user}</span>
+                    <span className="mx-1.5">|</span>
+                    <span>{rev.date}</span>
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-medium truncate">
+                    Purchased: <span className="underline hover:text-black transition-colors">{rev.productName}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -956,11 +1257,18 @@ const MobileProductDetail = () => {
 
               {/* Reviews Section (Desktop Only) */}
               <div className="hidden lg:block">
-                {reviewsSection}
+                {!isBookProduct && reviewsSection}
               </div>
 
+              {/* Seller Shop & Reviews Section (Book Products Only, Desktop) */}
+              {isBookProduct && (
+                <div className="hidden lg:block mt-6 max-w-4xl">
+                  <SellerShopCard product={product} />
+                </div>
+              )}
+
               {/* Community Q&A (Desktop Only) */}
-              <div className="hidden lg:block mt-12 max-w-4xl border-t border-gray-200 pt-10">
+              <div className="hidden lg:block mt-6 max-w-4xl border-t border-gray-200 pt-6">
                 <ProductQA productId={product.id} />
               </div>
             </div>
@@ -1595,7 +1903,11 @@ const MobileProductDetail = () => {
 
                 {/* Reviews & QA (Mobile Only) */}
                 <div className="block lg:hidden mt-8 space-y-8">
-                  {reviewsSection}
+                  {isBookProduct ? (
+                    <SellerShopCard product={product} />
+                  ) : (
+                    reviewsSection
+                  )}
                   <div className="border-t border-gray-200 pt-8">
                     <ProductQA productId={product.id} />
                   </div>
@@ -1606,7 +1918,7 @@ const MobileProductDetail = () => {
 
           {/* Similar Products (Outside the grid to span full-width) */}
           {similarProducts.length > 0 && (
-            <div className="mt-16 border-t border-gray-200 pt-10 px-4 lg:px-8">
+            <div className="mt-8 border-t border-gray-200 pt-6 px-4 lg:px-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">
                 {isBookProduct ? "Other books you might like" : "You May Also Like"}
               </h3>

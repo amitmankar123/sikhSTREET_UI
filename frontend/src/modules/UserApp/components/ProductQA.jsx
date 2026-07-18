@@ -67,8 +67,8 @@ const ProductQA = ({ productId }) => {
   }
 
   return (
-    <div className="mt-12 mb-8" id="qa-section">
-      <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+    <div className="mt-4 mb-4" id="qa-section">
+      <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
         <FiMessageSquare className="text-[#F5A623]" /> Community Q&A
       </h3>
 
