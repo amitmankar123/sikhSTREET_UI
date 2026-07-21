@@ -153,14 +153,14 @@ export default {
 
       // ── Typography ────────────────────────────────────────────────────
       fontFamily: {
-        // Body font (clean, modern)
-        sans:    ['"Segoe UI"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        // Display/heading font
-        heading: ['"Times New Roman"', 'Times', 'serif'],
-        // Brand logo font (Playfair for the hero brand name)
-        brand:   ['"Times New Roman"', 'Times', 'serif'],
+        // Body font (clean, modern Inter)
+        sans:    ['Inter', '"Poppins"', '"Segoe UI"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        // Display/heading font (Poppins to match UserApp headings)
+        heading: ['"Poppins"', 'Inter', '-apple-system', 'sans-serif'],
+        // Brand logo font
+        brand:   ['"Poppins"', 'Inter', 'sans-serif'],
         // Standard serif override
-        serif:   ['"Times New Roman"', 'Times', 'serif'],
+        serif:   ['"Playfair Display"', 'Lora', 'serif'],
       },
 
       fontSize: {

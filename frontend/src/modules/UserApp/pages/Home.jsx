@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../../shared/store/useStore";
 import { useCategoryStore } from "../../../shared/store/categoryStore";
+import { useWishlistStore } from "../../../shared/store/wishlistStore";
 import { formatPrice } from "../../../shared/utils/helpers";
 import MobileLayout from "../components/Layout/MobileLayout";
 import PageTransition from "../../../shared/components/PageTransition";
@@ -23,6 +24,47 @@ const MobileHome = () => {
   });
   const { addItem } = useCartStore();
   const { categories: backendCategories, initialize: initCategories } = useCategoryStore();
+
+  const wishlistStore = useWishlistStore();
+  const toggleWishlist = (product) => {
+    if (wishlistStore.isInWishlist(product.id)) {
+      wishlistStore.removeItem(product.id);
+      toast.success("Removed from wishlist");
+    } else {
+      wishlistStore.addItem(product);
+      toast.success("Added to wishlist!");
+    }
+  };
+
+  const trendingCarouselRef = useRef(null);
+  const scrollTrendingRight = () => {
+    if (trendingCarouselRef.current) {
+      trendingCarouselRef.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+  };
+  const scrollTrendingLeft = () => {
+    if (trendingCarouselRef.current) {
+      trendingCarouselRef.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+  };
+
+  const trendingProductsList = useMemo(() => {
+    const ids = [306, 307, 302, 460, 1, 2, 4, 5, 6, 7];
+    return ids.map(id => {
+      const found = allProducts.find(p => Number(p.id) === Number(id));
+      if (found) return found;
+      return {
+        id,
+        name: "Premium Sikh Artifact",
+        price: 45.00,
+        image: "/images/redesign/premium_kada.png",
+        rating: 4.8,
+        reviewCount: 42,
+      };
+    });
+  }, [allProducts]);
+
+
 
   useEffect(() => {
     try {
@@ -158,7 +200,7 @@ const MobileHome = () => {
               </div>
 
               {/* Secondary Feature Block */}
-              <div className="lg:col-span-4 relative rounded-[2rem] overflow-hidden shadow-sm h-[250px] lg:h-full cursor-pointer group" onClick={() => navigate("/category/3")}>
+              <div className="hidden lg:block lg:col-span-4 relative rounded-[2rem] overflow-hidden shadow-sm h-[250px] lg:h-full cursor-pointer group" onClick={() => navigate("/category/3")}>
                 <img
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   alt="Sculptural Kara"
@@ -406,122 +448,162 @@ const MobileHome = () => {
             </div>
           </section>
 
-          {/* Trending Products (Bento Style) */}
-          <section className="py-xl bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
+
+          {/* Etsy-Style Dual Banner Section */}
+          <section className="py-12 bg-white text-left">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-              <div className="mb-12 text-left">
-                <h3 className="text-3xl md:text-4xl font-bold font-serif tracking-tight text-neutral-900 leading-tight">
-                  Trending Pieces
-                </h3>
-                <p className="text-neutral-600 text-base md:text-lg mt-2 leading-relaxed">
-                  The most sought-after crafts this season.
-                </p>
+              <div className="">
+                {/* Wedding Trends Banner */}
+                <div
+                  onClick={() => navigate("/category/fashion")}
+                  className="bg-[#f4ece1] rounded-[2rem] overflow-hidden flex flex-col md:flex-row items-center justify-between cursor-pointer group hover:shadow-md transition-shadow duration-300 h-[280px]"
+                >
+                  <div className="p-8 md:p-12 flex flex-col justify-center items-start flex-1 text-left">
+                    <h3 className="text-3xl md:text-4xl font-serif text-neutral-900 font-bold mb-6 leading-tight max-w-xs">
+                      Our top wedding trends
+                    </h3>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/category/fashion");
+                      }}
+                      className="px-6 py-3 bg-neutral-900 text-white font-semibold text-sm rounded-full hover:bg-neutral-800 transition-colors shadow-sm hover:shadow"
+                    >
+                      Shop the edit
+                    </button>
+                  </div>
+                  <div className="w-full md:w-[55%] h-full overflow-hidden relative">
+                    <img
+                      src="/images/home/wedding_trends_banner.png"
+                      alt="Top wedding trends"
+                      className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Trending Products (Etsy-Style Carousel) */}
+          <section className="py-12 bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+              {/* Header Row */}
+              <div className="flex items-center justify-between mb-8 text-left">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-neutral-900 leading-tight">
+                    Trending Pieces
+                  </h3>
+                  <p className="text-neutral-600 text-sm mt-1 leading-relaxed">
+                    The most sought-after crafts this season.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toast.success("Marked as not interested")}
+                    className="bg-[#eaeaea] hover:bg-gray-200 text-gray-800 text-xs font-semibold px-4 py-2 rounded-full transition-colors whitespace-nowrap"
+                  >
+                    Not interested
+                  </button>
+                  <button
+                    onClick={() => navigate("/category/fashion")}
+                    className="bg-[#eaeaea] hover:bg-gray-200 text-gray-800 text-xs font-semibold px-4 py-2 rounded-full transition-colors whitespace-nowrap"
+                  >
+                    View all
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:h-[800px]">
-                {/* Large Feature: Kirpan */}
-                <div className="md:col-span-2 md:row-span-2 bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col justify-between">
-                  <div className="relative h-[250px] sm:h-[350px] md:h-[70%] overflow-hidden">
-                    <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      alt={kirpan.name}
-                      src={kirpan.image}
-                    />
-                    <span className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                      NEW ARRIVAL
-                    </span>
-                  </div>
-                  <div className="p-6 flex-1 flex flex-col justify-between">
-                    <div className="mb-4">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-xl font-bold font-serif text-black">{kirpan.name}</h4>
-                        <span className="text-xl font-bold text-black">${kirpan.price}</span>
+              {/* Carousel container with overlapping left/right hover arrows */}
+              <div className="relative group">
+                {/* Left Arrow */}
+                <button
+                  onClick={scrollTrendingLeft}
+                  className="absolute left-[-18px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                  </svg>
+                </button>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={scrollTrendingRight}
+                  className="absolute right-[-18px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                </button>
+
+                {/* Horizontal Scroll list */}
+                <div
+                  ref={trendingCarouselRef}
+                  className="flex gap-5 overflow-x-auto hide-scrollbar scroll-smooth pb-4"
+                >
+                  {trendingProductsList.map((product) => {
+                    const isFav = wishlistStore.isInWishlist(product.id);
+                    const originalPrice = product.originalPrice || Math.round(product.price * 1.25);
+                    const discount = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+                    return (
+                      <div
+                        key={product.id}
+                        className="flex-shrink-0 w-[140px] sm:w-[155px] md:w-[170px] bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group/card relative flex flex-col justify-between"
+                      >
+                        {/* Image area */}
+                        <div className="relative aspect-square overflow-hidden bg-gray-50 cursor-pointer" onClick={() => navigate(`/product/${product.id}`)}>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700"
+                          />
+                          {/* Heart icon button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleWishlist(product);
+                            }}
+                            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 shadow flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-neutral-600 hover:text-red-500"
+                          >
+                            <FiHeart className={`w-3.5 h-3.5 ${isFav ? "fill-red-500 text-red-500" : ""}`} />
+                          </button>
+                        </div>
+
+                        {/* Text / Price area */}
+                        <div className="p-3 text-left flex flex-col justify-between flex-1">
+                          <div>
+                            <Link to={`/product/${product.id}`} className="text-[11px] sm:text-xs font-semibold font-serif text-black hover:underline line-clamp-1 block">
+                              {product.name}
+                            </Link>
+                            {/* Stars */}
+                            <div className="flex items-center gap-1 mt-0.5 text-yellow-500 text-[9px] sm:text-[10px]">
+                              <FiStar className="fill-current" />
+                              <span className="font-bold text-gray-700">4.9</span>
+                              <span className="text-gray-400 font-medium">(18)</span>
+                            </div>
+                          </div>
+
+                          <div className="mt-2">
+                            {/* Price */}
+                            <div className="flex items-baseline gap-1 flex-wrap">
+                              <span className="text-xs sm:text-[13px] font-bold text-neutral-900">
+                                {formatPrice ? formatPrice(product.price) : `$${product.price}`}
+                              </span>
+                              {originalPrice > product.price && (
+                                <>
+                                  <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through">
+                                    {formatPrice ? formatPrice(originalPrice) : `$${originalPrice}`}
+                                  </span>
+                                  <span className="text-[9px] font-bold text-red-600">
+                                    ({discount}% OFF)
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-black mt-2">
-                        {kirpan.description}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(kirpan)}
-                      className="w-full bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white py-3 rounded-xl text-sm font-semibold transition-all duration-300 active:scale-[0.98] shadow-sm hover:shadow"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-
-                {/* Standard Card 1: Journal */}
-                <div className="md:col-span-1 bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                  <div className="h-48 overflow-hidden cursor-pointer" onClick={() => navigate(`/product/${journal.id}`)}>
-                    <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      alt={journal.name}
-                      src={journal.image}
-                    />
-                  </div>
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div className="cursor-pointer text-left" onClick={() => navigate(`/product/${journal.id}`)}>
-                      <h4 className="text-sm font-semibold font-serif text-black mb-1 truncate">{journal.name}</h4>
-                      <span className="text-sm font-bold text-black">${journal.price}</span>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(journal)}
-                      className="flex items-center justify-center self-end text-black hover:scale-110 transition-transform p-1.5 hover:bg-[#F5A623] hover:text-black rounded-full"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Standard Card 2: Juttis */}
-                <div className="md:col-span-1 bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                  <div className="h-48 overflow-hidden cursor-pointer" onClick={() => navigate(`/product/${juttis.id}`)}>
-                    <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      alt={juttis.name}
-                      src={juttis.image}
-                    />
-                  </div>
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div className="cursor-pointer text-left" onClick={() => navigate(`/product/${juttis.id}`)}>
-                      <h4 className="text-sm font-semibold font-serif text-black mb-1 truncate">{juttis.name}</h4>
-                      <span className="text-sm font-bold text-black">${juttis.price}</span>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(juttis)}
-                      className="flex items-center justify-center self-end text-black hover:scale-110 transition-transform p-1.5 hover:bg-[#F5A623] hover:text-black rounded-full"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Medium Feature: Full-Voile */}
-                <div className="md:col-span-2 bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col md:flex-row">
-                  <div className="md:w-1/2 overflow-hidden cursor-pointer" onClick={() => navigate(`/product/${voile.id}`)}>
-                    <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      alt={voile.name}
-                      src={voile.image}
-                    />
-                  </div>
-                  <div className="p-6 md:w-1/2 flex flex-col justify-center text-left">
-                    <h4 className="text-lg font-bold font-serif text-black mb-2">{voile.name}</h4>
-                    <p className="text-sm text-black mb-4">
-                      {voile.description}
-                    </p>
-                    <span className="text-lg font-bold text-black mb-4 block">${voile.price}</span>
-                    <button
-                      onClick={() => navigate(`/product/${voile.id}`)}
-                      className="w-full border border-[#F5A623]/30 hover:bg-[#F5A623] hover:text-black text-black py-2.5 rounded-xl text-sm font-semibold transition-all duration-300"
-                    >
-                      Shop Collection
-                    </button>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -745,10 +827,17 @@ const MobileHome = () => {
               </div>
             </div>
 
-            <div className="px-6 py-6 border-t border-white/10 text-center">
+            <div className="px-6 py-6 border-t border-white/10 text-center flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-xs text-gray-500">
-                © 2024 Sikh Street. Heritage Crafted.
+                © 2026 Sikh Street. Heritage Crafted.
               </p>
+              <div className="flex items-center gap-4 text-xs text-gray-400">
+                <Link to="/privacy-policy" className="hover:text-[#F5A623] transition-colors">Privacy Policy</Link>
+                <span>•</span>
+                <Link to="/terms-conditions" className="hover:text-[#F5A623] transition-colors">Terms & Conditions</Link>
+                <span>•</span>
+                <Link to="/refund-policy" className="hover:text-[#F5A623] transition-colors">Refund Policy</Link>
+              </div>
             </div>
           </footer>
 

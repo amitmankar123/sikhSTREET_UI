@@ -796,57 +796,20 @@ const MobileCategory = () => {
         >
           {/* Animated Header */}
           {categoryId !== 'books' && (
-            <div className={`px-4 pt-6 pb-6 rounded-b-[2.5rem] shadow-sm sticky top-0 z-40 backdrop-blur-md transition-all duration-500 ${activeTheme.headerBg}`}>
+            <div className={`px-4 py-3 shadow-sm sticky top-0 z-40 backdrop-blur-md transition-all duration-500 ${activeTheme.headerBg}`}>
               <div className="flex flex-row items-center justify-between gap-4">
 
-                {/* Left Side: Back button + Category Details */}
-                <div className="flex items-center gap-4">
+                {/* Left Side: Back button + Category Name */}
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate(-1)}
                     className="p-2.5 hover:bg-gray-100 rounded-full transition-colors text-black flex-shrink-0"
                   >
                     <FiArrowLeft className="text-xl" />
                   </button>
-
-                  <motion.div
-                    className="flex items-center gap-4"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  >
-                    <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-black flex items-center justify-center shadow-lg transition-all overflow-hidden relative flex-shrink-0 ${activeTheme.iconOutline}`}>
-                      {typeof category.image === 'string' && category.image.includes('<svg') ? (
-                        <div dangerouslySetInnerHTML={{ __html: category.image }} className="w-12 h-12 md:w-16 md:h-16 filter brightness-0 invert" />
-                      ) : (
-                        <LazyImage
-                          src={category.image}
-                          alt={category.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = getPlaceholderImage(80, 80, "Category");
-                          }}
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-col text-left">
-                      <motion.h1
-                        className="text-xl md:text-3xl font-black font-heading text-black tracking-tight leading-none"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        {category.name}
-                      </motion.h1>
-                      <motion.p
-                        className="text-xs md:text-sm text-gray-500 font-medium mt-1"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        {category.description || `Explore everything in ${category.name}`}
-                      </motion.p>
-                    </div>
-                  </motion.div>
+                  <span className="text-base md:text-lg font-bold text-gray-955 font-sans tracking-tight">
+                    {category?.name}
+                  </span>
                 </div>
               </div>
             </div>
@@ -997,11 +960,11 @@ const MobileCategory = () => {
               ) : (
                 /* Non-books filter bar with Show/Hide filters pill */
                 <div className="w-full mb-4">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-4 flex-wrap gap-3">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-4 flex-nowrap gap-3">
+                    <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar scroll-smooth flex-1 min-w-0 pr-4">
                       <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${showFilters
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${showFilters
                             ? "bg-gray-800 text-white border-gray-800 hover:bg-gray-700"
                             : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
                           }`}
@@ -1009,22 +972,54 @@ const MobileCategory = () => {
                         <FiSliders className="text-xs" />
                         {showFilters ? "Hide filters" : "Show filters"}
                       </button>
-                      <span className={`text-xs font-extrabold px-3 py-1.5 rounded-lg shadow-sm ${activeTheme.badgeColor}`}>
+
+                      {/* Subcategory buttons */}
+                      {subcategories.length > 0 && (
+                        <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar scroll-smooth flex-shrink-0">
+                          <div className="w-[1px] h-6 bg-gray-200 self-center mx-1 flex-shrink-0" />
+                          <button
+                            onClick={() => handleSubcategoryChange(null)}
+                            className={`px-4 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
+                              !selectedSubcategoryId
+                                ? "bg-gray-900 text-white border-gray-900"
+                                : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                            }`}
+                          >
+                            All Items
+                          </button>
+                          {subcategories.map(sub => (
+                            <button
+                              key={sub.id}
+                              onClick={() => handleSubcategoryChange(sub.id)}
+                              className={`px-4 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
+                                selectedSubcategoryId === sub.id
+                                  ? "bg-gray-900 text-white border-gray-900"
+                                  : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                              }`}
+                            >
+                                {sub.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 flex-shrink-0 pl-2">
+                      <span className="text-xs text-gray-500 font-semibold whitespace-nowrap">
                         {categoryProducts.length} items
                       </span>
-                    </div>
-                    <div className="relative flex items-center gap-1 cursor-pointer">
-                      <select
-                        value={etsySort}
-                        onChange={(e) => setEtsySort(e.target.value)}
-                        className="appearance-none bg-transparent pr-5 font-bold text-gray-800 focus:outline-none cursor-pointer hover:text-black transition-colors text-xs"
-                      >
-                        <option value="most_relevant">Most relevant</option>
-                        <option value="top_rated">Top rated</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                      </select>
-                      <FiChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs" />
+                      <div className="relative flex items-center gap-1 cursor-pointer">
+                        <select
+                          value={etsySort}
+                          onChange={(e) => setEtsySort(e.target.value)}
+                          className="appearance-none bg-transparent pr-5 font-bold text-gray-800 focus:outline-none cursor-pointer hover:text-black transition-colors text-xs select-none"
+                        >
+                          <option value="most_relevant">Most relevant</option>
+                          <option value="top_rated">Top rated</option>
+                          <option value="price_asc">Price: Low to High</option>
+                          <option value="price_desc">Price: High to Low</option>
+                        </select>
+                        <FiChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1456,7 +1451,9 @@ const MobileCategory = () => {
                           ? (showFilters
                             ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 w-full"
                             : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-8 w-full")
-                          : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+                          : (showFilters
+                            ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 w-full"
+                            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 w-full")
                         } ref={gridRef}>
                           {displayedItems.map((product) => (
                             <div key={product.id} className={categoryId === 'books' ? "product-card-gsap" : "product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl"}>

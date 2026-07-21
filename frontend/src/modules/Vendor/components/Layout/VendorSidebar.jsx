@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { appLogo } from "../../../../data/logos";
 import {
   FiHome,
   FiPackage,
@@ -255,23 +256,21 @@ const VendorSidebar = ({ isOpen, onClose }) => {
   const sidebarContent = (
     <div className="h-full flex flex-col bg-vendor-primary shadow-[4px_0_24px_rgba(10,25,47,0.15)] border-r border-white/5">
       {/* Header Section */}
-      <div className="p-4 border-b border-white/10 bg-vendor-primary/80 backdrop-blur-md">
-        {/* Header with Close Button and Vendor Info */}
-        <div className="flex items-center justify-between gap-3">
-          {/* Vendor User Info */}
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-vendor-accent to-vendor-accentHover rounded-xl flex items-center justify-center shadow-[0_4px_12px_rgba(212,175,55,0.3)] flex-shrink-0 border border-vendor-accent/30">
-              <FiShoppingBag className="text-vendor-primary text-xl" />
+      <div className="p-4 border-b border-white/10 bg-vendor-primary/80 backdrop-blur-md space-y-3">
+        {/* App Logo Branding */}
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <Link to="/vendor/dashboard" className="flex items-center gap-2">
+            <div className="bg-white px-2 py-1 rounded-lg flex items-center justify-center">
+              <img
+                src={appLogo.src}
+                alt={appLogo.alt || "SikhStreet Logo"}
+                className="h-7 w-auto object-contain mix-blend-multiply"
+              />
             </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="font-semibold text-white text-sm truncate">
-                {vendor?.storeName || vendor?.name || "Vendor Store"}
-              </h2>
-              <p className="text-xs text-gray-400 truncate">
-                {vendor?.email || "vendor@example.com"}
-              </p>
-            </div>
-          </div>
+            <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
+              Seller Hub
+            </span>
+          </Link>
 
           {/* Close Button - Mobile Only */}
           <button
@@ -280,6 +279,21 @@ const VendorSidebar = ({ isOpen, onClose }) => {
             aria-label="Close sidebar">
             <FiX className="text-xl text-gray-300" />
           </button>
+        </div>
+
+        {/* Vendor User Info */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-vendor-accent to-vendor-accentHover rounded-xl flex items-center justify-center shadow-[0_4px_12px_rgba(212,175,55,0.3)] flex-shrink-0 border border-vendor-accent/30">
+            <FiShoppingBag className="text-vendor-primary text-lg" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-semibold text-white text-sm truncate">
+              {vendor?.storeName || vendor?.name || "Vendor Store"}
+            </h2>
+            <p className="text-xs text-gray-400 truncate">
+              {vendor?.email || "vendor@example.com"}
+            </p>
+          </div>
         </div>
       </div>
 

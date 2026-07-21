@@ -33,6 +33,7 @@ import {
   getSimilarProducts,
   getVendorById,
   getBrandById,
+  getProductsByVendor,
 } from "../data/catalogData";
 import api from "../../../shared/utils/api";
 import { formatPrice } from "../../../shared/utils/helpers";
@@ -263,7 +264,29 @@ const SellerShopCard = ({ product }) => {
     }
   });
 
+  const dbVendor = useMemo(() => {
+    if (product.vendor?.id) return product.vendor;
+    return getVendorById(product.vendorId);
+  }, [product]);
+
   const resolvedVendor = useMemo(() => {
+    if (dbVendor) {
+      const joinYear = dbVendor.joinDate ? new Date(dbVendor.joinDate).getFullYear() : 2024;
+      const currentYear = new Date().getFullYear();
+      const yearsActive = Math.max(1, currentYear - joinYear);
+      return {
+        id: dbVendor.id || dbVendor._id,
+        storeName: dbVendor.storeName || dbVendor.name || "Sikh Street Shop",
+        ownerName: dbVendor.name?.split(" ")[0] || "Seller",
+        rating: dbVendor.rating || 4.8,
+        reviewCount: dbVendor.reviewCount || 128,
+        totalSales: dbVendor.totalSales ? (dbVendor.totalSales >= 1000 ? `${(dbVendor.totalSales / 1000).toFixed(1)}k` : dbVendor.totalSales) : "1.2k",
+        yearsOnPlatform: `${yearsActive} ${yearsActive === 1 ? "year" : "years"} on SikhStreet`,
+        location: dbVendor.address?.country || "India",
+        logo: dbVendor.storeLogo,
+      };
+    }
+
     const name = product.vendorName || "Qissa of Islam";
     const ownerName = name.replace(/^(By|Designed by)\s+/i, "").split(" ")[0] || "Muhebb";
     return {
@@ -277,7 +300,7 @@ const SellerShopCard = ({ product }) => {
       location: "United States",
       logo: "/images/books/book_vendor_avatar.png",
     };
-  }, [product]);
+  }, [dbVendor, product]);
 
   const handleFollowToggle = (e) => {
     e.preventDefault();
@@ -302,6 +325,28 @@ const SellerShopCard = ({ product }) => {
   };
 
   const shopReviews = useMemo(() => {
+    const vendorProducts = getProductsByVendor(resolvedVendor.id);
+    const genericComments = [
+      { user: "Amanpreet S.", comment: "Absolutely gorgeous craftsmanship! Highly recommend this shop." },
+      { user: "Harpreet K.", comment: "Very fast shipping, excellent packaging, and high quality items." },
+      { user: "Jaswinder S.", comment: "Fits perfectly. Beautifully made with great attention to detail." },
+      { user: "Navjot S.", comment: "Top notch customer service. Very helpful and friendly seller." }
+    ];
+
+    if (vendorProducts.length > 0) {
+      return genericComments.slice(0, Math.min(genericComments.length, vendorProducts.length)).map((item, idx) => {
+        const prod = vendorProducts[idx % vendorProducts.length];
+        return {
+          id: `shop-rev-${idx}`,
+          user: item.user,
+          rating: 5,
+          comment: item.comment,
+          date: `${10 - idx} Jul, 2026`,
+          productId: prod.id,
+        };
+      });
+    }
+
     return [
       {
         id: "shop-rev-1",
@@ -309,7 +354,7 @@ const SellerShopCard = ({ product }) => {
         rating: 5,
         comment: "Delivered to email immediately and easy to download. Great quality!",
         date: "09 Jul, 2026",
-        productId: "321", // Maharaja Ranjit Singh Book (Digital Edition)
+        productId: "321",
       },
       {
         id: "shop-rev-2",
@@ -325,7 +370,7 @@ const SellerShopCard = ({ product }) => {
         rating: 5,
         comment: "Good book giving solid foundation of Sikh History and values.",
         date: "02 Jul, 2026",
-        productId: "319", // Maharani Jindan Book
+        productId: "319",
       },
       {
         id: "shop-rev-4",
@@ -336,7 +381,7 @@ const SellerShopCard = ({ product }) => {
         productId: "319",
       }
     ];
-  }, []);
+  }, [resolvedVendor.id]);
 
   const resolvedReviews = useMemo(() => {
     // Try to resolve actual product image and name from getProductById fallback if available
@@ -1257,15 +1302,13 @@ const MobileProductDetail = () => {
 
               {/* Reviews Section (Desktop Only) */}
               <div className="hidden lg:block">
-                {!isBookProduct && reviewsSection}
+                {reviewsSection}
               </div>
 
-              {/* Seller Shop & Reviews Section (Book Products Only, Desktop) */}
-              {isBookProduct && (
-                <div className="hidden lg:block mt-6 max-w-4xl">
-                  <SellerShopCard product={product} />
-                </div>
-              )}
+              {/* Seller Shop & Reviews Section (Desktop Only, All Products) */}
+              <div className="hidden lg:block mt-6 max-w-4xl">
+                <SellerShopCard product={product} />
+              </div>
 
               {/* Community Q&A (Desktop Only) */}
               <div className="hidden lg:block mt-6 max-w-4xl border-t border-gray-200 pt-6">
@@ -1903,11 +1946,8 @@ const MobileProductDetail = () => {
 
                 {/* Reviews & QA (Mobile Only) */}
                 <div className="block lg:hidden mt-8 space-y-8">
-                  {isBookProduct ? (
-                    <SellerShopCard product={product} />
-                  ) : (
-                    reviewsSection
-                  )}
+                  {reviewsSection}
+                  <SellerShopCard product={product} />
                   <div className="border-t border-gray-200 pt-8">
                     <ProductQA productId={product.id} />
                   </div>

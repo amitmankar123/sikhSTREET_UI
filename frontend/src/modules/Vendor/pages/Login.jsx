@@ -4,6 +4,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff, FiKey, FiClock, FiArrowLeft } from 're
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVendorAuthStore } from "../store/vendorAuthStore";
 import toast from 'react-hot-toast';
+import { appLogo } from "../../../data/logos";
 
 const VendorLogin = () => {
   const navigate = useNavigate();
@@ -150,9 +151,13 @@ const VendorLogin = () => {
             >
               {/* Logo/Header */}
               <div className="text-center mb-8">
-                <div className="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow-green">
-                  <FiLock className="text-white text-2xl" />
-                </div>
+                <Link to="/vendor" className="inline-block">
+                  <img
+                    src={appLogo.src}
+                    alt={appLogo.alt || "SikhStreet Logo"}
+                    className="h-12 sm:h-14 w-auto mx-auto mb-4 object-contain mix-blend-multiply"
+                  />
+                </Link>
                 <h1 className="text-3xl font-extrabold text-gray-800 mb-2">Vendor Login</h1>
                 <p className="text-gray-600">Enter your credentials to access your vendor dashboard</p>
               </div>

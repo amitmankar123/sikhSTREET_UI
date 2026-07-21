@@ -6,6 +6,7 @@ import { useVendorAuthStore } from "../store/vendorAuthStore";
 import toast from 'react-hot-toast';
 import SearchablePhoneInput, { COUNTRIES } from "../../../shared/components/SearchablePhoneInput";
 import { checkVendorAvailability } from '../services/vendorService';
+import { appLogo } from "../../../data/logos";
 
 const getGovernmentIdLabel = (country) => {
   switch (country) {
@@ -218,9 +219,13 @@ const VendorRegister = () => {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow-green">
-            <FiShoppingBag className="text-white text-2xl" />
-          </div>
+          <Link to="/vendor" className="inline-block">
+            <img
+              src={appLogo.src}
+              alt={appLogo.alt || "SikhStreet Logo"}
+              className="h-12 sm:h-14 w-auto mx-auto mb-4 object-contain mix-blend-multiply"
+            />
+          </Link>
           <h1 className="text-3xl font-extrabold text-gray-800 mb-2">Become a Vendor</h1>
           <p className="text-gray-600">Step {step} of 2: {step === 1 ? 'General Information' : 'Business & Documents'}</p>
         </div>

@@ -93,7 +93,7 @@ import ProductsInventorySettings from "./modules/Admin/pages/settings/ProductsIn
 import ContentFeaturesSettings from "./modules/Admin/pages/settings/ContentFeaturesSettings";
 import NotificationsSEOSettings from "./modules/Admin/pages/settings/NotificationsSEOSettings";
 // Policies child pages
-import PrivacyPolicy from "./modules/Admin/pages/policies/PrivacyPolicy";
+import PrivacyPolicy from "./modules/Admin/pages/policies/StorePrivacyPolicy";
 import RefundPolicy from "./modules/Admin/pages/policies/RefundPolicy";
 import TermsConditions from "./modules/Admin/pages/policies/TermsConditions";
 // Firebase child pages
@@ -135,6 +135,7 @@ import MobileTrackOrder from "./modules/UserApp/pages/TrackOrder";
 import MobileOrderConfirmation from "./modules/UserApp/pages/OrderConfirmation";
 import ComingSoon from "./modules/UserApp/pages/ComingSoon";
 import MobileOurStory from "./modules/UserApp/pages/OurStory";
+import PublicPolicy from "./modules/UserApp/pages/PublicPolicy";
 // Delivery Routes
 import DeliveryLogin from "./modules/Delivery/pages/Login";
 import DeliveryRegister from "./modules/Delivery/pages/Register";
@@ -148,6 +149,7 @@ import DeliveryOrderDetail from "./modules/Delivery/pages/OrderDetail";
 import DeliveryProfile from "./modules/Delivery/pages/Profile";
 import DeliveryNotifications from "./modules/Delivery/pages/Notifications";
 // Vendor Routes
+import VendorLanding from "./modules/Vendor/pages/VendorLanding";
 import VendorLogin from "./modules/Vendor/pages/Login";
 import VendorRegister from "./modules/Vendor/pages/Register";
 import VendorVerification from "./modules/Vendor/pages/Verification";
@@ -388,6 +390,55 @@ const AppRoutes = () => {
           </RouteWrapper>
         }
       />
+      {/* Public Unauthenticated Policy Routes */}
+      <Route
+        path="/privacy-policy"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="privacy" />
+          </RouteWrapper>
+        }
+      />
+      <Route
+        path="/refund-policy"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="refund" />
+          </RouteWrapper>
+        }
+      />
+      <Route
+        path="/terms-conditions"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="terms" />
+          </RouteWrapper>
+        }
+      />
+      <Route
+        path="/policies/privacy-policy"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="privacy" />
+          </RouteWrapper>
+        }
+      />
+      <Route
+        path="/policies/refund-policy"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="refund" />
+          </RouteWrapper>
+        }
+      />
+      <Route
+        path="/policies/terms-conditions"
+        element={
+          <RouteWrapper>
+            <PublicPolicy type="terms" />
+          </RouteWrapper>
+        }
+      />
       <Route
         path="/order-confirmation/:orderId"
         element={
@@ -600,6 +651,8 @@ const AppRoutes = () => {
         <Route path="profile" element={<DeliveryProfile />} />
       </Route>
       {/* Vendor Routes */}
+      <Route path="/vendor" element={<VendorLanding />} />
+      <Route path="/vendor/landing" element={<VendorLanding />} />
       <Route path="/vendor/login" element={<VendorLogin />} />
       <Route path="/vendor/register" element={<VendorRegister />} />
       <Route path="/vendor/verification" element={<VendorVerification />} />
@@ -617,70 +670,68 @@ const AppRoutes = () => {
       />
       <Route path="/vendor/reset-password" element={<VendorResetPassword />} />
       <Route
-        path="/vendor"
         element={
           <VendorProtectedRoute>
             <VendorLayout />
           </VendorProtectedRoute>
         }>
-        <Route index element={<Navigate to="/vendor/dashboard" replace />} />
-        <Route path="dashboard" element={<VendorDashboard />} />
-        <Route path="products" element={<VendorProducts />} />
+        <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+        <Route path="/vendor/products" element={<VendorProducts />} />
         <Route
-          path="products/manage-products"
+          path="/vendor/products/manage-products"
           element={<VendorManageProducts />}
         />
-        <Route path="products/add-product" element={<VendorAddProduct />} />
-        <Route path="products/:id" element={<VendorProductForm />} />
-        <Route path="orders" element={<VendorOrders />} />
-        <Route path="orders/all-orders" element={<VendorAllOrders />} />
-        <Route path="orders/order-tracking" element={<VendorOrderTracking />} />
-        <Route path="orders/:id" element={<VendorOrderDetail />} />
-        <Route path="analytics" element={<VendorAnalytics />} />
-        <Route path="reports" element={<VendorReports />} />
-        <Route path="earnings" element={<VendorEarnings />} />
-        <Route path="earnings/overview" element={<VendorEarnings />} />
+        <Route path="/vendor/products/add-product" element={<VendorAddProduct />} />
+        <Route path="/vendor/products/:id" element={<VendorProductForm />} />
+        <Route path="/vendor/orders" element={<VendorOrders />} />
+        <Route path="/vendor/orders/all-orders" element={<VendorAllOrders />} />
+        <Route path="/vendor/orders/order-tracking" element={<VendorOrderTracking />} />
+        <Route path="/vendor/orders/:id" element={<VendorOrderDetail />} />
+        <Route path="/vendor/analytics" element={<VendorAnalytics />} />
+        <Route path="/vendor/reports" element={<VendorReports />} />
+        <Route path="/vendor/earnings" element={<VendorEarnings />} />
+        <Route path="/vendor/earnings/overview" element={<VendorEarnings />} />
         <Route
-          path="earnings/commission-history"
+          path="/vendor/earnings/commission-history"
           element={<VendorEarnings />}
         />
         <Route
-          path="earnings/settlement-history"
+          path="/vendor/earnings/settlement-history"
           element={<VendorEarnings />}
         />
-        <Route path="stock-management" element={<VendorStockManagement />} />
-        <Route path="wallet-history" element={<VendorWalletHistory />} />
-        <Route path="chat" element={<VendorChat />} />
-        <Route path="promotions" element={<VendorPromotions />} />
-        <Route path="notifications" element={<VendorNotifications />} />
-        <Route path="return-requests" element={<VendorReturnRequests />} />
+        <Route path="/vendor/stock-management" element={<VendorStockManagement />} />
+        <Route path="/vendor/wallet-history" element={<VendorWalletHistory />} />
+        <Route path="/vendor/chat" element={<VendorChat />} />
+        <Route path="/vendor/promotions" element={<VendorPromotions />} />
+        <Route path="/vendor/notifications" element={<VendorNotifications />} />
+        <Route path="/vendor/return-requests" element={<VendorReturnRequests />} />
         <Route
-          path="return-requests/:id"
+          path="/vendor/return-requests/:id"
           element={<VendorReturnRequestDetail />}
         />
-        <Route path="product-reviews" element={<VendorProductReviews />} />
+        <Route path="/vendor/product-reviews" element={<VendorProductReviews />} />
         <Route
-          path="shipping-management"
+          path="/vendor/shipping-management"
           element={<VendorShippingManagement />}
         />
-        <Route path="pickup-locations" element={<VendorPickupLocations />} />
-        <Route path="customers/:id" element={<VendorCustomerDetail />} />
-        <Route path="customers" element={<VendorCustomers />} />
-        <Route path="support-tickets" element={<VendorSupportTickets />} />
-        <Route path="inventory-reports" element={<VendorInventoryReports />} />
+        <Route path="/vendor/pickup-locations" element={<VendorPickupLocations />} />
+        <Route path="/vendor/customers/:id" element={<VendorCustomerDetail />} />
+        <Route path="/vendor/customers" element={<VendorCustomers />} />
+        <Route path="/vendor/support-tickets" element={<VendorSupportTickets />} />
+        <Route path="/vendor/inventory-reports" element={<VendorInventoryReports />} />
         <Route
-          path="performance-metrics"
+          path="/vendor/performance-metrics"
           element={<VendorPerformanceMetrics />}
         />
-        <Route path="documents" element={<VendorDocuments />} />
-        <Route path="language-settings" element={<VendorLanguageSettings />} />
-        <Route path="settings" element={<VendorSettings />} />
-        <Route path="settings/store" element={<VendorSettings />} />
-        <Route path="settings/payment" element={<VendorSettings />} />
-        <Route path="settings/payment-settings" element={<VendorSettings />} />
-        <Route path="settings/shipping" element={<VendorSettings />} />
-        <Route path="settings/shipping-settings" element={<VendorSettings />} />
-        <Route path="profile" element={<VendorSettings />} />
+        <Route path="/vendor/documents" element={<VendorDocuments />} />
+        <Route path="/vendor/language-settings" element={<VendorLanguageSettings />} />
+        <Route path="/vendor/settings" element={<VendorSettings />} />
+        <Route path="/vendor/settings/store" element={<VendorSettings />} />
+        <Route path="/vendor/settings/payment" element={<VendorSettings />} />
+        <Route path="/vendor/settings/payment-settings" element={<VendorSettings />} />
+        <Route path="/vendor/settings/shipping" element={<VendorSettings />} />
+        <Route path="/vendor/settings/shipping-settings" element={<VendorSettings />} />
+        <Route path="/vendor/profile" element={<VendorSettings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
