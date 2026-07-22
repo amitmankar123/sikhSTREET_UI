@@ -242,7 +242,7 @@ const MobileProductCard = ({ product }) => {
 
             {/* Price */}
             <div className="flex items-center gap-2 mb-3">
-              <span className={`text-lg font-bold ${product.originalPrice > 0 ? "text-green-700" : "text-gray-800"}`}>
+              <span className="text-lg font-bold text-neutral-900">
                 {formatPrice(product.price)}
               </span>
               {product.originalPrice && (

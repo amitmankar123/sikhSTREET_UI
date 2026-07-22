@@ -653,8 +653,8 @@ const AppRoutes = () => {
       {/* Vendor Routes */}
       <Route path="/vendor" element={<VendorLanding />} />
       <Route path="/vendor/landing" element={<VendorLanding />} />
-      <Route path="/vendor/login" element={<VendorLogin />} />
-      <Route path="/vendor/register" element={<VendorRegister />} />
+      <Route path="/vendor/login" element={<VendorLanding />} />
+      <Route path="/vendor/register" element={<VendorLanding />} />
       <Route path="/vendor/verification" element={<VendorVerification />} />
       <Route
         path="/vendor/onboarding"

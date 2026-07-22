@@ -47,7 +47,7 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true, full
       )}
       <main
         className={`min-h-screen w-full overflow-x-hidden ${fullWidth ? 'max-w-none px-0' : 'max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12'} ${shouldShowBottomNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0' : ''} ${showCartBar ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-0' : ''} ${className}`}
-        style={{ paddingTop: shouldShowHeader ? `${headerHeight}px` : '0px', ...style }}
+        style={{ ...style }}
       >
         {children}
       </main>

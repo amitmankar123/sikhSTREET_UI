@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { FiMenu, FiBell, FiLogOut, FiShoppingBag } from "react-icons/fi";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useVendorAuthStore } from "../../store/vendorAuthStore";
 import { useVendorNotificationStore } from "../../store/vendorNotificationStore";
 import toast from "react-hot-toast";
 import Button from "../../../Admin/components/Button";
 import VendorNotificationWindow from "./VendorNotificationWindow";
-import { appLogo } from "../../../../data/logos";
 
 const VendorHeader = ({ onMenuClick }) => {
   const location = useLocation();
@@ -55,9 +54,9 @@ const VendorHeader = ({ onMenuClick }) => {
       style={{
         paddingTop: "env(safe-area-inset-top, 0px)",
       }}>
-      <div className="flex items-center justify-between px-4 lg:px-6 py-3">
-        {/* Left: Menu Button, App Logo, & Page Heading */}
-        <div className="flex items-center gap-3 lg:gap-4">
+      <div className="flex items-center justify-between px-4 lg:px-6 py-4">
+        {/* Left: Menu Button */}
+        <div className="flex items-center gap-4">
           <Button
             onClick={onMenuClick}
             variant="icon"
@@ -65,23 +64,14 @@ const VendorHeader = ({ onMenuClick }) => {
             icon={FiMenu}
           />
 
-          {/* App Logo */}
-          <Link to="/vendor/dashboard" className="flex items-center gap-2 flex-shrink-0">
-            <img
-              src={appLogo.src}
-              alt={appLogo.alt || "SikhStreet Logo"}
-              className="h-8 sm:h-10 w-auto object-contain mix-blend-multiply"
-            />
-          </Link>
-
-          {/* Page Heading & Store Name */}
-          <div className="hidden sm:block border-l border-gray-200 pl-3">
-            <h1 className="text-lg lg:text-xl font-bold text-vendor-primary tracking-tight leading-tight">
+          {/* Page Heading - Desktop Only */}
+          <div className="hidden lg:block">
+            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight mb-1">
               {pageName}
             </h1>
-            <p className="text-xs text-gray-500 font-medium flex items-center gap-1.5">
-              <FiShoppingBag className="text-vendor-accent flex-shrink-0" />
-              <span className="truncate max-w-[150px] lg:max-w-[200px]">{storeName}</span>
+            <p className="text-sm text-gray-500 font-medium flex items-center gap-2">
+              <FiShoppingBag className="text-neutral-500" />
+              {storeName}
             </p>
           </div>
         </div>
@@ -115,7 +105,7 @@ const VendorHeader = ({ onMenuClick }) => {
             variant="ghost"
             icon={FiLogOut}
             size="sm"
-            className="text-vendor-primary hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200 font-bold transition-all">
+            className="text-neutral-800 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200 font-bold transition-all">
             Logout
           </Button>
         </div>

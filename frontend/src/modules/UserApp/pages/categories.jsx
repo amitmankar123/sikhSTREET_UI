@@ -37,19 +37,19 @@ export default function CategoriesPage() {
         </section>
 
         {/* Categories Grid */}
-        <section className="px-4 md:px-8 pb-20 max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        <section className="px-4 md:px-8 pb-20 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-6 md:gap-8">
             {rootCategories.map((category) => (
               <div
                 key={category.id}
                 onClick={() => navigate(`/category/${category.id}`)}
                 className="group cursor-pointer flex flex-col w-full"
               >
-                <div className="aspect-square rounded-2xl overflow-hidden mb-3 bg-[#f2dfd3] shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:shadow-black/10 border border-transparent group-hover:border-black/10">
+                <div className="aspect-square rounded-md overflow-hidden mb-3 bg-[#f2dfd3] shadow-sm transition-all duration-500 border border-neutral-100">
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
                 <span className="text-sm md:text-base font-semibold tracking-wide text-black group-hover:text-[#F5A623] transition-colors duration-300 text-left">

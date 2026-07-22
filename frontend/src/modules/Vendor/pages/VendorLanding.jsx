@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { appLogo } from '../../../data/logos';
+import VendorLogin from './Login';
+import VendorRegister from './Register';
 import {
   FiTag,
   FiTool,
@@ -25,10 +26,14 @@ import {
   FiAward
 } from 'react-icons/fi';
 import { useVendorAuthStore } from '../store/vendorAuthStore';
+import { appLogo } from '../../../data/logos';
 
 const VendorLanding = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useVendorAuthStore();
+  const isLoginOpen = location.pathname === '/vendor/login';
+  const isRegisterOpen = location.pathname === '/vendor/register';
   const [activeFaq, setActiveFaq] = useState(null);
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -112,18 +117,18 @@ const VendorLanding = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans overflow-x-hidden w-full relative">
 
       {/* Main Top Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/vendor')}>
+          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => navigate('/vendor')}>
             <img
+              className="w-[100px] sm:w-[130px] md:w-[160px] h-auto object-contain mix-blend-multiply"
+              alt="Sikh Street logo"
               src={appLogo.src}
-              alt={appLogo.alt || "SikhStreet Logo"}
-              className="h-10 w-auto object-contain mix-blend-multiply"
             />
-            <span className="px-2 py-0.5 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full">Seller Hub</span>
+            <span className="ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-xs font-semibold bg-amber-100 text-amber-800 rounded-full shrink-0">Seller Hub</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
@@ -135,11 +140,11 @@ const VendorLanding = () => {
             <button onClick={() => scrollToSection('faq')} className="hover:text-amber-600 transition-colors">FAQ</button>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/vendor/dashboard')}
-                className="px-4 py-2 text-sm font-semibold text-white bg-slate-900 rounded-full hover:bg-slate-800 transition-all shadow-sm flex items-center space-x-2"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white bg-slate-900 rounded-full hover:bg-slate-800 transition-all shadow-sm flex items-center space-x-2 shrink-0"
               >
                 <span>Dashboard</span>
                 <FiArrowRight />
@@ -148,15 +153,15 @@ const VendorLanding = () => {
               <>
                 <Link
                   to="/vendor/login"
-                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-amber-600 transition-colors"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-amber-600 transition-colors shrink-0"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/vendor/register"
-                  className="px-5 py-2 text-sm font-semibold text-white bg-amber-600 rounded-full hover:bg-amber-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white bg-amber-600 rounded-full hover:bg-amber-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 shrink-0"
                 >
-                  Open your Shop
+                  Open Shop
                 </Link>
               </>
             )}
@@ -175,89 +180,62 @@ const VendorLanding = () => {
       </header>
 
       {/* HERO SECTION */}
-      <section className="relative bg-white py-16 lg:py-24 overflow-hidden border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative bg-[#1a233b] py-24 md:py-32 overflow-hidden border-b border-slate-200 flex items-center justify-center">
+        {/* Background shapes mimicking the paint brush strokes & colors */}
+        
+        {/* Left Orange-Yellow Blob */}
+        <div className="absolute left-[-100px] top-[15%] w-[320px] h-[320px] text-[#F3A530] pointer-events-none opacity-85 select-none md:left-[-40px]">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M43.7,-64.5C57.4,-57.4,69.7,-46.6,74.7,-32.8C79.7,-19,77.4,-2.2,74.1,14.6C70.8,31.4,66.6,48.2,56.1,59C45.6,69.8,28.8,74.5,12.7,75.9C-3.4,77.3,-18.8,75.4,-33.5,69.5C-48.2,63.6,-62.3,53.8,-70.7,40.1C-79.1,26.5,-81.8,9.1,-79.7,-7.4C-77.7,-23.9,-70.9,-39.5,-59.6,-48C-48.4,-56.5,-32.8,-57.8,-18.3,-62.7C-3.8,-67.7,9.7,-71.5,23.7,-70C30.3,-69.3,37.1,-67.3,43.7,-64.5Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        {/* Top Right Orange-Red Blob */}
+        <div className="absolute right-[-80px] top-[-60px] w-[360px] h-[360px] text-[#EB5E28] pointer-events-none opacity-90 select-none md:right-[-20px] md:top-[-40px]">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M45.6,-68.2C59.3,-60.2,70.9,-47.3,77.2,-32.3C83.5,-17.3,84.5,-0.2,80.7,15.6C76.9,31.4,68.3,45.8,56.5,56C44.7,66.3,29.7,72.4,13.8,75.4C-2,78.5,-18.8,78.5,-33.5,73.5C-48.2,68.5,-60.9,58.4,-69.5,45.3C-78.1,32.2,-82.7,16.1,-82.3,0.2C-81.9,-15.7,-76.6,-31.4,-67.1,-43.3C-57.6,-55.1,-44,-63.1,-30.3,-69.8C-16.6,-76.6,-2.8,-82,9.7,-80.4C22.2,-78.9,31.9,-76.2,45.6,-68.2Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        {/* Bottom Right Small Orange Blob */}
+        <div className="absolute right-[-40px] bottom-[-20px] w-[180px] h-[180px] text-[#FC7A1E] pointer-events-none opacity-80 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full">
+            <path d="M38.5,-57.2C50.1,-49.2,60.1,-38.4,66.8,-25.4C73.4,-12.3,76.6,3.1,72.7,16.5C68.9,29.9,58,41.4,45.8,50C33.7,58.7,20.2,64.6,6.3,66.5C-7.6,68.4,-21.8,66.4,-34.5,59.9C-47.3,53.4,-58.5,42.4,-65.7,29.2C-72.9,16,-76.1,0.6,-73.4,-13.6C-70.6,-27.7,-61.9,-40.5,-50.1,-48.5C-38.3,-56.6,-23.4,-59.8,-9.4,-58.6C4.6,-57.4,18.7,-57.6,38.5,-57.2Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        {/* Bottom Left Blue-Teal Sweep */}
+        <div className="absolute left-[-120px] bottom-[-80px] w-[450px] h-[350px] text-[#29426f] pointer-events-none opacity-40 select-none">
+          <svg viewBox="0 0 200 100" fill="currentColor" className="w-full h-full">
+            <path d="M0,50 Q50,0 100,50 T200,50 L200,100 L0,100 Z" />
+          </svg>
+        </div>
+
+        {/* Center Content */}
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-center justify-center"
           >
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 mb-6">
-              ✨ Empowering 1.7M+ Creative Sellers Worldwide
-            </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-4xl mx-auto">
-              Join the creative marketplace where millions of shoppers spend billions each year purchasing directly from creative entrepreneurs like you.
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white tracking-wide leading-snug max-w-3xl mx-auto mb-8 font-sans">
+              Millions of shoppers can't wait to see what you have in store
             </h1>
+            <button
+              onClick={() => navigate('/vendor/register')}
+              className="px-8 py-3.5 text-sm font-semibold text-slate-900 bg-white rounded-full hover:bg-neutral-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Get started
+            </button>
           </motion.div>
+        </div>
 
-          {/* 3 Core Value Props Circles */}
-          <div id="tools" className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 hover:bg-amber-50/50 transition-colors border border-slate-100"
-            >
-              <div className="w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-6 shadow-inner">
-                <FiTag className="w-9 h-9" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Great value</h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                List your first item for just ₹15 – you only pay transaction, payment processing, and offsite advertising fees when you make a sale.
-              </p>
-              <button onClick={() => scrollToSection('fees')} className="text-sm font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-4 mt-auto">
-                Learn more
-              </button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 hover:bg-amber-50/50 transition-colors border border-slate-100"
-            >
-              <div className="w-20 h-20 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6 shadow-inner">
-                <FiTool className="w-9 h-9" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Powerful tools</h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                Our tools and services make it easy to manage inventory, analyze shop performance, promote products, and grow your business effortlessly.
-              </p>
-              <button onClick={() => scrollToSection('support')} className="text-sm font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-4 mt-auto">
-                Learn more
-              </button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 hover:bg-amber-50/50 transition-colors border border-slate-100"
-            >
-              <div className="w-20 h-20 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-6 shadow-inner">
-                <FiBookOpen className="w-9 h-9" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Support and education</h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                Reach out to SikhStreet support specialists anytime you need a hand, and get tips on running a successful shop in our Seller Handbook.
-              </p>
-              <button onClick={() => scrollToSection('support')} className="text-sm font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-4 mt-auto">
-                Learn more
-              </button>
-            </motion.div>
-          </div>
-
-          {/* Start Selling Central Box */}
-          <div className="mt-14 max-w-md mx-auto p-8 rounded-2xl bg-white border-2 border-slate-200 shadow-xl text-center relative">
-            <div className="text-3xl mb-2">🙌</div>
-            <h4 className="text-lg font-bold text-slate-800 mb-4">Start selling today</h4>
-            <Link
-              to="/vendor/register"
-              className="inline-block w-full py-3.5 px-8 text-base font-bold text-white bg-slate-900 rounded-full hover:bg-slate-800 transition-all shadow-md hover:shadow-xl"
-            >
-              Open your SikhStreet shop
-            </Link>
-          </div>
+        {/* Torn/Jagged Edge Bottom Wave Divider */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-10 select-none pointer-events-none">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[120%] h-[32px] text-slate-50 fill-current transform rotate-180">
+            <path d="M0,0 Q100,45 200,15 T400,30 T600,10 T800,45 T1000,15 T1200,40 L1200,120 L0,120 Z" />
+          </svg>
         </div>
       </section>
 
@@ -424,8 +402,23 @@ const VendorLanding = () => {
       </section>
 
       {/* SELLER STORIES */}
-      <section id="stories" className="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="stories" className="py-20 bg-[#1a233b] text-white relative overflow-hidden border-t border-b border-slate-800">
+        {/* Background blobs */}
+        {/* Left Orange-Yellow Blob */}
+        <div className="absolute left-[-120px] top-[20%] w-[320px] h-[320px] text-[#F3A530] pointer-events-none opacity-40 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M43.7,-64.5C57.4,-57.4,69.7,-46.6,74.7,-32.8C79.7,-19,77.4,-2.2,74.1,14.6C70.8,31.4,66.6,48.2,56.1,59C45.6,69.8,28.8,74.5,12.7,75.9C-3.4,77.3,-18.8,75.4,-33.5,69.5C-48.2,63.6,-62.3,53.8,-70.7,40.1C-79.1,26.5,-81.8,9.1,-79.7,-7.4C-77.7,-23.9,-70.9,-39.5,-59.6,-48C-48.4,-56.5,-32.8,-57.8,-18.3,-62.7C-3.8,-67.7,9.7,-71.5,23.7,-70C30.3,-69.3,37.1,-67.3,43.7,-64.5Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        {/* Bottom Right Orange-Red Blob */}
+        <div className="absolute right-[-100px] bottom-[10%] w-[350px] h-[350px] text-[#EB5E28] pointer-events-none opacity-40 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M45.6,-68.2C59.3,-60.2,70.9,-47.3,77.2,-32.3C83.5,-17.3,84.5,-0.2,80.7,15.6C76.9,31.4,68.3,45.8,56.5,56C44.7,66.3,29.7,72.4,13.8,75.4C-2,78.5,-18.8,78.5,-33.5,73.5C-48.2,68.5,-60.9,58.4,-69.5,45.3C-78.1,32.2,-82.7,16.1,-82.3,0.2C-81.9,-15.7,-76.6,-31.4,-67.1,-43.3C-57.6,-55.1,-44,-63.1,-30.3,-69.8C-16.6,-76.6,-2.8,-82,9.7,-80.4C22.2,-78.9,31.9,-76.2,45.6,-68.2Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-amber-400 font-bold uppercase tracking-wider text-xs">Community Voices</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2">Seller Stories</h2>
@@ -439,7 +432,7 @@ const VendorLanding = () => {
               <motion.div
                 key={story.id}
                 whileHover={{ y: -4 }}
-                className="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-8 flex flex-col justify-between shadow-xl"
+                className="bg-[#232d4b]/70 backdrop-blur-sm border border-slate-700/40 rounded-2xl p-8 flex flex-col justify-between shadow-xl"
               >
                 <div>
                   <div className="flex items-center space-x-1 text-amber-400 mb-4">
@@ -533,24 +526,39 @@ const VendorLanding = () => {
       </section>
 
       {/* BOTTOM CTA & NEWSLETTER */}
-      <section className="py-20 bg-gradient-to-b from-white to-slate-100 text-slate-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="p-10 rounded-3xl bg-white border border-slate-200 shadow-2xl">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3">Ready to start selling?</h2>
-            <p className="text-slate-600 text-base mb-8">In just a few minutes your shop can be open for business.</p>
+      <section className="relative bg-[#1a233b] py-24 overflow-hidden border-t border-slate-850 text-white flex items-center justify-center">
+        {/* Background shapes */}
+        {/* Left Orange-Yellow Blob */}
+        <div className="absolute left-[-120px] bottom-[-60px] w-[300px] h-[300px] text-[#F3A530] pointer-events-none opacity-75 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M43.7,-64.5C57.4,-57.4,69.7,-46.6,74.7,-32.8C79.7,-19,77.4,-2.2,74.1,14.6C70.8,31.4,66.6,48.2,56.1,59C45.6,69.8,28.8,74.5,12.7,75.9C-3.4,77.3,-18.8,75.4,-33.5,69.5C-48.2,63.6,-62.3,53.8,-70.7,40.1C-79.1,26.5,-81.8,9.1,-79.7,-7.4C-77.7,-23.9,-70.9,-39.5,-59.6,-48C-48.4,-56.5,-32.8,-57.8,-18.3,-62.7C-3.8,-67.7,9.7,-71.5,23.7,-70C30.3,-69.3,37.1,-67.3,43.7,-64.5Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        {/* Top Right Orange-Red Blob */}
+        <div className="absolute right-[-100px] top-[-100px] w-[350px] h-[350px] text-[#EB5E28] pointer-events-none opacity-80 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" className="w-full h-full filter drop-shadow-md">
+            <path d="M45.6,-68.2C59.3,-60.2,70.9,-47.3,77.2,-32.3C83.5,-17.3,84.5,-0.2,80.7,15.6C76.9,31.4,68.3,45.8,56.5,56C44.7,66.3,29.7,72.4,13.8,75.4C-2,78.5,-18.8,78.5,-33.5,73.5C-48.2,68.5,-60.9,58.4,-69.5,45.3C-78.1,32.2,-82.7,16.1,-82.3,0.2C-81.9,-15.7,-76.6,-31.4,-67.1,-43.3C-57.6,-55.1,-44,-63.1,-30.3,-69.8C-16.6,-76.6,-2.8,-82,9.7,-80.4C22.2,-78.9,31.9,-76.2,45.6,-68.2Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-20">
+          <div className="p-8 sm:p-12 rounded-3xl bg-[#232d4b]/60 backdrop-blur-sm border border-slate-700/50 shadow-2xl">
+            <h2 className="text-3xl sm:text-4xl font-light text-white mb-3">Ready to start selling?</h2>
+            <p className="text-slate-300 text-sm sm:text-base mb-8">In just a few minutes your shop can be open for business.</p>
             <Link
               to="/vendor/register"
-              className="inline-block px-8 py-4 bg-amber-600 text-white font-bold text-lg rounded-full hover:bg-amber-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+              className="inline-block px-8 py-4 bg-white text-slate-900 font-bold text-base rounded-full hover:bg-neutral-100 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 mb-10"
             >
               Open your SikhStreet shop
             </Link>
 
-            <div className="mt-12 pt-8 border-t border-slate-100 max-w-md mx-auto">
-              <p className="text-xs text-slate-500 mb-4">
+            <div className="pt-8 border-t border-slate-700/50 max-w-md mx-auto">
+              <p className="text-xs text-slate-400 mb-4">
                 Yes! Send me exclusive offers, seller growth tips, and personalized recommendations for selling on SikhStreet.
               </p>
               {subscribed ? (
-                <div className="p-3 bg-emerald-50 text-emerald-700 text-sm font-semibold rounded-xl border border-emerald-200">
+                <div className="p-3 bg-emerald-500/20 text-emerald-300 text-sm font-semibold rounded-xl border border-emerald-500/30">
                   🎉 Thank you for subscribing!
                 </div>
               ) : (
@@ -561,11 +569,11 @@ const VendorLanding = () => {
                     placeholder="Enter your email"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    className="flex-1 w-full sm:w-auto min-w-0 px-4 py-3 rounded-full border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="flex-1 px-4 py-3 rounded-full bg-[#1a233b] border border-slate-600 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-slate-400"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-full hover:bg-slate-800 transition-colors shrink-0"
+                    className="px-6 py-3 bg-white text-slate-900 text-sm font-semibold rounded-full hover:bg-neutral-100 transition-colors shrink-0"
                   >
                     Subscribe
                   </button>
@@ -632,6 +640,41 @@ const VendorLanding = () => {
         </div>
       </footer>
 
+      {/* Route-based Vendor Login Modal */}
+      <AnimatePresence>
+        {isLoginOpen && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] flex justify-center items-start sm:items-center p-4 animate-fadeIn">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0"
+              onClick={() => navigate('/vendor')}
+            />
+            <div className="relative z-10 w-full max-w-md my-auto">
+              <VendorLogin isModal={true} onClose={() => navigate('/vendor')} />
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Route-based Vendor Register Modal */}
+      <AnimatePresence>
+        {isRegisterOpen && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] flex justify-center items-start sm:items-center p-4 animate-fadeIn">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0"
+              onClick={() => navigate('/vendor')}
+            />
+            <div className="relative z-10 w-full max-w-2xl my-auto">
+              <VendorRegister isModal={true} onClose={() => navigate('/vendor')} />
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

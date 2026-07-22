@@ -207,6 +207,34 @@ const SHARED_CATEGORY_THEME = {
   name: "Category"
 };
 
+// ── Topic group definitions ────────────────────────────────────────────────
+const TG_SIKHISM      = { group: "Sikhism",                items: ["Gurus", "Gurbani Studies", "Sikh Philosophy", "Sikh Practices", "Sikh Rehat", "Sikh Theology", "Sikh Symbols"] };
+const TG_HISTORY      = { group: "History",                items: ["Sikh History", "Punjab History", "Partition", "Sikh Empire", "Freedom Movement", "Military History"] };
+const TG_BIOGRAPHIES  = { group: "Biographies",            items: ["Gurus", "Sikh Warriors", "Saints", "Scholars", "Modern Sikh Personalities"] };
+const TG_PUNJABI_LIT  = { group: "Punjabi Literature",     items: ["Fiction", "Short Stories", "Poetry", "Classic Literature", "Contemporary Literature"] };
+const TG_CHILDREN     = { group: "Children & Young Readers", items: ["Picture Books", "Early Readers", "Activity Books", "Educational Books", "Bedtime Stories", "Sikh Values", "Comics", "Historical Comics", "Graphic Novels"] };
+const TG_LANGUAGE     = { group: "Language Learning",      items: ["Punjabi", "Gurmukhi", "Shahmukhi", "Dictionaries", "Grammar", "Workbooks", "Persian", "Urdu", "Sanskrit"] };
+const TG_ACADEMIC     = { group: "Academic & Research",    items: ["Research Papers", "Journals", "Reference Books", "Encyclopedias", "University Texts"] };
+const TG_SOCIETY      = { group: "Society & Politics",     items: ["Sikh Identity", "Politics", "Human Rights", "Diaspora", "Gender Studies"] };
+const TG_ART          = { group: "Art & Culture",          items: ["Architecture", "Music", "Calligraphy", "Folk Traditions", "Photography", "Museums"] };
+const TG_SKILL        = { group: "Skill Building",         items: ["Leadership", "Spiritual Growth", "Parenting", "Mental Wellness", "Motivation", "Spirituality"] };
+
+// ── Per-subcategory topic groups (auto-updates Topics accordion) ───────────
+const BOOK_SUBCATEGORY_TOPICS = {
+  "sikh-history-books":          [TG_SIKHISM, TG_HISTORY],
+  "childrens-books":             [TG_CHILDREN],
+  "punjabi-literature":          [TG_PUNJABI_LIT],
+  "poetry-collections":          [TG_PUNJABI_LIT],
+  "biographies-sikh-personalities": [TG_BIOGRAPHIES],
+  "comics-graphic-novels":       [TG_CHILDREN],
+  "language-learning-books":     [TG_LANGUAGE],
+  "e-books":                     [TG_SIKHISM, TG_HISTORY, TG_PUNJABI_LIT, TG_CHILDREN, TG_LANGUAGE, TG_ACADEMIC, TG_SOCIETY, TG_ART, TG_SKILL],
+  "journals-notebooks":          [TG_ACADEMIC],
+  "politics":                    [TG_SOCIETY],
+  "punjab":                      [TG_HISTORY, TG_SOCIETY, TG_ART],
+  "skill-building":              [TG_SKILL]
+};
+
 const CATEGORY_THEMES = {
   decor: { ...SHARED_CATEGORY_THEME, name: "Art & Decor", searchPlaceholder: 'Search "Paintings", "Wall Clocks", "Gurbani Frames"...' },
   turbans: { ...SHARED_CATEGORY_THEME, name: "Turbans", searchPlaceholder: 'Search "Full Voile", "Rubia", "Parna", "Double Patti"...' },
@@ -334,6 +362,7 @@ const MobileCategory = () => {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isSwipingBack, setIsSwipingBack] = useState(false);
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Sikh Street Books specific filter states
@@ -372,6 +401,7 @@ const MobileCategory = () => {
   const handleSubcategoryChange = (subId) => {
     if (subId === selectedSubcategoryId) return;
     setIsTransitioning(true);
+    setSelectedTopic(""); // Reset topic when subcategory changes
     setTimeout(() => {
       setSelectedSubcategoryId(subId);
       setIsTransitioning(false);
@@ -381,6 +411,7 @@ const MobileCategory = () => {
   useEffect(() => {
     setIsTransitioning(true);
     setSelectedSubcategoryId(null);
+    setSelectedTopic(""); // Reset topic on category change
     const timer = setTimeout(() => {
       setIsTransitioning(false);
     }, 200);
@@ -525,6 +556,14 @@ const MobileCategory = () => {
       result = result.filter(product => product.categoryId === selectedSubcategoryId);
     }
 
+    if (selectedTopic) {
+      result = result.filter(product => 
+        product.topic === selectedTopic ||
+        product.attributes?.topic === selectedTopic ||
+        product.name.toLowerCase().includes(selectedTopic.toLowerCase())
+      );
+    }
+
     if (searchQuery) {
       result = result.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -613,7 +652,7 @@ const MobileCategory = () => {
     }
 
     return result;
-  }, [category, categoryProductsFeed, filters, searchQuery, selectedSubcategoryId, etsyHandmade, etsyIncludesVideo, etsyPicks, etsyOriginIN, etsyUnderCA10, etsyStarSeller, etsyPaperback, etsySpiralBound, etsyEncyclopedia, etsyDigital, etsySentFrom, etsyDelivery, etsySort]);
+  }, [category, categoryProductsFeed, filters, searchQuery, selectedSubcategoryId, selectedTopic, etsyHandmade, etsyIncludesVideo, etsyPicks, etsyOriginIN, etsyUnderCA10, etsyStarSeller, etsyPaperback, etsySpiralBound, etsyEncyclopedia, etsyDigital, etsySentFrom, etsyDelivery, etsySort]);
 
   const { displayedItems, hasMore, isLoading, loadMore, loadMoreRef } =
     useInfiniteScroll(categoryProducts, 10, 10);
@@ -706,10 +745,12 @@ const MobileCategory = () => {
     setEtsySentFrom("");
     setEtsyDelivery("");
     setEtsySort("most_relevant");
+    setSelectedTopic("");
   };
 
   // Check if any filter is active
   const hasActiveFilters =
+    selectedTopic ||
     filters.minPrice ||
     filters.maxPrice ||
     filters.minRating ||
@@ -845,79 +886,34 @@ const MobileCategory = () => {
                           {showFilters ? "Hide filters" : "Show filters"}
                         </button>
 
-                        {(() => {
-                          const getPillClass = (isActive) => {
-                            return `px-5 py-2.5 rounded-full border-2 text-xs font-semibold whitespace-nowrap transition-all ${isActive
-                                ? "bg-[#eaeaea] text-gray-900 border-[#1861bf]"
-                                : "bg-[#eaeaea] text-gray-800 border-transparent hover:bg-gray-200"
-                              }`;
-                          };
-
-                          return (
-                            <>
+                        {subcategories.length > 0 && (
+                          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar scroll-smooth flex-shrink-0">
+                            <div className="w-[1px] h-6 bg-gray-200 self-center mx-1 flex-shrink-0" />
+                            <button
+                              onClick={() => handleSubcategoryChange(null)}
+                              className={`px-4 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
+                                !selectedSubcategoryId
+                                  ? "bg-gray-900 text-white border-gray-900"
+                                  : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                              }`}
+                            >
+                              All Books
+                            </button>
+                            {subcategories.map(sub => (
                               <button
-                                onClick={() => setEtsyHandmade(!etsyHandmade)}
-                                className={getPillClass(etsyHandmade)}
+                                key={sub.id}
+                                onClick={() => handleSubcategoryChange(sub.id)}
+                                className={`px-4 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
+                                  selectedSubcategoryId === sub.id
+                                    ? "bg-gray-900 text-white border-gray-900"
+                                    : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                                }`}
                               >
-                                Handmade only
+                                {sub.name}
                               </button>
-
-                              <button
-                                onClick={() => setEtsyOriginIN(!etsyOriginIN)}
-                                className={getPillClass(etsyOriginIN)}
-                              >
-                                Sent from IN
-                              </button>
-
-                              <button
-                                onClick={() => setEtsyUnderCA10(!etsyUnderCA10)}
-                                className={getPillClass(etsyUnderCA10)}
-                              >
-                                Under CA$10
-                              </button>
-
-                              <button
-                                onClick={() => setEtsyStarSeller(!etsyStarSeller)}
-                                className={getPillClass(etsyStarSeller)}
-                              >
-                                Star Seller
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setEtsyPaperback(!etsyPaperback);
-                                  setEtsySpiralBound(false);
-                                  setEtsyEncyclopedia(false);
-                                }}
-                                className={getPillClass(etsyPaperback)}
-                              >
-                                Paperback
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setEtsySpiralBound(!etsySpiralBound);
-                                  setEtsyPaperback(false);
-                                  setEtsyEncyclopedia(false);
-                                }}
-                                className={getPillClass(etsySpiralBound)}
-                              >
-                                Spiral Bound
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setEtsyEncyclopedia(!etsyEncyclopedia);
-                                  setEtsyPaperback(false);
-                                  setEtsySpiralBound(false);
-                                }}
-                                className={getPillClass(etsyEncyclopedia)}
-                              >
-                                Encyclopedia
-                              </button>
-                            </>
-                          );
-                        })()}
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       {showScrollRight && (
@@ -1074,7 +1070,7 @@ const MobileCategory = () => {
                                 {openSections.sikhStreetBest && (
                                   <div className="px-4 pb-3 space-y-2.5">
                                     {[
-                                      { label: 'Handmade only', info: true, state: etsyHandmade, toggle: () => setEtsyHandmade(!etsyHandmade) },
+
                                       { label: 'Includes video', info: false, state: etsyIncludesVideo, toggle: () => setEtsyIncludesVideo(!etsyIncludesVideo) },
                                       { label: "Sikh Street's Picks", info: true, state: etsyPicks, toggle: () => setEtsyPicks(!etsyPicks) },
                                       { label: 'Star Seller', info: true, state: etsyStarSeller, toggle: () => setEtsyStarSeller(!etsyStarSeller) },
@@ -1093,23 +1089,87 @@ const MobileCategory = () => {
                                 )}
                               </div>
 
-                              {/* === CATEGORY === */}
+                              {/* === SUB CATEGORIES === */}
                               <div className="border-b border-gray-200">
                                 <button onClick={() => toggleSection('category')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                                  <span className="font-semibold text-sm text-gray-900">Category</span>
+                                  <span className="font-semibold text-sm text-gray-900">Sub Categories</span>
                                   <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.category ? 'rotate-180' : ''}`} />
                                 </button>
                                 {openSections.category && (
                                   <div className="px-4 pb-3 space-y-2">
-                                    {['All Books', 'Sikh History', 'Spiritual & Devotional', 'Children Books', 'Reference & Study'].map((label) => (
-                                      <label key={label} className="flex items-center gap-2 cursor-pointer group">
-                                        <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#1861bf] flex-shrink-0 transition-all" />
-                                        <span className="text-xs text-gray-700 group-hover:text-black">{label}</span>
+                                    <label
+                                      onClick={() => handleSubcategoryChange(null)}
+                                      className="flex items-center gap-2 cursor-pointer group"
+                                    >
+                                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${!selectedSubcategoryId ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                        {!selectedSubcategoryId && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
+                                      </div>
+                                      <span className={`text-xs ${!selectedSubcategoryId ? 'text-black font-bold' : 'text-gray-700 group-hover:text-black'}`}>All Books</span>
+                                    </label>
+                                    {subcategories.map((sub) => (
+                                      <label
+                                        key={sub.id}
+                                        onClick={() => handleSubcategoryChange(sub.id)}
+                                        className="flex items-center gap-2 cursor-pointer group"
+                                      >
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${selectedSubcategoryId === sub.id ? 'border-[#1861bf]' : 'border-gray-400 group-hover:border-[#1861bf]'}`}>
+                                          {selectedSubcategoryId === sub.id && <div className="w-2 h-2 rounded-full bg-[#1861bf]" />}
+                                        </div>
+                                        <span className={`text-xs ${selectedSubcategoryId === sub.id ? 'text-black font-bold' : 'text-gray-700 group-hover:text-black'}`}>{sub.name}</span>
                                       </label>
                                     ))}
                                   </div>
                                 )}
                               </div>
+
+                              {/* === TOPICS (DYNAMIC — updates per selected subcategory) === */}
+                              {selectedSubcategoryId && BOOK_SUBCATEGORY_TOPICS[selectedSubcategoryId] && (
+                                <div className="border-b border-gray-200">
+                                  <button onClick={() => toggleSection('topic')} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                                    <span className="font-semibold text-sm text-gray-900">Topics</span>
+                                    <FiChevronDown className={`text-gray-500 text-xs transition-transform duration-200 ${openSections.topic !== false ? 'rotate-180' : ''}`} />
+                                  </button>
+                                  {openSections.topic !== false && (
+                                    <div className="px-4 pb-3 max-h-72 overflow-y-auto">
+                                      {/* All Topics reset option */}
+                                      <label
+                                        onClick={() => setSelectedTopic("")}
+                                        className="flex items-center gap-2 cursor-pointer group mb-2"
+                                      >
+                                        <div className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${!selectedTopic ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                          {!selectedTopic && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                        </div>
+                                        <span className={`text-xs ${!selectedTopic ? 'text-black font-bold' : 'text-gray-700 group-hover:text-black'}`}>All Topics</span>
+                                      </label>
+
+                                      {/* Grouped topics — auto-updates when subcategory changes */}
+                                      {BOOK_SUBCATEGORY_TOPICS[selectedSubcategoryId].map(({ group, items }) => (
+                                        <div key={group} className="mb-3">
+                                          {/* Group header */}
+                                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 py-1.5 border-t border-gray-100 mt-1">
+                                            {group}
+                                          </p>
+                                          {/* Group items */}
+                                          <div className="space-y-2">
+                                            {items.map((topic) => (
+                                              <label
+                                                key={topic}
+                                                onClick={() => setSelectedTopic(selectedTopic === topic ? "" : topic)}
+                                                className="flex items-center gap-2 cursor-pointer group"
+                                              >
+                                                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${selectedTopic === topic ? 'bg-[#1861bf] border-[#1861bf]' : 'border-gray-400 bg-white group-hover:border-[#1861bf]'}`}>
+                                                  {selectedTopic === topic && <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                                </div>
+                                                <span className={`text-xs ${selectedTopic === topic ? 'text-black font-bold' : 'text-gray-700 group-hover:text-black'}`}>{topic}</span>
+                                              </label>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
 
                               {/* === SPECIAL OFFERS === */}
                               <div className="border-b border-gray-200">
@@ -1433,6 +1493,35 @@ const MobileCategory = () => {
 
                 {/* === PRODUCT GRID (shrinks when sidebar opens) === */}
                 <div className="flex-1 min-w-0">
+
+                  {/* === DYNAMIC TOPIC CHIPS (Books only — hidden when filter sidebar open) === */}
+                  {categoryId === 'books' && !showFilters && selectedSubcategoryId && BOOK_SUBCATEGORY_TOPICS[selectedSubcategoryId] && (
+                    <div className="mb-5 pt-2">
+                      {BOOK_SUBCATEGORY_TOPICS[selectedSubcategoryId].map(({ group, items }) => (
+                        <div key={group} className="mb-3">
+                          {/* Group label */}
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">{group}</p>
+                          {/* Topic chips */}
+                          <div className="flex flex-wrap gap-2">
+                            {items.map((topic) => (
+                              <button
+                                key={topic}
+                                onClick={() => setSelectedTopic(selectedTopic === topic ? "" : topic)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                  selectedTopic === topic
+                                    ? "bg-gray-900 text-white border-gray-900"
+                                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-900"
+                                }`}
+                              >
+                                {topic}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className={`pt-2 transition-all duration-200 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
                     {categoryProducts.length === 0 ? (
                       <div className="text-center py-12">
@@ -1452,11 +1541,11 @@ const MobileCategory = () => {
                             ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 w-full"
                             : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-8 w-full")
                           : (showFilters
-                            ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 w-full"
-                            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 w-full")
+                            ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full"
+                            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4 md:gap-6 w-full")
                         } ref={gridRef}>
                           {displayedItems.map((product) => (
-                            <div key={product.id} className={categoryId === 'books' ? "product-card-gsap" : "product-card-gsap hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(10,25,47,0.1)] transition-all duration-300 rounded-xl"}>
+                            <div key={product.id} className="product-card-gsap">
                               {categoryId === 'books' ? (
                                 <BookProductCard product={product} />
                               ) : (

@@ -52,13 +52,19 @@ const VendorProtectedRoute = ({ children }) => {
 
   // Onboarding enforcement
   const isOnboardingPath = location.pathname === '/vendor/onboarding';
-  if (!vendor?.isOnboarded) {
-    if (!isOnboardingPath) {
-      return <Navigate to="/vendor/onboarding" replace />;
-    }
-  } else {
-    if (isOnboardingPath) {
-      return <Navigate to="/vendor/dashboard" replace />;
+  if (isOnboardingPath) {
+    return <Navigate to="/vendor/dashboard" replace />;
+  }
+
+  // Prevent accessing selling functionality routes if not onboarded
+  if (vendor && !vendor.isOnboarded) {
+    const isSellingRoute = 
+      location.pathname.startsWith('/vendor/products') || 
+      location.pathname === '/vendor/stock-management' ||
+      location.pathname === '/vendor/promotions';
+
+    if (isSellingRoute) {
+      return <Navigate to="/vendor/dashboard" state={{ onboardingWarning: true }} replace />;
     }
   }
 

@@ -48,6 +48,18 @@ const MobileHome = () => {
     }
   };
 
+  const smallShopsCarouselRef = useRef(null);
+  const scrollSmallShopsRight = () => {
+    if (smallShopsCarouselRef.current) {
+      smallShopsCarouselRef.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+  };
+  const scrollSmallShopsLeft = () => {
+    if (smallShopsCarouselRef.current) {
+      smallShopsCarouselRef.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+  };
+
   const trendingProductsList = useMemo(() => {
     const ids = [306, 307, 302, 460, 1, 2, 4, 5, 6, 7];
     return ids.map(id => {
@@ -240,7 +252,7 @@ const MobileHome = () => {
                 <div
                   key={cat.id || cat._id}
                   onClick={() => navigate(`/category/${cat.id || cat._id}`)}
-                  className="group cursor-pointer w-full text-center"
+                  className="group cursor-pointer w-full max-w-[180px] md:max-w-[260px] lg:max-w-[280px] mx-auto text-center"
                 >
                   <div className="aspect-square rounded-2xl overflow-hidden mb-2 transition-transform duration-500 group-hover:scale-[1.02] shadow-sm hover:shadow bg-[#f2dfd3]">
                     <img
@@ -249,7 +261,7 @@ const MobileHome = () => {
                       src={cat.image}
                     />
                   </div>
-                  <span className="text-xs md:text-sm font-semibold text-black group-hover:text-[#F5A623] transition-colors block">
+                  <span className="text-sm md:text-base font-semibold text-black group-hover:text-[#F5A623] transition-colors block">
                     {cat.name}
                   </span>
                 </div>
@@ -258,7 +270,7 @@ const MobileHome = () => {
           </section>
 
           {/* Discover Small Shops Section */}
-          <section className="py-12 bg-[#faf6f0] text-left">
+          <section className="py-12 bg-white text-left">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                 <div>
@@ -390,7 +402,7 @@ const MobileHome = () => {
           </section>
 
           {/* Featured Items from Small Shops Section */}
-          <section className="py-12 bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
+          <section className="py-12 bg-white text-left border-t border-[#ebdcd0]/40">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                 <div>
@@ -403,47 +415,93 @@ const MobileHome = () => {
                 </div>
               </div>
 
-              {/* Product Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {smallShopProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => navigate(`/product/${product.id}`)}
-                    className="bg-white rounded-2xl border border-neutral-200/60 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
-                  >
-                    <div className="overflow-hidden aspect-square relative bg-stone-100">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between">
-                      <div className="mb-3">
-                        <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block mb-1">
-                          {product.vendorName}
-                        </span>
-                        <h4 className="text-sm font-bold text-neutral-800 line-clamp-2 hover:text-[#F5A623] transition-colors leading-snug">
-                          {product.name}
-                        </h4>
+              {/* Carousel container with overlapping left/right hover arrows */}
+              <div className="relative group">
+                {/* Left Arrow */}
+                <button
+                  onClick={scrollSmallShopsLeft}
+                  className="absolute left-[-18px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                  </svg>
+                </button>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={scrollSmallShopsRight}
+                  className="absolute right-[-18px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                </button>
+
+                {/* Horizontal Scroll list */}
+                <div
+                  ref={smallShopsCarouselRef}
+                  className="flex gap-5 overflow-x-auto hide-scrollbar scroll-smooth pb-4"
+                >
+                  {smallShopProducts.map((product) => {
+                    const isFav = wishlistStore.isInWishlist(product.id);
+                    const originalPrice = product.originalPrice || Math.round(product.price * 1.25);
+                    const discount = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+                    return (
+                      <div
+                        key={product.id}
+                        className="flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] lg:w-[calc((100%-60px)/4)] bg-transparent group/card relative flex flex-col justify-between cursor-pointer"
+                        onClick={() => navigate(`/product/${product.id}`)}
+                      >
+                        {/* Image area */}
+                        <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-50">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700"
+                          />
+                          {/* Heart icon button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleWishlist(product);
+                            }}
+                            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 shadow flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-neutral-600 hover:text-red-500"
+                          >
+                            <FiHeart className={`w-3.5 h-3.5 ${isFav ? "fill-red-500 text-red-500" : ""}`} />
+                          </button>
+                        </div>
+
+                        {/* Text / Price area */}
+                        <div className="pt-2 text-left flex flex-col justify-between flex-1">
+                          <div>
+                            <span className="text-[11px] sm:text-xs md:text-sm font-normal text-neutral-800 hover:underline line-clamp-2 block leading-snug">
+                              {product.name}
+                            </span>
+                          </div>
+
+                          <div className="mt-1">
+                            {/* Price */}
+                            <div className="flex items-baseline gap-1 flex-wrap">
+                              <span className="text-xs sm:text-sm md:text-base font-bold text-neutral-900">
+                                {formatPrice ? formatPrice(product.price) : `$${product.price}`}
+                              </span>
+                              {originalPrice > product.price && (
+                                <>
+                                  <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
+                                    {formatPrice ? formatPrice(originalPrice) : `$${originalPrice}`}
+                                  </span>
+                                  <span className="text-[9px] sm:text-[10px] font-bold text-red-600">
+                                    ({discount}% OFF)
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-50">
-                        <span className="text-sm font-extrabold text-neutral-900">
-                          {formatPrice(product.price)}
-                        </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product);
-                          }}
-                          className="px-4 py-2 bg-black hover:bg-[#F5A623] hover:text-black transition-colors text-white rounded-xl text-xs font-semibold transition-all duration-300 active:scale-95 shadow-sm"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </section>
@@ -485,7 +543,7 @@ const MobileHome = () => {
           </section>
 
           {/* Trending Products (Etsy-Style Carousel) */}
-          <section className="py-12 bg-[#faf6f0] text-left border-t border-[#ebdcd0]/40">
+          <section className="py-12 bg-white text-left border-t border-[#ebdcd0]/40">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
               {/* Header Row */}
               <div className="flex items-center justify-between mb-8 text-left">
@@ -547,10 +605,11 @@ const MobileHome = () => {
                     return (
                       <div
                         key={product.id}
-                        className="flex-shrink-0 w-[140px] sm:w-[155px] md:w-[170px] bg-white border border-[#e8e8e8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group/card relative flex flex-col justify-between"
+                        className="flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] lg:w-[calc((100%-60px)/4)] bg-transparent group/card relative flex flex-col justify-between cursor-pointer"
+                        onClick={() => navigate(`/product/${product.id}`)}
                       >
                         {/* Image area */}
-                        <div className="relative aspect-square overflow-hidden bg-gray-50 cursor-pointer" onClick={() => navigate(`/product/${product.id}`)}>
+                        <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-50">
                           <img
                             src={product.image}
                             alt={product.name}
@@ -569,31 +628,25 @@ const MobileHome = () => {
                         </div>
 
                         {/* Text / Price area */}
-                        <div className="p-3 text-left flex flex-col justify-between flex-1">
+                        <div className="pt-2 text-left flex flex-col justify-between flex-1">
                           <div>
-                            <Link to={`/product/${product.id}`} className="text-[11px] sm:text-xs font-semibold font-serif text-black hover:underline line-clamp-1 block">
+                            <span className="text-[11px] sm:text-xs md:text-sm font-normal text-neutral-800 hover:underline line-clamp-2 block leading-snug">
                               {product.name}
-                            </Link>
-                            {/* Stars */}
-                            <div className="flex items-center gap-1 mt-0.5 text-yellow-500 text-[9px] sm:text-[10px]">
-                              <FiStar className="fill-current" />
-                              <span className="font-bold text-gray-700">4.9</span>
-                              <span className="text-gray-400 font-medium">(18)</span>
-                            </div>
+                            </span>
                           </div>
 
-                          <div className="mt-2">
+                          <div className="mt-1">
                             {/* Price */}
                             <div className="flex items-baseline gap-1 flex-wrap">
-                              <span className="text-xs sm:text-[13px] font-bold text-neutral-900">
+                              <span className="text-xs sm:text-sm md:text-base font-bold text-neutral-900">
                                 {formatPrice ? formatPrice(product.price) : `$${product.price}`}
                               </span>
                               {originalPrice > product.price && (
                                 <>
-                                  <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through">
+                                  <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
                                     {formatPrice ? formatPrice(originalPrice) : `$${originalPrice}`}
                                   </span>
-                                  <span className="text-[9px] font-bold text-red-600">
+                                  <span className="text-[9px] sm:text-[10px] font-bold text-red-600">
                                     ({discount}% OFF)
                                   </span>
                                 </>

@@ -31,7 +31,7 @@ const getBusinessDocumentLabel = (country) => {
   }
 };
 
-const VendorRegister = () => {
+const VendorRegister = ({ isModal = false, onClose }) => {
   const navigate = useNavigate();
   const { register: registerVendor, isLoading } = useVendorAuthStore();
 
@@ -210,13 +210,23 @@ const VendorRegister = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 flex items-center justify-center p-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass-card rounded-3xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
-      >
+  const cardContent = (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-card rounded-3xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto relative bg-white border border-slate-200"
+    >
+      {isModal && onClose && (
+        <button
+          onClick={onClose}
+          type="button"
+          className="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-full hover:bg-gray-100 z-50 animate-fadeIn"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/vendor" className="inline-block">
@@ -691,7 +701,16 @@ const VendorRegister = () => {
             )}
           </AnimatePresence>
         </form>
-      </motion.div>
+    </motion.div>
+  );
+
+  if (isModal) {
+    return cardContent;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 flex items-center justify-center p-4 py-8">
+      {cardContent}
     </div>
   );
 };
