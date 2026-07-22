@@ -99,7 +99,7 @@ const DesktopHeader = () => {
                 <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 h-full flex items-center pb-3 gap-1.9 lg:gap-8 transition-all">
                     {/* Logo & Categories */}
                     <div className="flex items-center gap-5 lg:gap-8 flex-shrink-0">
-                        <Link to="/home" className="flex-shrink-0 flex items-center gap-2.5">
+                        <Link to="/" className="flex-shrink-0 flex items-center gap-2.5">
                             {appLogo.src ? (
                                 <motion.div style={{ scale: logoScale }} className="origin-left flex items-center">
                                     <img

@@ -69,7 +69,7 @@ const MobileHeader = () => {
         {/* Row 1: Logo, Search Bar, and Action Icons */}
         <div className="flex justify-between items-center w-full gap-6">
           <div className="flex items-center gap-4 flex-shrink-0">
-            <Link to="/home" className="flex items-center gap-3 active:scale-95 transition-transform">
+            <Link to="/" className="flex items-center gap-3 active:scale-95 transition-transform">
               <div className="flex items-center justify-center">
                 <img
                   className="w-[140px] sm:w-[160px] h-auto object-contain mix-blend-multiply"
@@ -302,9 +302,9 @@ const MobileHeader = () => {
         </div>
 
         {/* Row 2: Desktop Navigation Links (Below Search) */}
-        <nav className="hidden md:flex gap-8 items-center justify-center border-t border-gray-200/50 pt-2.5 w-full">
-          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/home">
-            Home
+        <nav className="hidden md:flex gap-8 items-center justify-start border-t border-gray-200/50 pt-2.5 w-full pl-12">
+          <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/category/books">
+            Book & Literature
           </Link>
           <Link className="text-[11px] uppercase tracking-wider font-semibold text-black transition-colors hover:text-[#F5A623]" to="/home-favourites">
             Home Favourites
