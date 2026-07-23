@@ -84,7 +84,7 @@ const MobileVerification = () => {
     if (!email) return;
     try {
       await resendOTP(email);
-      toast.success('Verification code sent to your email');
+      // toast.success('Verification code sent to your email');
     } catch (error) {
       toast.error(error?.message || 'Failed to resend code. Please try again.');
     }
