@@ -44,6 +44,7 @@ const VendorRegister = ({ isModal = false, onClose }) => {
     confirmPassword: '',
     vendorType: 'Individual',
     vendorCountry: '',
+    shopCurrency: '',
     storeName: '',
     address: {
       street: '',
@@ -108,9 +109,18 @@ const VendorRegister = ({ isModal = false, onClose }) => {
       }
     }
 
+    const defaultCurrency = selectedName === 'US' ? 'USD' :
+                            selectedName === 'CANADA' ? 'CAD' :
+                            selectedName === 'UK' ? 'GBP' :
+                            selectedName === 'AUSTRALIA' ? 'AUD' :
+                            selectedName === 'SINGAPORE' ? 'SGD' :
+                            selectedName === 'DUBAI' ? 'AED' :
+                            selectedName === 'INDIA' ? 'INR' : '';
+
     setFormData({
       ...formData,
       vendorCountry: selectedName,
+      shopCurrency: defaultCurrency,
       phone: countryObj ? `${countryObj.code} ${currentPhoneNum}`.trim() : currentPhoneNum
     });
   };
@@ -119,6 +129,10 @@ const VendorRegister = ({ isModal = false, onClose }) => {
     // Validate Step 1
     if (!formData.vendorCountry) {
       toast.error('Please select a country');
+      return;
+    }
+    if (!formData.shopCurrency) {
+      toast.error('Please select a shop currency');
       return;
     }
     if (!formData.name || !formData.email || !formData.phone) {
@@ -189,6 +203,7 @@ const VendorRegister = ({ isModal = false, onClose }) => {
       submitData.append('phone', formData.phone.trim());
       submitData.append('vendorType', formData.vendorType);
       submitData.append('vendorCountry', formData.vendorCountry);
+      submitData.append('currency', formData.shopCurrency);
       submitData.append('storeName', formData.storeName.trim());
       submitData.append('address', JSON.stringify(formData.address));
       
@@ -258,23 +273,44 @@ const VendorRegister = ({ isModal = false, onClose }) => {
               >
                 {/* Vendor Country */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Country</h3>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Country <span className="text-red-500">*</span></label>
-                    <select
-                      name="vendorCountry"
-                      value={formData.vendorCountry}
-                      onChange={handleCountryChange}
-                      className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800"
-                      required
-                    >
-                      <option value="" disabled>Select Country</option>
-                      {COUNTRIES.map((country, idx) => (
-                        <option key={idx} value={country.name}>
-                          {country.name}
-                        </option>
-                      ))}
-                    </select>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Country & Currency</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Country <span className="text-red-500">*</span></label>
+                      <select
+                        name="vendorCountry"
+                        value={formData.vendorCountry}
+                        onChange={handleCountryChange}
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800"
+                        required
+                      >
+                        <option value="" disabled>Select Country</option>
+                        {COUNTRIES.map((country, idx) => (
+                          <option key={idx} value={country.name}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Shop Currency <span className="text-red-500">*</span></label>
+                      <select
+                        name="shopCurrency"
+                        value={formData.shopCurrency}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-500 text-gray-800"
+                        required
+                      >
+                        <option value="" disabled>Select Shop Currency</option>
+                        <option value="USD">USD ($) - US Dollar</option>
+                        <option value="CAD">CAD ($) - Canadian Dollar</option>
+                        <option value="GBP">GBP (£) - British Pound</option>
+                        <option value="AUD">AUD ($) - Australian Dollar</option>
+                        <option value="SGD">SGD ($) - Singapore Dollar</option>
+                        <option value="AED">AED (د.إ) - UAE Dirham</option>
+                        <option value="INR">INR (₹) - Indian Rupee</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -340,7 +376,7 @@ const VendorRegister = ({ isModal = false, onClose }) => {
                     disabled={isValidating}
                     className="flex items-center gap-2 gradient-green text-white px-8 py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isValidating ? 'Checking...' : 'Next Step'} <FiArrowRight />
+                    {isValidating ? 'Checking...' : 'Save & Next Step'} <FiArrowRight />
                   </button>
                 </div>
                 

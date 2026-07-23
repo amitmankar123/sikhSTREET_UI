@@ -32,7 +32,7 @@ const MobileForgotPassword = () => {
 
     try {
       await forgotPassword(email.trim().toLowerCase());
-      toast.success('If the email exists, reset OTP has been sent.');
+      // toast.success('If the email exists, reset OTP has been sent.');
       setStep('verify');
     } catch (error) {
       const message = String(
