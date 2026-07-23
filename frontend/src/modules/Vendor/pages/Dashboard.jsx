@@ -179,7 +179,7 @@ const VendorDashboard = () => {
     const [isActivating, setIsActivating] = useState(false);
 
     // Step verification
-    const isStep1Done = !!(vendor?.bankDetails?.accountNumber || bankData.accountNumber);
+    const isStep1Done = !!vendor?.bankDetails?.accountNumber;
     const isStep2Done = billingSaved;
 
     const handleSaveBank = async (e) => {
@@ -192,6 +192,13 @@ const VendorDashboard = () => {
       try {
         await updateVendorBankDetails(bankData);
         toast.success("Payout bank details saved successfully!");
+        const currentVendor = useVendorAuthStore.getState().vendor;
+        useVendorAuthStore.setState({
+          vendor: {
+            ...currentVendor,
+            bankDetails: bankData
+          }
+        });
         await fetchProfile();
         setOpenStep(2);
       } catch (err) {
